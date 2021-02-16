@@ -9,6 +9,7 @@ import android.os.Bundle;
 // Fixed the grammar because Cajsa's a grammar nazi. Sometimes.
 // It was on porpoise!
 // Don't push before you pull. Bad stuff happens.
+//Pancakes are the very best food of all time
 
 public class MainActivity extends AppCompatActivity {
 
