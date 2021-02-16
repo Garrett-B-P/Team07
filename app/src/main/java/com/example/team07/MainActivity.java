@@ -7,6 +7,7 @@ import android.os.Bundle;
 // Just a comment from Braeden to test if we got it working
 // Comment from Garrett
 // Fixed the grammar because Cajsa's a grammar nazi. Sometimes.
+//Pancakes are the very best food of all time
 
 public class MainActivity extends AppCompatActivity {
 
