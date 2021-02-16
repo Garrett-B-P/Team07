@@ -8,6 +8,7 @@ import android.os.Bundle;
 // Comment from Garrett
 // Fixed the grammar because Cajsa's a grammar nazi. Sometimes.
 // It was on porpoise!
+// Don't push before you pull. Bad stuff happens.
 
 public class MainActivity extends AppCompatActivity {
 
