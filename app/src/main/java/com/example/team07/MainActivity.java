@@ -5,12 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-// Just a comment from Braeden to test if we got it working
-// Comment from Garrett
-// Fixed the grammar because Cajsa's a grammar nazi. Sometimes.
-// It was on porpoise!
-// Don't push before you pull. Bad stuff happens.
-// Pancakes are the very best food of all time
+// Milestones: Week 08
+// All 3 screens display
+// All 3 classes made, along with objects and current plans for functions stubbed
+// Temporary buttons to view each of three screens
 
 public class MainActivity extends AppCompatActivity {
 
@@ -18,6 +16,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        List<ClassActivity> classes [];
+    }
+
+    private void selectClass(){
+
+    }
+
+    private void addClass(){
+
+    }
+
+    private void removeClass(){
+
+    }
+
+    public String addReminder(){
+        String message = "Useless message.";
+
+        return message;
+    }
+
+    public List searchAllNotes(){
+
     }
 
     public String Test1() {
