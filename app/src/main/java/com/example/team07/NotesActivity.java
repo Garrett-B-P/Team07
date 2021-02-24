@@ -33,9 +33,9 @@ public class NotesActivity extends AppCompatActivity {
 
     }
 
-    public List<String> searchNote(){
-        List<String> results = new ArrayList<>();
-
-        return results;
+    public List searchNote(){
+        // Change <String> to whatever the list objects will be later
+        ArrayList<String> searchList = new ArrayList<>();
+        return searchList;
     }
 }

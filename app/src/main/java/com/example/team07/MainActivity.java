@@ -1,6 +1,8 @@
 package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.Intent;
+import android.view.View;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -39,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
         return message;
     }
 
-    public List<String> searchAllNotes(){
-        List<String> results = new ArrayList<>();
-
-        return results;
+    public List searchAllNotes(){
+        // Change <String> to whatever the list objects will be later
+        ArrayList<String> searchList = new ArrayList<>();
+        return searchList;
     }
 
     public String Test1() {
