@@ -3,6 +3,7 @@ package com.example.team07;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // Milestones: Week 08
@@ -38,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
         return message;
     }
 
-    public List searchAllNotes(){
+    public List<String> searchAllNotes(){
+        List<String> results = new ArrayList<>();
 
+        return results;
     }
 
     public String Test1() {

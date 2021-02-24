@@ -1,7 +1,6 @@
 package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -40,7 +39,9 @@ public class ClassActivity extends AppCompatActivity {
         return classTitle;
     }
 
-    public List searchClassNotes(){
+    public List<String> searchClassNotes(){
+        List<String> results = new ArrayList<>();
 
+        return results;
     }
 }
