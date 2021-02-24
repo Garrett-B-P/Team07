@@ -2,6 +2,7 @@ package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import android.os.Bundle;
 
 // Just a comment from Braeden to test if we got it working
@@ -18,4 +19,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
     }
+
+    public String Test1() {
+        String date = "Feb 18, 2021";
+        return date;
+    }
+
+    public String Test2() {
+        String def = "Enter Class Name";
+        return def;
+
+    }
+
+    public int Test3() {
+        int classNum = 3;
+        return classNum;
+
+    }
+
 }
