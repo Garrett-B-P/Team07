@@ -1,9 +1,9 @@
 package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.os.Bundle;
+
+import java.util.List;
 
 // Milestones: Week 08
 // All 3 screens display
