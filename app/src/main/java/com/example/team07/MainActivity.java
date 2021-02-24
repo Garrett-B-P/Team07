@@ -5,14 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import java.util.List;
-
-// Just a comment from Braeden to test if we got it working
-// Comment from Garrett
-// Fixed the grammar because Cajsa's a grammar nazi. Sometimes.
-// It was on porpoise!
-// Don't push before you pull. Bad stuff happens.
-// Pancakes are the very best food of all time
+// Milestones: Week 08
+// All 3 screens display
+// All 3 classes made, along with objects and current plans for functions stubbed
+// Temporary buttons to view each of three screens
 
 public class MainActivity extends AppCompatActivity {
 
