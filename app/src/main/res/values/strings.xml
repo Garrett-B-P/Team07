@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Team07</string>
+    <string name="title_name">Enter Note Title</string>
+    <string name="note">Type Note Here</string>
+    <string name="timeStamp">Time Stamp</string>
+    <string name="save">Save</string>
 </resources>
