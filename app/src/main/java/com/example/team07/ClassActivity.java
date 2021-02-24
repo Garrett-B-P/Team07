@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ClassActivity extends AppCompatActivity {
 
-    String title;
+    String classTitle;
     List notes = new ArrayList<NotesActivity>();
 
     @Override
@@ -17,7 +17,7 @@ public class ClassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class);
 
-        title = "unchangedTitle";
+        classTitle = "unchangedTitle";
     }
 
     private void addNote(){
@@ -37,7 +37,7 @@ public class ClassActivity extends AppCompatActivity {
     }
 
     public String getClassTitle(){
-        return title;
+        return classTitle;
     }
 
     public List searchClassNotes(){
