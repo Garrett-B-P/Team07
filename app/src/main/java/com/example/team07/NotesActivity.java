@@ -2,14 +2,15 @@ package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class NotesActivity extends AppCompatActivity {
-    String noteTitle;
-    String notes;
+    View noteTitle = findViewById(R.id.noteTitle);
+    View notes = findViewById(R.id.noteBody);
     Calendar dateCreated;
     Calendar lastEdited;
 

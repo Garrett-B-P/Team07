@@ -7,7 +7,7 @@
     tools:context=".NotesActivity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/noteTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/noteBody"
         android:layout_width="384dp"
         android:layout_height="384dp"
         android:layout_marginStart="16dp"
@@ -44,7 +44,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="17dp"
         android:text="@string/timeStamp"
-        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toTopOf="@+id/noteBody"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchView"
         app:layout_constraintVertical_bias="0.767" />
@@ -71,6 +71,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/noteTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
