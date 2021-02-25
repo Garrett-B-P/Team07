@@ -53,24 +53,20 @@ public class MainActivity extends AppCompatActivity {
 
     public List searchAllNotes(){
         // Change <String> to whatever the list objects will be later
-        ArrayList<String> searchList = new ArrayList<>();
-        return searchList;
+        return new ArrayList<String>();
     }
 
     public String Test1() {
-        String date = "Feb 18, 2021";
-        return date;
+        return "Feb 18, 2021";
     }
 
     public String Test2() {
-        String def = "Enter Class Name";
-        return def;
+        return "Enter Class Name";
 
     }
 
     public int Test3() {
-        int classNum = 3;
-        return classNum;
+        return 3;
 
     }
 

@@ -10,4 +10,6 @@
     <string name="enter_note_here">Enter Note Here</string>
     <string name="type_note_here">Type Note Here</string>
     <string name="type_note">Type Notes Here</string>
+    <string name="enter_title">Enter Title</string>
+    <string name="addnote">addNote</string>
 </resources>
