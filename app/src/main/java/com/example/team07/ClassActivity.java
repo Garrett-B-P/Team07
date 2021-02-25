@@ -42,6 +42,8 @@ public class ClassActivity extends AppCompatActivity {
     }
 
     public List searchClassNotes(){
-
+        // Change <String> to whatever the list objects will be later
+        ArrayList<String> searchList = new ArrayList<>();
+        return searchList;
     }
 }

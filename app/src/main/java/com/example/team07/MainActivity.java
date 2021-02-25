@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.view.View;
 import android.os.Bundle;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // Milestones: Week 08
 // All 3 screens display
 // All 3 classes made, along with objects and current plans for functions stubbed
@@ -39,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public List searchAllNotes(){
-
+        // Change <String> to whatever the list objects will be later
+        ArrayList<String> searchList = new ArrayList<>();
+        return searchList;
     }
 
     public String Test1() {
