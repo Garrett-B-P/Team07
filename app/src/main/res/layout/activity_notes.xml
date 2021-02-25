@@ -49,7 +49,6 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:autofillHints=""
-        android:capitalize="words"
         android:ems="10"
         android:hint="@string/title_name"
         android:inputType="textPersonName"
@@ -58,15 +57,11 @@
 
     <EditText
         android:id="@+id/noteBody"
-        android:layout_width="351dp"
-        android:layout_height="554dp"
+        android:layout_width="415dp"
+        android:layout_height="620dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
-        android:capitalize="sentences"
         android:ems="10"
         android:gravity="start|top"
         android:hint="@string/enter_note_here"
@@ -74,8 +69,10 @@
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.947" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
