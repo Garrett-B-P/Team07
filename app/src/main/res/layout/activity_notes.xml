@@ -15,7 +15,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/timeStamp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/noteTitle" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/save"
@@ -42,7 +42,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/title"
+        android:id="@+id/noteTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -56,7 +56,7 @@
         app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
     <EditText
-        android:id="@+id/editTextTextMultiLine"
+        android:id="@+id/noteBody"
         android:layout_width="372dp"
         android:layout_height="398dp"
         android:layout_marginStart="16dp"
