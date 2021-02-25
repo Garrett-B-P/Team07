@@ -4,14 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.view.View;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.Button;
+/*
 import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
+*/
 
 public class ClassActivity extends AppCompatActivity {
-
+/*
     EditText classTitle = findViewById(R.id.classTitle);
     List notes = new ArrayList<NotesActivity>();
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +24,13 @@ public class ClassActivity extends AppCompatActivity {
         setContentView(R.layout.activity_class);
     }
 
+
+    public void onClick(View v) {
+        Intent intent = new Intent(this, NotesActivity.class);
+        startActivity(intent);
+    }
+
+    /*
     private void addNote(){
 
     }
@@ -47,4 +59,5 @@ public class ClassActivity extends AppCompatActivity {
         ArrayList<String> searchList = new ArrayList<>();
         return searchList;
     }
+     */
 }

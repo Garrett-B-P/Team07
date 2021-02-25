@@ -12,4 +12,6 @@
     <string name="type_note">Type Notes Here</string>
     <string name="enter_title">Enter Title</string>
     <string name="addnote">addNote</string>
+    <string name="add_notes">Add notes</string>
+    <string name="add_class">Add Class</string>
 </resources>

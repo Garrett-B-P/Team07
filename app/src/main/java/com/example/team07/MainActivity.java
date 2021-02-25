@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.view.View;
 import android.os.Bundle;
 
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
 
 // Milestones: Week 08
 // All 3 screens display
@@ -20,15 +20,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        List<ClassActivity> classes [];
+        //List<ClassActivity> classes [];
     }
 
 
     public void onClick(View v) {
-        Intent intent = new Intent(this, NotesActivity.class);
+        Intent intent = new Intent(this, ClassActivity.class);
         startActivity(intent);
     }
-
+/*
     private void selectClass(){
 
     }
@@ -42,9 +42,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String addReminder(){
-        String message = "Useless message.";
 
-        return message;
+        return "Useless message.";
     }
 
     public List searchAllNotes(){
@@ -65,5 +64,5 @@ public class MainActivity extends AppCompatActivity {
         return 3;
 
     }
-
+*/
 }
