@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,8 @@ public class NotesActivity extends AppCompatActivity {
     }
 
     public List searchNote(){
-
+        // Change <String> to whatever the list objects will be later
+        ArrayList<String> searchList = new ArrayList<>();
+        return searchList;
     }
 }
