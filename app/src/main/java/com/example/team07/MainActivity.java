@@ -3,10 +3,12 @@ package com.example.team07;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.List;
+
+import java.util.ArrayList;
 import java.util.List;
 
 // Milestones: Week 08
@@ -49,8 +51,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public List searchAllNotes(){
-
-        return null;
+        // Change <String> to whatever the list objects will be later
+        ArrayList<String> searchList = new ArrayList<>();
+        return searchList;
     }
 
     public String Test1() {
