@@ -3,7 +3,11 @@ package com.example.team07;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+
+import java.util.List;
 
 // Milestones: Week 08
 // All 3 screens display
@@ -18,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         List<ClassActivity> classes [];
+    }
+
+
+    public void onClick(View v) {
+        Intent intent = new Intent(this, NotesActivity.class);
+        startActivity(intent);
     }
 
     private void selectClass(){
@@ -40,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     public List searchAllNotes(){
 
+        return null;
     }
 
     public String Test1() {
