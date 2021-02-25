@@ -16,6 +16,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        List<ClassActivity> classes [];
+    }
+
+    private void selectClass(){
+
+    }
+
+    private void addClass(){
+
+    }
+
+    private void removeClass(){
+
+    }
+
+    public String addReminder(){
+        String message = "Useless message.";
+
+        return message;
+    }
+
+    public List searchAllNotes(){
+
     }
 
     public String Test1() {
