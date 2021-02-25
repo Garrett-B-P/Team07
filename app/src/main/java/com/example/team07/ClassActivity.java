@@ -29,8 +29,11 @@ public class ClassActivity extends AppCompatActivity {
 
     }
 
-    private void editNote(){
-
+    private void editNote(View view){
+        Intent intent = new Intent(this, NotesActivity.class);
+        String title = "Notes Title";
+        intent.putExtra("Notes Title", title);
+        startActivity(intent);
     }
 
     public void sortNotes(){

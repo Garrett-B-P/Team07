@@ -1,13 +1,9 @@
 package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
-
-import java.util.List;
+import android.os.Bundle;
 
 import java.util.ArrayList;
 import java.util.List;
