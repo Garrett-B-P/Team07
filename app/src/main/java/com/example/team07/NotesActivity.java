@@ -4,14 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.view.View;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class NotesActivity extends AppCompatActivity {
-    View noteTitle = findViewById(R.id.noteTitle);
-    View notes = findViewById(R.id.noteBody);
+    EditText noteTitle = findViewById(R.id.noteTitle);
+    EditText notes = findViewById(R.id.noteBody);
     Calendar dateCreated;
     Calendar lastEdited;
 

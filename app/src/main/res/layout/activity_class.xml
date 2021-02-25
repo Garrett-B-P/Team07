@@ -6,4 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".ClassActivity">
 
+    <EditText
+        android:id="@+id/classTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:capitalize="words"
+        android:ems="10"
+        android:hint="Enter Title"
+        android:inputType="textPersonName"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="43dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
