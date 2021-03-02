@@ -8,10 +8,10 @@ import android.os.Bundle;
 //import java.util.ArrayList;
 //import java.util.List;
 
-// Milestones: Week 08
-// All 3 screens display
-// All 3 classes made, along with objects and current plans for functions stubbed
-// Temporary buttons to view each of three screens
+// Milestones: Week 09
+// Able to create separate classes and note files
+// Classes and files display properly, including timestamps
+// Enter in notes, but don't need to save information in long term
 
 public class MainActivity extends AppCompatActivity {
 
