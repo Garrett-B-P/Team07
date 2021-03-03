@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.view.View;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Button;
+
+import java.util.ArrayList;
 /*
 import android.widget.EditText;
 import java.util.ArrayList;
@@ -17,6 +20,8 @@ public class ClassActivity extends AppCompatActivity {
     EditText classTitle = findViewById(R.id.classTitle);
     List notes = new ArrayList<NotesActivity>();
 */
+    static ArrayList<String> notes = new ArrayList<>();
+    static ArrayAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

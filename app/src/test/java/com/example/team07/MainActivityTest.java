@@ -8,7 +8,7 @@ public class MainActivityTest extends TestCase {
         assertEquals(4, 2 + 2);
     }
 
-    public void testTest1() {
+    /*public void testTest1() {
         String lastEdited = "Feb 23, 2021";
         String currentDate;
         MainActivity activity = new MainActivity();
@@ -34,6 +34,6 @@ public class MainActivityTest extends TestCase {
         classes = activity.Test3();
 
         assertNotSame(classes, notZero);
-    }
+    }*/
 }
 

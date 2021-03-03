@@ -2,8 +2,12 @@ package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //import java.util.ArrayList;
 //import java.util.List;
@@ -19,8 +23,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
 
-        //List<ClassActivity> classes [];
+    List<ClassActivity> classes = new ArrayList<>();
+
+    // Function to save the list of classes with notes
+    private void saveState(){
+        SharedPreferences preferences;
     }
 
 
