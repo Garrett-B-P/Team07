@@ -57,6 +57,7 @@ public class NotesActivity extends AppCompatActivity {
 
         if (noteId != -1) {
             noteTitle.setText(ClassActivity.notes_title.get(noteId));
+            noteBody.setText(ClassActivity.notes_body.get(bodyId));
 
         } else {
             ClassActivity.notes_title.add("");
