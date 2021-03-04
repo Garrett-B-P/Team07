@@ -13,12 +13,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.HashSet;
 
 
 public class NotesActivity extends AppCompatActivity {
     int noteId;
     int bodyId;
+
 
 
     public void onClick(View v) {
@@ -37,6 +39,11 @@ public class NotesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
+        TextView time = findViewById(R.id.time);
+
+        String timeStamp = dateCreated();
+        time.setText(timeStamp);
+
 
 //Attempt 1 on saving notes
 
@@ -47,24 +54,13 @@ public class NotesActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         noteId = intent.getIntExtra("noteId", -1);
-        bodyId = intent.getIntExtra("noteId", -1);
 
         if (noteId != -1) {
             noteTitle.setText(ClassActivity.notes_title.get(noteId));
-            noteBody.setText(ClassActivity.notes_body.get(noteId));
 
         } else {
             ClassActivity.notes_title.add("");
             noteId = ClassActivity.notes_title.size() - 1;
-            ClassActivity.arrayAdapter.notifyDataSetChanged();
-        }
-
-        if (bodyId != -1) {
-            noteBody.setText(ClassActivity.notes_body.get(bodyId));
-
-        } else {
-            ClassActivity.notes_body.add("");
-            bodyId = ClassActivity.notes_body.size() - 1;
             ClassActivity.arrayAdapter.notifyDataSetChanged();
         }
 
@@ -87,9 +83,9 @@ public class NotesActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-            //add code here
+                //add code here
             }
-            });
+        });
 
         noteBody.addTextChangedListener(new TextWatcher() {
             @Override
@@ -115,7 +111,14 @@ public class NotesActivity extends AppCompatActivity {
         });
 
 
+    }
 
+    private final String dateCreated() {
+        Calendar dateCreated = Calendar.getInstance();
+        String time = java.text.DateFormat.getDateTimeInstance().format(dateCreated.getTime());
+        return time;
+    }
+}
         //dateCreated = Calendar.getInstance();
 
 /*
@@ -138,5 +141,5 @@ public class NotesActivity extends AppCompatActivity {
     }
     */
 
-    }
-}
+
+
