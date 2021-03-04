@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    List<ClassActivity> classes = new ArrayList<>();
+    //List<ClassActivity> classes = new ArrayList<>();
 
     // Function to save the list of classes with notes
     private void saveState(){

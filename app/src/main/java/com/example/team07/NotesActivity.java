@@ -8,64 +8,80 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.EditText;
-
-import java.util.HashSet;
-/*
-import android.widget.EditText;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-*/
+import java.util.HashSet;
+
 
 public class NotesActivity extends AppCompatActivity {
     int noteId;
-   /*
-    EditText noteTitle = findViewById(R.id.noteTitle);
-    EditText notes = findViewById(R.id.noteBody);
-    Calendar dateCreated;
-    Calendar lastEdited;
-    */
+    int bodyId;
+
+
+    public void onClick(View v) {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+        HashSet<String> set = new HashSet(ClassActivity.notes_title);
+        sharedPreferences.edit().putStringSet("notes", set).apply();
+
+        String message = "Note Saved";
+        Context context = getApplicationContext();
+        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
 
-/* Attempt 1 on saving notes
+//Attempt 1 on saving notes
 
 
-        EditText note = findViewById(R.id.noteBody);
+        EditText noteTitle = findViewById(R.id.noteTitle);
+        EditText noteBody = findViewById(R.id.noteBody);
 
         Intent intent = getIntent();
 
         noteId = intent.getIntExtra("noteId", -1);
-        if (noteId != 1) {
-            note.setText(ClassActivity.notes.get(noteId));
+        bodyId = intent.getIntExtra("noteId", -1);
+
+        if (noteId != -1) {
+            noteTitle.setText(ClassActivity.notes_title.get(noteId));
+            noteBody.setText(ClassActivity.notes_body.get(noteId));
+
         } else {
-            ClassActivity.notes.add("");
-            noteId = ClassActivity.notes.size() - 1;
+            ClassActivity.notes_title.add("");
+            noteId = ClassActivity.notes_title.size() - 1;
             ClassActivity.arrayAdapter.notifyDataSetChanged();
         }
 
-        note.addTextChangedListener(new TextWatcher() {
+        if (bodyId != -1) {
+            noteBody.setText(ClassActivity.notes_body.get(bodyId));
+
+        } else {
+            ClassActivity.notes_body.add("");
+            bodyId = ClassActivity.notes_body.size() - 1;
+            ClassActivity.arrayAdapter.notifyDataSetChanged();
+        }
+
+        noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 // add your code here
             }
 
             @Override
-
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ClassActivity.notes.set(noteId, String.valueOf(charSequence));
+                ClassActivity.notes_title.set(noteId, String.valueOf(charSequence));
                 ClassActivity.arrayAdapter.notifyDataSetChanged();
 
                 // Creating Object of SharedPreferences to store data in the phone
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet<String> set = new HashSet(ClassActivity.notes);
+                HashSet<String> set = new HashSet(ClassActivity.notes_title);
                 sharedPreferences.edit().putStringSet("notes", set).apply();
             }
 
@@ -75,7 +91,32 @@ public class NotesActivity extends AppCompatActivity {
             }
             });
 
-            //dateCreated = Calendar.getInstance();
+        noteBody.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // add your code here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                ClassActivity.notes_body.set(bodyId, String.valueOf(charSequence));
+                ClassActivity.arrayAdapter2.notifyDataSetChanged();
+
+                // Creating Object of SharedPreferences to store data in the phone
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                HashSet<String> set = new HashSet(ClassActivity.notes_body);
+                sharedPreferences.edit().putStringSet("notes", set).apply();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //add code here
+            }
+        });
+
+
+
+        //dateCreated = Calendar.getInstance();
 
 /*
     private void writeNote(){
