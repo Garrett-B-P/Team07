@@ -1,10 +1,17 @@
 package com.example.team07;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +26,28 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    static List<ClassActivity> classes = new ArrayList<>();
+    static ArrayAdapter arrayAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-    }
 
-    //List<ClassActivity> classes = new ArrayList<>();
+        ListView classList = (ListView) findViewById(R.id.classList);
+
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, classes);
+
+        classList.setAdapter(arrayAdapter);
+        classList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
+                intent.putExtra("ID", position);
+                startActivity(intent);
+            }
+        });
+    }
 
     // Function to save the list of classes with notes
     private void saveState(){
@@ -34,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void onClick(View v) {
-        Intent intent = new Intent(this, ClassActivity.class);
+        Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
         startActivity(intent);
     }
 /*
