@@ -6,15 +6,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ClassActivity extends AppCompatActivity {
+    int classId;
 
     static ArrayList<String> notes_title = new ArrayList<>();
     static ArrayList<String> notes_body = new ArrayList<>();
@@ -30,7 +34,7 @@ public class ClassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class);
 
-        ListView listView = findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView2);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
         HashSet<String> set2 = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
@@ -88,6 +92,43 @@ public class ClassActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        EditText classTitle = findViewById(R.id.classTitle);
+        Intent intent = getIntent();
+
+        classId = intent.getIntExtra("classId", -1);
+        if (classId != -1) {
+            classTitle.setText(MainActivity.course.get(classId));
+        } else {
+            MainActivity.course.add("");
+            classId = MainActivity.course.size() -1;
+            MainActivity.arrayAdapter.notifyDataSetChanged();
+        }
+
+        classTitle.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // add your code here
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                MainActivity.course.set(classId, String.valueOf(charSequence));
+                MainActivity.arrayAdapter.notifyDataSetChanged();
+
+                // Creating Object of SharedPreferences to store data in the phone
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                HashSet<String> set = new HashSet(MainActivity.course);
+                sharedPreferences.edit().putStringSet("course", set).apply();
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                // add your code here
+            }
+        });
+
 
     }
 }
