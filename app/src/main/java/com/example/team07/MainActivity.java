@@ -57,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // Going from MainActivity to NotesEditorActivity
                 Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 final int itemToDelete = i;
