@@ -79,7 +79,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
                 //add code here
             }
         });
-
+/*
         //Checks for when text is changed in the body and then saves it, or at least its supposed to, Garrett
         noteBody.addTextChangedListener(new TextWatcher() {
             @Override
@@ -103,7 +103,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
                 //add code here
             }
         });
-
+*/
     }
 
     // compareTo() is needed for Comparable<NotesActivity>
