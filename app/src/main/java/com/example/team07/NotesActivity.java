@@ -14,10 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashSet;
 
 
-public class NotesActivity extends AppCompatActivity {
+public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     int noteId;
     int bodyId;
 
@@ -111,7 +112,6 @@ public class NotesActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
     private final String dateCreated() {
@@ -119,6 +119,23 @@ public class NotesActivity extends AppCompatActivity {
         String time = java.text.DateFormat.getDateTimeInstance().format(dateCreated.getTime());
         return time;
     }
+
+    // compareTo() is needed for Comparable<NotesActivity>
+    @Override
+    public int compareTo(NotesActivity o) {
+        return 0;
+    }
+
+    /*
+    // To make other comparisons: Collections.sort(ListName, NotesActivity.byCreate);
+    public static Comparator<NotesActivity> byCreate = new Comparator<NotesActivity>() {
+        @Override
+        public int compare(NotesActivity o1, NotesActivity o2) {
+            //return (o1.createDateVar.compareTo(o2.createDateVar);
+            return 0;
+        }
+    };
+     */
 }
         //dateCreated = Calendar.getInstance();
 
