@@ -27,7 +27,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    static ArrayList<String> course = new ArrayList<>();
+    static ArrayList<ClassActivity> classes = new ArrayList<>();
     static ArrayAdapter arrayAdapter;
 
     public void onClick(View v) {
@@ -40,23 +40,21 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ListView listView = findViewById(R.id.listView2);
+        // Creates list of classes
+        ListView listView = findViewById(R.id.classList);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
 
-        if (set == null) {
-            course.add("Example Class");
-        } else {
-            course = new ArrayList(set);
-        }
 
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, course);
+
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, classes);
 
         listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
+
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // Going from MainActivity to NotesEditorActivity
                 Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
@@ -65,32 +63,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
 
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+            final int itemToDelete = i;
+            // To delete the data from the App
+            new AlertDialog.Builder(MainActivity.this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Are you sure?")
+                    .setMessage("Do you want to delete this note?")
+                    .setPositiveButton("Yes", (dialogInterface, i1) -> {
+                        classes.remove(itemToDelete);
+                        arrayAdapter.notifyDataSetChanged();
+                        SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                        HashSet set1 = new HashSet(MainActivity.classes);
+                        sharedPreferences1.edit().putStringSet("notes", set1).apply();
+                    }).setNegativeButton("No", null).show();
 
-                final int itemToDelete = i;
-                // To delete the data from the App
-                new AlertDialog.Builder(MainActivity.this)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setTitle("Are you sure?")
-                        .setMessage("Do you want to delete this note?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                course.remove(itemToDelete);
-                                arrayAdapter.notifyDataSetChanged();
-                                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                                HashSet<String> set = new HashSet(MainActivity.course);
-                                sharedPreferences.edit().putStringSet("notes", set).apply();
-                            }
-                        }).setNegativeButton("No", null).show();
-
-                return true;
-
-            }
+            return true;
 
         });
 

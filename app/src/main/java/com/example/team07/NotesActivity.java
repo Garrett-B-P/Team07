@@ -14,13 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashSet;
 
 
-public class NotesActivity extends AppCompatActivity {
+public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     int noteId;
     int bodyId;
-
+    Calendar createdDate;
+    // createdDate might never be shown, but can be sorted by in the future
+    Calendar lastEdit;
 
 
     public void onClick(View v) {
@@ -41,7 +44,9 @@ public class NotesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notes);
         TextView time = findViewById(R.id.time);
 
-        String timeStamp = dateCreated();
+        createdDate = Calendar.getInstance();
+        lastEdit = Calendar.getInstance();
+        String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
         time.setText(timeStamp);
 
 
@@ -110,14 +115,24 @@ public class NotesActivity extends AppCompatActivity {
             }
         });
 
-
     }
 
-    private final String dateCreated() {
-        Calendar dateCreated = Calendar.getInstance();
-        String time = java.text.DateFormat.getDateTimeInstance().format(dateCreated.getTime());
-        return time;
+    // compareTo() is needed for Comparable<NotesActivity>
+    @Override
+    public int compareTo(NotesActivity o) {
+        return 0;
     }
+
+    /*
+    // To make other comparisons: Collections.sort(ListName, NotesActivity.byCreate);
+    public static Comparator<NotesActivity> byCreate = new Comparator<NotesActivity>() {
+        @Override
+        public int compare(NotesActivity o1, NotesActivity o2) {
+            //return (o1.createDateVar.compareTo(o2.createDateVar);
+            return 0;
+        }
+    };
+     */
 }
         //dateCreated = Calendar.getInstance();
 

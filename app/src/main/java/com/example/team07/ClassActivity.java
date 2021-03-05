@@ -98,10 +98,10 @@ public class ClassActivity extends AppCompatActivity {
 
         classId = intent.getIntExtra("classId", -1);
         if (classId != -1) {
-            classTitle.setText(MainActivity.course.get(classId));
+            classTitle.setText((CharSequence) MainActivity.classes.get(classId));
         } else {
-            MainActivity.course.add("");
-            classId = MainActivity.course.size() -1;
+            MainActivity.classes.add(new ClassActivity());
+            classId = MainActivity.classes.size() -1;
             MainActivity.arrayAdapter.notifyDataSetChanged();
         }
 
@@ -114,12 +114,12 @@ public class ClassActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                MainActivity.course.set(classId, String.valueOf(charSequence));
+
                 MainActivity.arrayAdapter.notifyDataSetChanged();
 
                 // Creating Object of SharedPreferences to store data in the phone
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet<String> set = new HashSet(MainActivity.course);
+                HashSet<String> set = new HashSet(MainActivity.classes);
                 sharedPreferences.edit().putStringSet("course", set).apply();
             }
 
