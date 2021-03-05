@@ -21,7 +21,9 @@ import java.util.HashSet;
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     int noteId;
     int bodyId;
-
+    Calendar createdDate;
+    // createdDate might never be shown, but can be sorted by in the future
+    Calendar lastEdit;
 
 
     public void onClick(View v) {
@@ -42,7 +44,9 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         setContentView(R.layout.activity_notes);
         TextView time = findViewById(R.id.time);
 
-        String timeStamp = dateCreated();
+        createdDate = Calendar.getInstance();
+        lastEdit = Calendar.getInstance();
+        String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
         time.setText(timeStamp);
 
 
@@ -112,12 +116,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             }
         });
 
-    }
-
-    private final String dateCreated() {
-        Calendar dateCreated = Calendar.getInstance();
-        String time = java.text.DateFormat.getDateTimeInstance().format(dateCreated.getTime());
-        return time;
     }
 
     // compareTo() is needed for Comparable<NotesActivity>
