@@ -39,6 +39,18 @@ public class ClassActivity extends AppCompatActivity {
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
         HashSet<String> set2 = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
 
+        EditText classTitle = findViewById(R.id.classTitle);
+        Intent intent = getIntent();
+
+        classId = intent.getIntExtra("classId", -1);
+        if (classId != -1) {
+            classTitle.setText((CharSequence) MainActivity.classes.get(classId));
+        } else {
+            MainActivity.classes.add(new ClassActivity());
+            classId = MainActivity.classes.size() -1;
+            MainActivity.arrayAdapter.notifyDataSetChanged();
+        }
+
         if (set == null) {
             notes_title.add("Example note");
         } else {
@@ -93,18 +105,6 @@ public class ClassActivity extends AppCompatActivity {
             }
         });
 
-        EditText classTitle = findViewById(R.id.classTitle);
-        Intent intent = getIntent();
-
-        classId = intent.getIntExtra("classId", -1);
-        if (classId != -1) {
-            classTitle.setText((CharSequence) MainActivity.classes.get(classId));
-        } else {
-            MainActivity.classes.add(new ClassActivity());
-            classId = MainActivity.classes.size() -1;
-            MainActivity.arrayAdapter.notifyDataSetChanged();
-        }
-
         classTitle.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -118,9 +118,7 @@ public class ClassActivity extends AppCompatActivity {
                 MainActivity.arrayAdapter.notifyDataSetChanged();
 
                 // Creating Object of SharedPreferences to store data in the phone
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet<String> set = new HashSet(MainActivity.classes);
-                sharedPreferences.edit().putStringSet("course", set).apply();
+
             }
 
             @Override
