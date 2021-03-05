@@ -27,9 +27,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Creates an array for the different classes
     static ArrayList<ClassActivity> classes = new ArrayList<>();
     static ArrayAdapter arrayAdapter;
 
+    //When the add class button is hit it will create a new intent
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
         startActivity(intent);
@@ -53,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            //When an item in the list view is clicked it will go to that intent, Garrett
             @Override
-
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // Going from MainActivity to NotesEditorActivity
                 Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        //deletes a class when you press and hold on it, Garrett
         listView.setOnItemLongClickListener((adapterView, view, i, l) -> {
 
             final int itemToDelete = i;

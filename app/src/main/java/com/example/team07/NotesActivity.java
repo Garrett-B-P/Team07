@@ -19,24 +19,13 @@ import java.util.HashSet;
 
 
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
+    //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     int noteId;
     int bodyId;
+
     Calendar createdDate;
     // createdDate might never be shown, but can be sorted by in the future
     Calendar lastEdit;
-
-
-    public void onClick(View v) {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-        HashSet<String> set = new HashSet(ClassActivity.notes_title);
-        sharedPreferences.edit().putStringSet("notes", set).apply();
-
-        String message = "Note Saved";
-        Context context = getApplicationContext();
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +40,18 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
 
 //Attempt 1 on saving notes
-
-
+        //Finds the note title and body and sets them to variables, Garrett
         EditText noteTitle = findViewById(R.id.noteTitle);
         EditText noteBody = findViewById(R.id.noteBody);
 
+        //I believe this gets the information that was passed through the intent, Garrett
         Intent intent = getIntent();
 
+        //I believe this section of code is checking the noteId, Garrett
         noteId = intent.getIntExtra("noteId", -1);
 
         if (noteId != -1) {
             noteTitle.setText(ClassActivity.notes_title.get(noteId));
-            noteBody.setText(ClassActivity.notes_body.get(bodyId));
 
         } else {
             ClassActivity.notes_title.add("");
@@ -70,6 +59,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             ClassActivity.arrayAdapter.notifyDataSetChanged();
         }
 
+        //This is checking for when the note is changed and saves it when it does, for the title, Garrett
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -93,6 +83,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             }
         });
 
+        //Checks for when text is changed in the body and then saves it, or at least its supposed to, Garrett
         noteBody.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

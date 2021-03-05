@@ -20,10 +20,12 @@ import java.util.HashSet;
 public class ClassActivity extends AppCompatActivity {
     int classId;
 
+    //Creates Arrays that hold the note information, Garrett
     static ArrayList<String> notes_title = new ArrayList<>();
     static ArrayList<String> notes_body = new ArrayList<>();
     static ArrayAdapter arrayAdapter, arrayAdapter2;
 
+    //Creates an intent for the NotesActivity and sends some information to the activity, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
         startActivity(intent);
@@ -34,40 +36,28 @@ public class ClassActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class);
 
+        //finds the listView in the layout and sets it to a variable, Garrett
         ListView listView = findViewById(R.id.listView2);
+
+        //I believe this saves the note, Garrett
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
         HashSet<String> set2 = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
 
-        EditText classTitle = findViewById(R.id.classTitle);
-        Intent intent = getIntent();
-
-        classId = intent.getIntExtra("classId", -1);
-        if (classId != -1) {
-            classTitle.setText((CharSequence) MainActivity.classes.get(classId));
-        } else {
-            MainActivity.classes.add(new ClassActivity());
-            classId = MainActivity.classes.size() -1;
-            MainActivity.arrayAdapter.notifyDataSetChanged();
-        }
-
+        //Creates an example note if there are no notes, Garrett
         if (set == null) {
             notes_title.add("Example note");
         } else {
             notes_title = new ArrayList(set);
         }
 
-        if (set2 == null) {
-            notes_body.add("Example note");
-        } else {
-            notes_body = new ArrayList(set2);
-        }
-
+        //Adds the created notes to the array adapter, Garrett
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes_title);
         arrayAdapter2 = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes_body);
 
         listView.setAdapter(arrayAdapter);
 
+        //When a note is clicked on it will go to that note and passes in the info, Garrett
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -79,10 +69,10 @@ public class ClassActivity extends AppCompatActivity {
             }
         });
 
+        //Deletes the notes if you press and hold on the note, Garrett
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
                 final int itemToDelete = i;
                 // To delete the data from the App
@@ -104,6 +94,19 @@ public class ClassActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //This section of code was supposed to create the different classes, Garrett
+        EditText classTitle = findViewById(R.id.classTitle);
+        Intent intent = getIntent();
+
+        classId = intent.getIntExtra("classId", -1);
+        if (classId != -1) {
+            classTitle.setText((CharSequence) MainActivity.classes.get(classId));
+        } else {
+            MainActivity.classes.add(new ClassActivity());
+            classId = MainActivity.classes.size() -1;
+            MainActivity.arrayAdapter.notifyDataSetChanged();
+        }
 
         classTitle.addTextChangedListener(new TextWatcher() {
 
