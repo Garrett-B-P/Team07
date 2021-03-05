@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 
 //import java.util.ArrayList;
 //import java.util.List;
@@ -27,11 +25,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Creates an array for the different classes
-    static ArrayList<ClassActivity> classes = new ArrayList<>();
-    static ArrayAdapter arrayAdapter;
+    //Creates an array for the different classes, Garrett
+    static ArrayList<String> classes = new ArrayList<String>();
+    static ArrayAdapter arrayAdapter3;
 
-    //When the add class button is hit it will create a new intent
+    //When the add class button is hit it will create a new intent, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
         startActivity(intent);
@@ -49,9 +47,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, classes);
+        arrayAdapter3 = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, classes);
 
-        listView.setAdapter(arrayAdapter);
+        listView.setAdapter(arrayAdapter3);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -76,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage("Do you want to delete this note?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
                         classes.remove(itemToDelete);
-                        arrayAdapter.notifyDataSetChanged();
+                        arrayAdapter3.notifyDataSetChanged();
                         SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                         HashSet set1 = new HashSet(MainActivity.classes);
                         sharedPreferences1.edit().putStringSet("notes", set1).apply();

@@ -8,13 +8,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.Calendar;
-import java.util.Comparator;
 import java.util.HashSet;
 
 
@@ -40,6 +36,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
 
 //Attempt 1 on saving notes
+
         //Finds the note title and body and sets them to variables, Garrett
         EditText noteTitle = findViewById(R.id.noteTitle);
         EditText noteBody = findViewById(R.id.noteBody);
@@ -73,7 +70,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
                 // Creating Object of SharedPreferences to store data in the phone
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet<String> set = new HashSet(ClassActivity.notes_title);
+                HashSet set = new HashSet(ClassActivity.notes_title);
                 sharedPreferences.edit().putStringSet("notes", set).apply();
             }
 
@@ -97,7 +94,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
                 // Creating Object of SharedPreferences to store data in the phone
                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet<String> set = new HashSet(ClassActivity.notes_body);
+                HashSet set = new HashSet(ClassActivity.notes_body);
                 sharedPreferences.edit().putStringSet("notes", set).apply();
             }
 
