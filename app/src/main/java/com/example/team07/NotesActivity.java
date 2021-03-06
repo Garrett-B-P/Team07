@@ -19,7 +19,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     int noteId;
     int bodyId;
 
-    Calendar createdDate;
+    Calendar createdDate = Calendar.getInstance();
     // createdDate might never be shown, but can be sorted by in the future
     Calendar lastEdit;
 
@@ -29,7 +29,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         setContentView(R.layout.activity_notes);
         TextView time = findViewById(R.id.time);
 
-        createdDate = Calendar.getInstance();
         lastEdit = Calendar.getInstance();
         String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
         time.setText(timeStamp);
