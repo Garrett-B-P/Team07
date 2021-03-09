@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.AdapterView;
@@ -29,6 +30,8 @@ public class ClassActivity extends AppCompatActivity {
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
         startActivity(intent);
+
+        Log.i("ClassOnClick", "Note Activity Opened");
     }
 
     @Override
@@ -66,6 +69,8 @@ public class ClassActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
                 intent.putExtra("noteId", i);
                 startActivity(intent);
+
+                Log.i("ClassOnItemClick", "Note #" + i + " opened");
             }
         });
 
@@ -79,7 +84,7 @@ public class ClassActivity extends AppCompatActivity {
                 new AlertDialog.Builder(ClassActivity.this)
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setTitle("Are you sure?")
-                        .setMessage("Do you want to delete this note?")
+                        .setMessage("Do you want to delete " + notes_title.get(itemToDelete) + "?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                             @Override
@@ -89,6 +94,8 @@ public class ClassActivity extends AppCompatActivity {
                                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                                 HashSet<String> set = new HashSet(ClassActivity.notes_title);
                                 sharedPreferences.edit().putStringSet("notes", set).apply();
+
+                                Log.i("ClassOnItemOnLongClick", "Deleted note #" + itemToDelete);
                             }
                         }).setNegativeButton("No", null).show();
                 return true;
@@ -106,6 +113,8 @@ public class ClassActivity extends AppCompatActivity {
             MainActivity.classes.add("");
             classId = MainActivity.classes.size() - 1;
             MainActivity.arrayAdapter3.notifyDataSetChanged();
+
+            Log.i("ClassCreate", "Created Class #" + classId);
         }
 
         classTitle.addTextChangedListener(new TextWatcher() {

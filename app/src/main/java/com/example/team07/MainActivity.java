@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.AdapterView;
@@ -56,10 +57,12 @@ public class MainActivity extends AppCompatActivity {
             //When an item in the list view is clicked it will go to that intent, Garrett
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                // Going from MainActivity to NotesEditorActivity
+                // Going from MainActivity to ClassActivity
                 Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
                 intent.putExtra("classId", i);
                 startActivity(intent);
+
+                Log.i("MainOnItemClick", "Opening class #" + i);
             }
         });
 
@@ -71,13 +74,15 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(MainActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("Are you sure?")
-                    .setMessage("Do you want to delete this note?")
+                    .setMessage("Do you want to delete " + classes.get(itemToDelete) + "?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
                         classes.remove(itemToDelete);
                         arrayAdapter3.notifyDataSetChanged();
                         SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                         HashSet set1 = new HashSet(MainActivity.classes);
                         sharedPreferences1.edit().putStringSet("notes", set1).apply();
+
+                        Log.i("ClassOnItemOnLongClick", "Deleted note #" + itemToDelete);
                     }).setNegativeButton("No", null).show();
 
             return true;
