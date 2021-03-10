@@ -22,15 +22,13 @@ public class ClassActivity extends AppCompatActivity {
     int classId;
 
     //Creates Arrays that hold the note information, Garrett
-    static ArrayList<String> notes_title = new ArrayList<>();
-    static ArrayList<String> notes_body = new ArrayList<>();
-    static ArrayAdapter arrayAdapter, arrayAdapter2;
+    static ArrayList<String> notes_title = new ArrayList<String>();
+    static ArrayAdapter arrayAdapter;
 
     //Creates an intent for the NotesActivity and sends some information to the activity, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
         startActivity(intent);
-
         Log.i("ClassOnClick", "Note Activity Opened");
     }
 
@@ -45,7 +43,6 @@ public class ClassActivity extends AppCompatActivity {
         //I believe this saves the note, Garrett
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
-        HashSet<String> set2 = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
 
         //Creates an example note if there are no notes, Garrett
         if (set == null) {
@@ -56,7 +53,6 @@ public class ClassActivity extends AppCompatActivity {
 
         //Adds the created notes to the array adapter, Garrett
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes_title);
-        arrayAdapter2 = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes_body);
 
         listView.setAdapter(arrayAdapter);
 
