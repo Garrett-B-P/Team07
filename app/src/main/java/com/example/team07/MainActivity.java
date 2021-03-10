@@ -19,10 +19,9 @@ import java.util.HashSet;
 //import java.util.ArrayList;
 //import java.util.List;
 
-// Milestones: Week 09
-// Able to create separate classes and note files
-// Classes and files display properly, including timestamps
-// Enter in notes, but don't need to save information in long term
+// Milestones: Week 10
+// Titles and content now searchable
+// Notes and Class files are now actually saved and remembered
 
 public class MainActivity extends AppCompatActivity {
 
