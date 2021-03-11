@@ -1,13 +1,13 @@
 package com.example.team07;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import java.util.Calendar;
@@ -17,11 +17,15 @@ import java.util.HashSet;
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     int noteId;
-    int bodyId;
+    int noteId2;
 
     Calendar createdDate = Calendar.getInstance();
     // createdDate might never be shown, but can be sorted by in the future
     Calendar lastEdit;
+
+    public void onClick(View v) {
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
         //Finds the note title and body and sets them to variables, Garrett
         EditText noteTitle = findViewById(R.id.noteTitle);
-        EditText noteBody = findViewById(R.id.noteBody);
 
         //I believe this gets the information that was passed through the intent, Garrett
         Intent intent = getIntent();
@@ -78,31 +81,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
                 //add code here
             }
         });
-/*
-        //Checks for when text is changed in the body and then saves it, or at least its supposed to, Garrett
-        noteBody.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // add your code here
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ClassActivity.notes_body.set(bodyId, String.valueOf(charSequence));
-                ClassActivity.arrayAdapter2.notifyDataSetChanged();
-
-                // Creating Object of SharedPreferences to store data in the phone
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet set = new HashSet(ClassActivity.notes_body);
-                sharedPreferences.edit().putStringSet("notes", set).apply();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                //add code here
-            }
-        });
-*/
     }
 
     // compareTo() is needed for Comparable<NotesActivity>

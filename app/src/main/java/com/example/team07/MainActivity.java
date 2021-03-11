@@ -2,15 +2,12 @@ package com.example.team07;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.AdapterView;
@@ -20,9 +17,6 @@ import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
-//import java.util.ArrayList;
-//import java.util.List;
 
 // Milestones: Week 10
 // Titles and content now searchable
@@ -50,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
         listView = findViewById(R.id.classList);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
-
-
 
         arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classes);
 
