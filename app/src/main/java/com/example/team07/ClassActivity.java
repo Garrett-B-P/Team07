@@ -173,36 +173,3 @@ public class ClassActivity extends AppCompatActivity {
     }
 
 }
-
-
-
-    /*
-    private void addNote(){
-
-    }
-
-    private void deleteNote(){
-
-    }
-
-    private void editNote(View view){
-        Intent intent = new Intent(this, NotesActivity.class);
-        String title = "Notes Title";
-        intent.putExtra("Notes Title", title);
-        startActivity(intent);
-    }
-
-    public void sortNotes(){
-
-    }
-
-    public String getClassTitle(){
-        return classTitle.getText().toString();
-    }
-
-    public List searchClassNotes(){
-        // Change <String> to whatever the list objects will be later
-        ArrayList<String> searchList = new ArrayList<>();
-        return searchList;
-    }
-     */
