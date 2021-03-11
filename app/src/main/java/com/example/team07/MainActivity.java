@@ -2,16 +2,21 @@ package com.example.team07;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -28,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     //Creates an array for the different classes, Garrett
     static ArrayList<String> classes = new ArrayList<String>();
     static ArrayAdapter arrayAdapter3;
+    ListView listView;
 
     //When the add class button is hit it will create a new intent, Garrett
     public void onClick(View v) {
@@ -41,13 +47,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Creates list of classes
-        ListView listView = findViewById(R.id.classList);
+        listView = findViewById(R.id.classList);
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
 
 
 
-        arrayAdapter3 = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, classes);
+        arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classes);
 
         listView.setAdapter(arrayAdapter3);
 
@@ -55,13 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
             //When an item in the list view is clicked it will go to that intent, Garrett
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Going from MainActivity to ClassActivity
                 Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
-                intent.putExtra("classId", i);
+                intent.putExtra("classId", position);
                 startActivity(intent);
 
-                Log.i("MainOnItemClick", "Opening class #" + i);
+                Log.i("MainOnItemClick", "Opening class #" + position);
             }
         });
 
@@ -88,6 +94,28 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Initialize search view
+        SearchView searchView = findViewById(R.id.searchView3);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Filter array list of classes
+                arrayAdapter3.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     //List<ClassActivity> classes = new ArrayList<>();
