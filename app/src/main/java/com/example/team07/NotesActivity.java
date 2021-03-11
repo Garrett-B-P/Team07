@@ -4,13 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.util.Calendar;
 import java.util.HashSet;
 
@@ -18,6 +20,10 @@ import java.util.HashSet;
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     int noteId;
+
+    //For the camera
+    private ImageView mimageView;
+    private static final int REQUEST_IMAGE_CAPTURE = 101;
 
     Calendar createdDate = Calendar.getInstance();
     // createdDate might never be shown, but can be sorted by in the future
@@ -31,6 +37,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
+
+        mimageView = findViewById(R.id.imageView);
 
         TextView time = findViewById(R.id.time);
         lastEdit = Calendar.getInstance();
@@ -98,6 +106,26 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         }
     };
      */
+
+    //For the camera
+    public void takePicture(View view) {
+        Intent imageTakeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (imageTakeIntent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(imageTakeIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            mimageView.setImageBitmap(imageBitmap);
+        }
+
+    }
 }
         //dateCreated = Calendar.getInstance();
 

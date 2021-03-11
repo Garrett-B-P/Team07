@@ -14,4 +14,7 @@
     <string name="addnote">addNote</string>
     <string name="add_notes">Add notes</string>
     <string name="add_class">Add Class</string>
+    <string name="finish">Finish</string>
+    <string name="take_pic">Take Pic</string>
+    <string name="picture">Picture</string>
 </resources>
