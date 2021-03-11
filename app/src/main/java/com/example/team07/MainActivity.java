@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     static ArrayAdapter arrayAdapter3;
     ListView listView;
 
-    //When the add class button is hit it will create a new intent, Garrett
+    //When the add class button is hit it will create and start a new intent, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
         startActivity(intent);
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // Function for searchView3, will apply a filter to arrayAdapter3 so only items with matching text are displayed
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Initialize search view
