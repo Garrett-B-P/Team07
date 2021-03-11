@@ -9,12 +9,15 @@ import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SearchView;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -103,6 +106,7 @@ public class ClassActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
         classId = intent.getIntExtra("classId", -1);
+
         if (classId != -1) {
             classTitle.setText(MainActivity.classes.get(classId));
         } else {
@@ -144,6 +148,29 @@ public class ClassActivity extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Initialize search view
+        SearchView searchView = findViewById(R.id.searchView2);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Filter array list of classes
+                arrayAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
 }
 
 
