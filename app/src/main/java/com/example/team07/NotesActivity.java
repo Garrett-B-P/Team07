@@ -101,25 +101,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 }
         //dateCreated = Calendar.getInstance();
 
-/*
-    private void writeNote(){
-        lastEdited = Calendar.getInstance();
-    }
-
-    public void upload(){
-
-    }
-
-    public void takePic(){
-
-    }
-
-    public List searchNote(){
-        // Change <String> to whatever the list objects will be later
-        ArrayList<String> searchList = new ArrayList<>();
-        return searchList;
-    }
-    */
 
 
 
