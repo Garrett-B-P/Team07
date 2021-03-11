@@ -149,6 +149,7 @@ public class ClassActivity extends AppCompatActivity {
 
     }
 
+    // Function for searchView2, will apply a filter to arrayAdapter2 so only items with matching text are displayed
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Initialize search view
