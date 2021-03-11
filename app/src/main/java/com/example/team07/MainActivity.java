@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
 
-
-
         arrayAdapter3 = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, classes);
 
         listView.setAdapter(arrayAdapter3);

@@ -17,6 +17,7 @@ import java.util.HashSet;
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     int noteId;
+    int noteId2;
 
     Calendar createdDate = Calendar.getInstance();
     // createdDate might never be shown, but can be sorted by in the future
