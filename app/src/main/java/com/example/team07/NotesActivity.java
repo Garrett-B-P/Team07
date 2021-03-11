@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import java.util.Calendar;
 import java.util.HashSet;
 
@@ -17,7 +18,6 @@ import java.util.HashSet;
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     int noteId;
-    int noteId2;
 
     Calendar createdDate = Calendar.getInstance();
     // createdDate might never be shown, but can be sorted by in the future
@@ -31,12 +31,11 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
-        TextView time = findViewById(R.id.time);
 
+        TextView time = findViewById(R.id.time);
         lastEdit = Calendar.getInstance();
         String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
         time.setText(timeStamp);
-
 
 //Attempt 1 on saving notes
 

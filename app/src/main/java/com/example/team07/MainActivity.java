@@ -2,7 +2,6 @@ package com.example.team07;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,12 +11,8 @@ import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 import java.util.HashSet;
-
-//import java.util.ArrayList;
-//import java.util.List;
 
 // Milestones: Week 10
 // Titles and content now searchable
