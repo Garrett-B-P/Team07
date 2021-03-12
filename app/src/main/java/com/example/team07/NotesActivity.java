@@ -126,6 +126,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         super.onStop();
 
         // If no title, either don't save note or assign title?
+        TextView noteTitle = findViewById(R.id.noteTitle);
+        renameFile(noteTitle.getText().toString())
         saveToFile()
     }
      */
@@ -211,12 +213,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         if (filePath != null) {
             return filePath;
         } else {
-            String newName = "Untitled";
+            File parent = new File(parentPath);
+            String newName = generateNoteTitle("Untitled", parent);
             // I want to add a function call instead of the line above to check if this name exists,
             // and if not, iterate through a while loop adding x to the end of the given title
             // This would prevent existing files from being overwritten
             File newNote = new File(parentPath, newName);
-            File parent = new File(parentPath);
             makeNewFile(parent, newNote.getName());
             return newNote.getPath();
         }
@@ -230,6 +232,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         }
         return newFile;
     }
+    public void renameFile(String newName) {
+        if (!path.getName().equals(newName)) {
+            String checkedName = generateNoteTitle(newName, parent);
+            File newFileName = new File(parent, checkedName);
+            path.renameTo(newFileName);
+            // For some reason, renameTo() deletes the old name directory after renaming,
+            // but it doesn't do the same for the old name file, so we have to do that
+            path.delete();
+            path = newFileName;
+        }
+    }
     public void saveToFile() {
         TextView body = findViewById(R.id.noteBody);
         String fileContents = body.getText().toString();
@@ -242,6 +255,32 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             e.printStackTrace();
         }
     }
+    public String generateNoteTitle(String name, File parent) {
+        Boolean answer = false;
+        int y = 0;
+        String newName = "";
+        for (int x=0; x<parent.listFiles().length; x++) {
+            if (name.equals(parent.listFiles()[x].getName())) {
+                // If the name is in the directory
+                answer = true;
+            } else {
+                return name;
+            }
+        }
+        while (answer) {
+            newName = name + y;
+            // Append the number to the name
+            for (int z=0; z<parent.listFiles().length; z++) {
+                if (!newName.equals(parent.listFiles()[z].getName())) {
+                    // If the new name isn't in the directory, exit loop
+                    answer = false;
+                }
+            }
+            y++;
+        }
+        return newName;
+    }
+
 }
         //dateCreated = Calendar.getInstance();
 

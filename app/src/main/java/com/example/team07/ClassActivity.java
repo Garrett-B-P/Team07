@@ -216,9 +216,6 @@ public class ClassActivity extends AppCompatActivity {
                 noteList[x] = fileList[x].getName();
             }
         }
-        // I should have this check if intent sent "filePath", for existing classes,
-        // and if that's null, check if it sent "parentPath", for new classes
-        // I now have functions in Main to send either "filePath" or "parentPath"
     }
     public String getClassPath(Intent i) {
         String filePath = i.getStringExtra("filePath");
@@ -226,7 +223,8 @@ public class ClassActivity extends AppCompatActivity {
         if (filePath != null) {
             return filePath;
         } else {
-            String newName = "Untitled";
+            File parent = new File(parentPath);
+            String newName = generateClassTitle("Untitled", parent);
             // I want to add a function call instead of the line above to check if this name exists,
             // and if not, iterate through a while loop adding x to the end of the given title
             // This would prevent existing files from being overwritten
@@ -248,7 +246,8 @@ public class ClassActivity extends AppCompatActivity {
     }
     public void renameDir(String newName) {
         if (!currentDirectory.getName().equals(newName)) {
-            File newDirName = new File(currentDirectory.getParent(), newName);
+            String checkedName = generateClassTitle(newName, getApplicationContext().getFilesDir());
+            File newDirName = new File(currentDirectory.getParent(), checkedName);
             currentDirectory.renameTo(newDirName);
             currentDirectory = newDirName;
         }
@@ -260,5 +259,30 @@ public class ClassActivity extends AppCompatActivity {
         for (int x=0; x<newNoteList.length; x++) {
             noteList[x] = newNoteList[place].getName();
         }
+    }
+    public String generateClassTitle(String name, File parent) {
+        Boolean answer = false;
+        int y = 0;
+        String newName = "";
+        for (int x=0; x<parent.listFiles().length; x++) {
+            if (name.equals(parent.listFiles()[x].getName())) {
+                // If the name is in the directory
+                answer = true;
+            } else {
+                return name;
+            }
+        }
+        while (answer) {
+            newName = name + y;
+            // Append the number to the name
+            for (int z=0; z<parent.listFiles().length; z++) {
+                if (!newName.equals(parent.listFiles()[z].getName())) {
+                    // If the new name isn't in the directory, exit loop
+                    answer = false;
+                }
+            }
+            y++;
+        }
+        return newName;
     }
 }
