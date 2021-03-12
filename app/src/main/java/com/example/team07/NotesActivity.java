@@ -172,9 +172,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setUpNote(Intent i) {
         // to set up an existing note
-        String filepath = i.getStringExtra("filePath");
-        String parentPath = i.getStringExtra("parentPath");
-        // Need to do something with parentPath to make new note, but I'm burning out
+        String filepath = getNotePath(i);
         EditText noteTitle = findViewById(R.id.noteTitle);
         if (filepath != null) {
             path = new File(filepath);
@@ -206,6 +204,22 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         // I should have this check if intent sent "filePath", for existing notes,
         // and if that's null, check if it sent "parentPath", for new notes
         // I now have functions in Class to send either "filePath" or "parentPath"
+    }
+    public String getNotePath(Intent i) {
+        String filePath = i.getStringExtra("filePath");
+        String parentPath = i.getStringExtra("parentPath");
+        if (filePath != null) {
+            return filePath;
+        } else {
+            String newName = "Untitled";
+            // I want to add a function call instead of the line above to check if this name exists,
+            // and if not, iterate through a while loop adding x to the end of the given title
+            // This would prevent existing files from being overwritten
+            File newNote = new File(parentPath, newName);
+            File parent = new File(parentPath);
+            makeNewFile(parent, newNote.getName());
+            return newNote.getPath();
+        }
     }
     public File makeNewFile(File parent, String name) {
         File newFile = new File(parent, name);

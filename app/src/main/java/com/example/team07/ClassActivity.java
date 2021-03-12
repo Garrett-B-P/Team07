@@ -204,7 +204,7 @@ public class ClassActivity extends AppCompatActivity {
     }
     // Below are functions to call for app's directory use
     public void setUpClass(Intent i) {
-        String filePath = i.getStringExtra("filePath");
+        String filePath = getClassPath(i);
         EditText classTitle = findViewById(R.id.classTitle);
         if (filePath != null) {
             // If existing directory was clicked on and path sent, set up here
@@ -219,6 +219,21 @@ public class ClassActivity extends AppCompatActivity {
         // I should have this check if intent sent "filePath", for existing classes,
         // and if that's null, check if it sent "parentPath", for new classes
         // I now have functions in Main to send either "filePath" or "parentPath"
+    }
+    public String getClassPath(Intent i) {
+        String filePath = i.getStringExtra("filePath");
+        String parentPath = i.getStringExtra("parentPath");
+        if (filePath != null) {
+            return filePath;
+        } else {
+            String newName = "Untitled";
+            // I want to add a function call instead of the line above to check if this name exists,
+            // and if not, iterate through a while loop adding x to the end of the given title
+            // This would prevent existing files from being overwritten
+            File newClass = new File(parentPath, newName);
+            makeNewDir(newClass.getName());
+            return newClass.getPath();
+        }
     }
     public Intent setNewNote(Intent i) {
         return i.putExtra("parentPath", currentDirectory.toString());
