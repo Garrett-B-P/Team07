@@ -169,9 +169,6 @@ public class ClassActivity extends AppCompatActivity {
                 // How do I compare before it changed to after it changed? I need that to see if I can
                 // search for the directory, rename it, etc.
 
-                // To make new directory:
-                //makeNewDir(newTitle);
-
                 // To change directory's name:
                 //renameDir(newName);
             }
@@ -203,6 +200,11 @@ public class ClassActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
     // Below are functions to call for app's directory use
+
+    /******************************************************************
+     * A function to set up ClassActivity with necessary information
+     * @param i The current intent from MainActivity
+     ******************************************************************/
     public void setUpClass(Intent i) {
         String filePath = getClassPath(i);
         EditText classTitle = findViewById(R.id.classTitle);
@@ -217,6 +219,12 @@ public class ClassActivity extends AppCompatActivity {
             }
         }
     }
+
+    /********************************************************************************
+     * A function to find or make the path of the directory ClassActivity will use
+     * @param i The intent that will be tested which path it has
+     * @return The string holding the filepath ClassActivity will use
+     ********************************************************************************/
     public String getClassPath(Intent i) {
         String filePath = i.getStringExtra("filePath");
         String parentPath = i.getStringExtra("parentPath");
@@ -233,17 +241,40 @@ public class ClassActivity extends AppCompatActivity {
             return newClass.getPath();
         }
     }
+
+    /****************************************************************************************
+     * A function to update the intent to prepare to make a new note
+     * @param i The current intent
+     * @return Updated intent with the parent directory of the new note
+     ****************************************************************************************/
     public Intent setNewNote(Intent i) {
         return i.putExtra("parentPath", currentDirectory.toString());
     }
+
+    /****************************************************************************************
+     * A function to update the intent to the selected note and load the note's information
+     * @param i The current intent
+     * @param place The position of the Note in the directory
+     * @return Updated intent with the current note's information
+     ****************************************************************************************/
     public Intent setExistingNote(Intent i, int place) {
         return i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
     }
+
+    /********************************************
+     * A function to make a directory
+     * @param title The new directory's title
+     ********************************************/
     public void makeNewDir(String title) {
         File newDir = new File(getApplicationContext().getFilesDir(), title);
         newDir.mkdir();
         currentDirectory = newDir;
     }
+
+    /******************************************************
+     * A function to rename the current directory
+     * @param newName The directory's possibly new title
+     ******************************************************/
     public void renameDir(String newName) {
         if (!currentDirectory.getName().equals(newName)) {
             String checkedName = generateClassTitle(newName, getApplicationContext().getFilesDir());
@@ -252,6 +283,11 @@ public class ClassActivity extends AppCompatActivity {
             currentDirectory = newDirName;
         }
     }
+
+    /*********************************************************
+     * A function used to delete notes
+     * @param place The position the note we're deleting
+     *********************************************************/
     public void deleteNote(int place) {
         currentDirectory.listFiles()[place].delete();
         File[] newNoteList = currentDirectory.listFiles();
@@ -260,6 +296,13 @@ public class ClassActivity extends AppCompatActivity {
             noteList[x] = newNoteList[place].getName();
         }
     }
+
+    /**************************************************************************************
+     * A function used to check if a Class exists in this directory to not overwrite it
+     * @param name The original name we're using
+     * @param parent This class's parent directory
+     * @return The name that may or may not have a number added to the end
+     **************************************************************************************/
     public String generateClassTitle(String name, File parent) {
         Boolean answer = false;
         int y = 0;
