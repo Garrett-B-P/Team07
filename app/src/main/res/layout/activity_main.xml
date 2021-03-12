@@ -27,7 +27,8 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="28dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:iconifiedByDefault="false" />
 
     <ListView
         android:id="@+id/classList"
