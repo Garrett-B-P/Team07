@@ -89,7 +89,7 @@ public class ClassActivity extends AppCompatActivity {
                 final int itemToDelete = i;
                 // To delete the data from the App
                 new AlertDialog.Builder(ClassActivity.this)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setIcon(R.drawable.ic_dialog_alert)
                         .setTitle("Are you sure?")
                         .setMessage("Do you want to delete " + notes_title.get(itemToDelete) + "?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
