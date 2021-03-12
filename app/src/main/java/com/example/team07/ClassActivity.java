@@ -17,12 +17,17 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ClassActivity extends AppCompatActivity {
     int classId;
+    // Member variables below are for use with app's directory
+    static File currentDirectory;
+    public String[] noteList;
 
     //Creates Arrays that hold the note information, Garrett
     static ArrayList<String> notes_title = new ArrayList<String>();
@@ -31,6 +36,7 @@ public class ClassActivity extends AppCompatActivity {
     //Creates an intent for the NotesActivity and sends some information to the activity, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
+        //setNewNote(intent);
         startActivity(intent);
         Log.i("ClassOnClick", "Note Activity Opened");
     }
@@ -67,6 +73,8 @@ public class ClassActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
                 intent.putExtra("noteId", i);
+                // Below will send Class directory's filepath to be used in ClassActivity
+                //setExistingNote(intent, i);
                 startActivity(intent);
 
                 Log.i("ClassOnItemClick", "Note #" + i + " opened");
@@ -89,6 +97,8 @@ public class ClassActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 notes_title.remove(itemToDelete);
+                                // Below is to delete the Note from the directory
+                                //deleteNote(i);
                                 arrayAdapter.notifyDataSetChanged();
                                 SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                                 HashSet<String> set = new HashSet(ClassActivity.notes_title);
@@ -117,6 +127,12 @@ public class ClassActivity extends AppCompatActivity {
             Log.i("ClassCreate", "Created Class #" + classId);
         }
 
+        // This custom function is for use with an app's directory
+        // PLEASE NOTE, FELLOW PROGRAMMERS!! I'd made my program ask for a name in MainActivity for the new ClassActivity,
+        // but don't quite know how to program it here, since the text box for new Class/Note are in ClassActivity/NoteActivity
+        // instead of their "parent" activities. I'll do what I can
+        //setUpClass(intent);
+
         classTitle.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -138,11 +154,26 @@ public class ClassActivity extends AppCompatActivity {
                 HashSet set = new HashSet(MainActivity.classes);
                 sharedPreferences.edit().putStringSet("classes", set).apply();
 
+
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 // add your code here
+
+                // From Cajsa: I want to add code to make directories here, since the name changes here
+                // I'll probably add code to test if directory exists, then if true, use the renameTo() option,
+                // but if false, mkdir()
+                // I was going to put it in onTextChanged() above, but that'd renameTo() and mkdir()
+                // every time the text changes, which I'd imagine is BAD
+                // How do I compare before it changed to after it changed? I need that to see if I can
+                // search for the directory, rename it, etc.
+
+                // To make new directory:
+                //makeNewDir(newTitle);
+
+                // To change directory's name:
+                //renameDir(newName);
             }
         });
 
@@ -171,5 +202,48 @@ public class ClassActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
-
+    // Below are functions to call for app's directory use
+    public void setUpClass(Intent i) {
+        String filePath = i.getStringExtra("filePath");
+        EditText classTitle = findViewById(R.id.classTitle);
+        if (filePath != null) {
+            // If existing directory was clicked on and path sent, set up here
+            currentDirectory = new File(filePath);
+            classTitle.setText(currentDirectory.getName());
+            File[] fileList = currentDirectory.listFiles();
+            noteList = new String[fileList.length];
+            for (int x=0; x<fileList.length; x++) {
+                noteList[x] = fileList[x].getName();
+            }
+        }
+        // I should have this check if intent sent "filePath", for existing classes,
+        // and if that's null, check if it sent "parentPath", for new classes
+        // I now have functions in Main to send either "filePath" or "parentPath"
+    }
+    public Intent setNewNote(Intent i) {
+        return i.putExtra("parentPath", currentDirectory.toString());
+    }
+    public Intent setExistingNote(Intent i, int place) {
+        return i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
+    }
+    public void makeNewDir(String title) {
+        File newDir = new File(getApplicationContext().getFilesDir(), title);
+        newDir.mkdir();
+        currentDirectory = newDir;
+    }
+    public void renameDir(String newName) {
+        if (!currentDirectory.getName().equals(newName)) {
+            File newDirName = new File(currentDirectory.getParent(), newName);
+            currentDirectory.renameTo(newDirName);
+            currentDirectory = newDirName;
+        }
+    }
+    public void deleteNote(int place) {
+        currentDirectory.listFiles()[place].delete();
+        File[] newNoteList = currentDirectory.listFiles();
+        noteList = new String[newNoteList.length];
+        for (int x=0; x<newNoteList.length; x++) {
+            noteList[x] = newNoteList[place].getName();
+        }
+    }
 }

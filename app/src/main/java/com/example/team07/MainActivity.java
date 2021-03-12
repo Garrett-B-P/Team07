@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -28,10 +29,15 @@ public class MainActivity extends AppCompatActivity {
     static ArrayList<String> classes = new ArrayList<String>();
     static ArrayAdapter arrayAdapter3;
     ListView listView;
+    // Member variables below are for use with app's directory
+    static File mainDirectory;
+    public String[] classList;
 
     //When the add class button is hit it will create and start a new intent, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
+        // Below will send parent's path to new Class instead of the Class's filepath
+        //setNewClass(intent);
         startActivity(intent);
     }
 
@@ -45,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
         HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
 
+        // This function is for use with app's directory
+        //setUpMain();
+
         arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classes);
 
         listView.setAdapter(arrayAdapter3);
@@ -57,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 // Going from MainActivity to ClassActivity
                 Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
                 intent.putExtra("classId", position);
+                // Below will send Class directory's filepath to be used in ClassActivity
+                //setExistingClass(intent, position);
                 startActivity(intent);
 
                 Log.i("MainOnItemClick", "Opening class #" + position);
@@ -74,6 +85,8 @@ public class MainActivity extends AppCompatActivity {
                     .setMessage("Do you want to delete " + classes.get(itemToDelete) + "?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
                         classes.remove(itemToDelete);
+                        // To delete the class from the directory
+                        //deleteClass(itemToDelete);
                         arrayAdapter3.notifyDataSetChanged();
                         SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                         HashSet set1 = new HashSet(MainActivity.classes);
@@ -109,5 +122,39 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
+    }
+    // Below are functions to call for app's directory use
+    public void setUpMain() {
+        mainDirectory = getApplicationContext().getFilesDir();
+        File[] fileList = mainDirectory.listFiles();
+        classList = new String[fileList.length];
+        for (int i=0; i<fileList.length; i++) {
+            classList[i] = fileList[i].getName();
+        }
+        arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
+    }
+    public Intent setNewClass(Intent i) {
+        return i.putExtra("parentPath", mainDirectory.toString());
+    }
+    public Intent setExistingClass(Intent i, int place) {
+        return i.putExtra("filePath", mainDirectory.listFiles()[place].toString());
+    }
+    public void deleteClass(int place) {
+        // A directory with items inside it cannot be deleted, so contents will be deleted first
+        File[] fullList = mainDirectory.listFiles();
+        File[] toDelete = fullList[place].listFiles();
+        if (toDelete.length > 0) {
+            Log.d("MainActivity", "Directory to be deleted has items inside");
+            for (int x=0; x<toDelete.length; x++) {
+                toDelete[x].delete();
+            }
+        }
+        fullList[place].delete();
+        File[] newList = mainDirectory.listFiles();
+        classList = new String[newList.length];
+        for (int i=0; i<newList.length; i++) {
+            classList[i] = newList[i].getName();
+        }
+
     }
 }

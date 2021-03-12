@@ -1,10 +1,12 @@
 package com.example.team07;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -13,6 +15,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.HashSet;
 
@@ -20,6 +32,10 @@ import java.util.HashSet;
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     int noteId;
+    // Member variables below are for use with app's directory
+    File parent;
+    File path;
+    String contents;
 
     //For the camera
     private ImageView mimageView;
@@ -33,6 +49,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         finish();
     }
 
+    // Api thing is for StandardCharsets.UTF_8 in setUpNote()
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +83,9 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             ClassActivity.arrayAdapter.notifyDataSetChanged();
         }
 
+        // This is a custom function to use app file to set up Note
+        //setUpNote(intent);
+
         //This is checking for when the note is changed and saves it when it does, for the title, Garrett
         noteTitle.addTextChangedListener(new TextWatcher() {
             @Override
@@ -86,9 +107,28 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             @Override
             public void afterTextChanged(Editable s) {
                 //add code here
+
+                // I'd need to add file-making text here, maybe
+                // If the file-making is here, here's my custom function:
+                // Found a problem: can't tell what the parent directory is
+                // Possible solution: can send parent directory path through intent instead,
+                // plus an existing file's name if not creating a new file
+                //path = makeNewFile(parent, name);
             }
         });
     }
+
+    // onStop() is currently only saving note body to file
+    // In my program, it also renamed the title if it was different
+    /*
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        // If no title, either don't save note or assign title?
+        saveToFile()
+    }
+     */
 
     // compareTo() is needed for Comparable<NotesActivity>
     @Override
@@ -125,6 +165,68 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             mimageView.setImageBitmap(imageBitmap);
         }
 
+    }
+
+    // Below are functions to call for app's directory use
+    // Api thing is for StandardCharsets.UTF_8 in InputStreamReader
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void setUpNote(Intent i) {
+        // to set up an existing note
+        String filepath = i.getStringExtra("filePath");
+        String parentPath = i.getStringExtra("parentPath");
+        // Need to do something with parentPath to make new note, but I'm burning out
+        EditText noteTitle = findViewById(R.id.noteTitle);
+        if (filepath != null) {
+            path = new File(filepath);
+            noteTitle.setText(path.getName());
+            try {
+                FileInputStream fis = new FileInputStream(path);
+                InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+                StringBuilder builder = new StringBuilder();
+                try (BufferedReader reader = new BufferedReader(isr)) {
+                    String line = reader.readLine();
+                    while (line != null) {
+                        builder.append(line).append("\n");
+                        line = reader.readLine();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    contents = builder.toString();
+                }
+                fis.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast toast = Toast.makeText(getApplicationContext(), "File is not found", Toast.LENGTH_SHORT);
+                toast.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        // I should have this check if intent sent "filePath", for existing notes,
+        // and if that's null, check if it sent "parentPath", for new notes
+        // I now have functions in Class to send either "filePath" or "parentPath"
+    }
+    public File makeNewFile(File parent, String name) {
+        File newFile = new File(parent, name);
+        try {
+            newFile.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return newFile;
+    }
+    public void saveToFile() {
+        TextView body = findViewById(R.id.noteBody);
+        String fileContents = body.getText().toString();
+        try {
+            FileWriter writer = new FileWriter(path);
+            writer.append(fileContents);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
         //dateCreated = Calendar.getInstance();
