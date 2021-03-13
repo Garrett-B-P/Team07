@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             final int itemToDelete = i;
             // To delete the data from the App
             new AlertDialog.Builder(MainActivity.this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setIcon(R.drawable.ic_dialog_alert)
                     .setTitle("Are you sure?")
                     .setMessage("Do you want to delete " + classes.get(itemToDelete) + "?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
@@ -103,13 +103,13 @@ public class MainActivity extends AppCompatActivity {
 
     // Function for searchView3, will apply a filter to arrayAdapter3 so only items with matching text are displayed
 
-    /**
+    /**********************************************************************************
      * Used to implement the search bar and apply a filter on the arrayAdapter3 to only
      * display searched items.
      *
      * @param menu Unused in this function, auto generated with the function itself.
      * @return Auto generated return statement
-     */
+     **********************************************************************************/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Initialize search view
