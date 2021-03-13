@@ -102,6 +102,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Function for searchView3, will apply a filter to arrayAdapter3 so only items with matching text are displayed
+
+    /**
+     * Used to implement the search bar and apply a filter on the arrayAdapter3 to only
+     * display searched items.
+     *
+     * @param menu Unused in this function, auto generated with the function itself.
+     * @return Auto generated return statement
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Initialize search view
@@ -123,7 +131,12 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
+
     // Below are functions to call for app's directory use
+
+    /**
+     *
+     */
     public void setUpMain() {
         mainDirectory = getApplicationContext().getFilesDir();
         File[] fileList = mainDirectory.listFiles();
@@ -133,12 +146,30 @@ public class MainActivity extends AppCompatActivity {
         }
         arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
     }
+
+    /**
+     *
+     * @param i The current intent
+     * @return
+     */
     public Intent setNewClass(Intent i) {
         return i.putExtra("parentPath", mainDirectory.toString());
     }
+
+    /****************************************************************************************
+     * A function to update the intent to the selected class and load the classes information
+     * @param i The current intent
+     * @param place The position of the Class in the directory
+     * @return Updated intent with the current classes information
+     ****************************************************************************************/
     public Intent setExistingClass(Intent i, int place) {
         return i.putExtra("filePath", mainDirectory.listFiles()[place].toString());
     }
+
+    /*****************************************************************
+     * A function used to delete directories and their contents
+     * @param place The position the directory we're deleting
+     *****************************************************************/
     public void deleteClass(int place) {
         // A directory with items inside it cannot be deleted, so contents will be deleted first
         File[] fullList = mainDirectory.listFiles();
