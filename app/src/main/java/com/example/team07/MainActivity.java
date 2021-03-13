@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
         // Below will send parent's path to new Class instead of the Class's filepath
-        //setNewClass(intent);
+        setNewClass(intent);
         startActivity(intent);
     }
 
@@ -48,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Creates list of classes
         listView = findViewById(R.id.classList);
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
-        HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
+        //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
+        //HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
 
         // This function is for use with app's directory
-        //setUpMain();
+        setUpMain();
 
         arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classes);
 
@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Going from MainActivity to ClassActivity
                 Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
-                intent.putExtra("classId", position);
+                //intent.putExtra("classId", position);
                 // Below will send Class directory's filepath to be used in ClassActivity
-                //setExistingClass(intent, position);
+                setExistingClass(intent, position);
                 startActivity(intent);
 
                 Log.i("MainOnItemClick", "Opening class #" + position);
@@ -82,15 +82,15 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(MainActivity.this)
                     .setIcon(R.drawable.ic_dialog_alert)
                     .setTitle("Are you sure?")
-                    .setMessage("Do you want to delete " + classes.get(itemToDelete) + "?")
+                    .setMessage("Do you want to delete " + classList[itemToDelete] + "?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
-                        classes.remove(itemToDelete);
+                        //classes.remove(itemToDelete);
                         // To delete the class from the directory
-                        //deleteClass(itemToDelete);
+                        deleteClass(itemToDelete);
                         arrayAdapter3.notifyDataSetChanged();
-                        SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                        HashSet set1 = new HashSet(MainActivity.classes);
-                        sharedPreferences1.edit().putStringSet("notes", set1).apply();
+                        //SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                        //HashSet set1 = new HashSet(MainActivity.classes);
+                        //sharedPreferences1.edit().putStringSet("notes", set1).apply();
 
                         Log.i("ClassOnItemOnLongClick", "Deleted note #" + itemToDelete);
                     }).setNegativeButton("No", null).show();
@@ -142,11 +142,13 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "setUpMain: mainDirectory has been set");
         File[] fileList = mainDirectory.listFiles();
         classList = new String[fileList.length];
+        classes.clear();
         for (int i=0; i<fileList.length; i++) {
             classList[i] = fileList[i].getName();
+            classes.add(fileList[i].getName());
         }
         Log.d("MainActivity", "setUpMain: classList has been set and filled");
-        arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
+        //arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
         Log.d("MainActivity", "setUpMain: ArrayAdapter has been set to classList");
     }
 
@@ -199,8 +201,10 @@ public class MainActivity extends AppCompatActivity {
         }
         File[] newList = mainDirectory.listFiles();
         classList = new String[newList.length];
+        classes.clear();
         for (int i=0; i<newList.length; i++) {
             classList[i] = newList[i].getName();
+            classes.add(newList[i].getName());
         }
         Log.d("MainActivity", "deleteClass: classList has been reset");
     }

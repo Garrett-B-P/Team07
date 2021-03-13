@@ -32,7 +32,7 @@ import java.util.HashSet;
 
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
-    int noteId;
+    //int noteId;
     // Member variables below are for use with app's directory
     File parent;
     File path;
@@ -73,8 +73,9 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         Intent intent = getIntent();
 
         //I believe this section of code is checking the noteId, Garrett
-        noteId = intent.getIntExtra("noteId", -1);
+        //noteId = intent.getIntExtra("noteId", -1);
 
+        /*
         if (noteId != -1) {
             noteTitle.setText(ClassActivity.notes_title.get(noteId));
 
@@ -83,9 +84,10 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             noteId = ClassActivity.notes_title.size() - 1;
             ClassActivity.arrayAdapter.notifyDataSetChanged();
         }
+         */
 
         // This is a custom function to use app file to set up Note
-        //setUpNote(intent);
+        setUpNote(intent);
 
         //This is checking for when the note is changed and saves it when it does, for the title, Garrett
         noteTitle.addTextChangedListener(new TextWatcher() {
@@ -96,13 +98,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                ClassActivity.notes_title.set(noteId, String.valueOf(charSequence));
+                //ClassActivity.notes_title.set(noteId, String.valueOf(charSequence));
                 ClassActivity.arrayAdapter.notifyDataSetChanged();
 
                 // Creating Object of SharedPreferences to store data in the phone
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet set = new HashSet(ClassActivity.notes_title);
-                sharedPreferences.edit().putStringSet("notes", set).apply();
+                //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                //HashSet set = new HashSet(ClassActivity.notes_title);
+                //sharedPreferences.edit().putStringSet("notes", set).apply();
+
+                // I know it's risky, but we gotta try it
+                renameFile(String.valueOf(charSequence));
+
             }
 
             @Override
@@ -121,17 +127,15 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
     // onStop() is currently only saving note body to file
     // In my program, it also renamed the title if it was different
-    /*
     @Override
     protected void onStop() {
         super.onStop();
 
         // If no title, either don't save note or assign title?
         TextView noteTitle = findViewById(R.id.noteTitle);
-        renameFile(noteTitle.getText().toString())
-        saveToFile()
+        renameFile(noteTitle.getText().toString());
+        saveToFile();
     }
-     */
 
     // compareTo() is needed for Comparable<NotesActivity>
     @Override
@@ -217,9 +221,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             e.printStackTrace();
             Log.d("NotesActivity", "setUpNote: Closing the FileInputStream went wrong");
         }
-        // I should have this check if intent sent "filePath", for existing notes,
-        // and if that's null, check if it sent "parentPath", for new notes
-        // I now have functions in Class to send either "filePath" or "parentPath"
+        if (contents != "") {
+            EditText body = findViewById(R.id.noteBody);
+            body.setText(contents);
+            Log.d("NotesActivity", "setUpNote: contents is not empty, set noteBody");
+        }
+        //ClassActivity.arrayAdapter.notifyDataSetChanged();
     }
 
     /********************************************************************************
@@ -230,12 +237,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     public String getNotePath(Intent i) {
         String filePath = i.getStringExtra("filePath");
         String parentPath = i.getStringExtra("parentPath");
+        parent = new File(parentPath);
         if (filePath != null) {
             Log.d("NotesActivity", "getNotePath: sending an existing file path");
             return filePath;
         } else {
             Log.d("NotesActivity", "getNotePath: generating a new file path");
-            File parent = new File(parentPath);
             String newName = generateNoteTitle("Untitled", parent);
             Log.d("NotesActivity", "getNotePath: title of new file is " + newName);
             // I want to add a function call instead of the line above to check if this name exists,
@@ -262,10 +269,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             } else {
                 Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
             }
+            path = newFile;
         } catch (IOException e) {
             e.printStackTrace();
             Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
         }
+        //ClassActivity.arrayAdapter.notifyDataSetChanged();
     }
 
     /******************************************************
@@ -275,24 +284,18 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     public void renameFile(String newName) {
         if (!path.getName().equals(newName)) {
             Log.d("NotesActivity", "renameFile: path will now be renamed");
+            Log.d("NotesActivity", "parent is " + parent.getName() + ", " + parent.toString());
             String checkedName = generateNoteTitle(newName, parent);
             File newFileName = new File(parent, checkedName);
             Boolean x = path.renameTo(newFileName);
             if (x) {
-                // For some reason, renameTo() deletes the old name directory after renaming,
-                // but it doesn't do the same for the old name file, so we have to do that
-                Boolean y = path.delete();
-                if (y) {
-                    Log.d("NotesActivity", "renameFile: old name path has now been deleted");
-                } else {
-                    Log.d("NotesActivity", "renameFile: old name path failed to be deleted");
-                }
                 path = newFileName;
                 Log.d("NotesActivity", "renameFile: path has now been renamed");
             } else {
                 Log.d("NotesActivity", "renameFile: path failed to be renamed");
             }
         }
+        //ClassActivity.arrayAdapter.notifyDataSetChanged();
     }
 
     /******************************************************************
@@ -320,31 +323,33 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     /**************************************************************************************
      * A function used to check if a Note exists in this directory to not overwrite it
      * @param name The original name we're using
-     * @param parent This note's parent directory
+     * @param parentFile This note's parent directory
      * @return The name that may or may not have a number added to the end
      **************************************************************************************/
-    public String generateNoteTitle(String name, File parent) {
+    public String generateNoteTitle(String name, File parentFile) {
         Boolean answer = false;
         int y = 0;
         String newName = "";
-        Log.d("NotesActivity", "generateNoteTitle: about to test if name exists");
-        for (int x=0; x<parent.listFiles().length; x++) {
-            if (name.equals(parent.listFiles()[x].getName())) {
+        for (int x=0; x<parentFile.listFiles().length; x++) {
+            if (name.equals(parentFile.listFiles()[x].getName())) {
                 // If the name is in the directory
                 answer = true;
-            } else {
-                Log.d("NotesActivity", "generateNoteTitle: returning name " + name);
-                return name;
             }
+        }
+        if (!answer) {
+            Log.d("NotesActivity", "generateNoteTitle: returning name " + name);
+            return name;
         }
         Log.d("NotesActivity", "generateNoteTitle: does " + name + " title exist in its parent directory? " + answer);
         while (answer) {
             newName = name + y;
             // Append the number to the name
-            for (int z=0; z<parent.listFiles().length; z++) {
-                if (!newName.equals(parent.listFiles()[z].getName())) {
+            answer = false;
+            for (int z=0; z<parentFile.listFiles().length; z++) {
+                Log.d("NotesActivity", "generateNoteTitle: testing if " + newName + " exists in this directory");
+                if (newName.equals(parentFile.listFiles()[z].getName())) {
                     // If the new name isn't in the directory, exit loop
-                    answer = false;
+                    answer = true;
                 }
             }
             Log.d("NotesActivity", "generateNotesTitle: new name " + newName + " has been generated");

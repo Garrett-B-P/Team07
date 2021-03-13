@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class ClassActivity extends AppCompatActivity {
-    int classId;
+    //int classId;
     // Member variables below are for use with app's directory
     static File currentDirectory;
     public String[] noteList;
@@ -36,7 +36,7 @@ public class ClassActivity extends AppCompatActivity {
     //Creates an intent for the NotesActivity and sends some information to the activity, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
-        //setNewNote(intent);
+        setNewNote(intent);
         startActivity(intent);
         Log.i("ClassOnClick", "Note Activity Opened");
     }
@@ -50,15 +50,17 @@ public class ClassActivity extends AppCompatActivity {
         ListView listView = findViewById(R.id.listView2);
 
         //I believe this saves the note, Garrett
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-        HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
+        //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+        //HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
 
         //Creates an example note if there are no notes, Garrett
+        /*
         if (set == null) {
             notes_title.add("Example note");
         } else {
             notes_title = new ArrayList(set);
         }
+         */
 
         //Adds the created notes to the array adapter, Garrett
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes_title);
@@ -72,9 +74,9 @@ public class ClassActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
-                intent.putExtra("noteId", i);
+                //intent.putExtra("noteId", i);
                 // Below will send Class directory's filepath to be used in ClassActivity
-                //setExistingNote(intent, i);
+                setExistingNote(intent, i);
                 startActivity(intent);
 
                 Log.i("ClassOnItemClick", "Note #" + i + " opened");
@@ -91,18 +93,18 @@ public class ClassActivity extends AppCompatActivity {
                 new AlertDialog.Builder(ClassActivity.this)
                         .setIcon(R.drawable.ic_dialog_alert)
                         .setTitle("Are you sure?")
-                        .setMessage("Do you want to delete " + notes_title.get(itemToDelete) + "?")
+                        .setMessage("Do you want to delete " + noteList[itemToDelete] + "?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                notes_title.remove(itemToDelete);
+                                //notes_title.remove(itemToDelete);
                                 // Below is to delete the Note from the directory
-                                //deleteNote(i);
+                                deleteNote(i);
                                 arrayAdapter.notifyDataSetChanged();
-                                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                                HashSet<String> set = new HashSet(ClassActivity.notes_title);
-                                sharedPreferences.edit().putStringSet("notes", set).apply();
+                                //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                                //HashSet<String> set = new HashSet(ClassActivity.notes_title);
+                                //sharedPreferences.edit().putStringSet("notes", set).apply();
 
                                 Log.i("ClassOnItemOnLongClick", "Deleted note #" + itemToDelete);
                             }
@@ -115,8 +117,9 @@ public class ClassActivity extends AppCompatActivity {
         EditText classTitle = findViewById(R.id.classTitle);
         Intent intent = getIntent();
 
-        classId = intent.getIntExtra("classId", -1);
+        //classId = intent.getIntExtra("classId", -1);
 
+        /*
         if (classId != -1) {
             classTitle.setText(MainActivity.classes.get(classId));
         } else {
@@ -126,12 +129,13 @@ public class ClassActivity extends AppCompatActivity {
 
             Log.i("ClassCreate", "Created Class #" + classId);
         }
+         */
 
         // This custom function is for use with an app's directory
         // PLEASE NOTE, FELLOW PROGRAMMERS!! I'd made my program ask for a name in MainActivity for the new ClassActivity,
         // but don't quite know how to program it here, since the text box for new Class/Note are in ClassActivity/NoteActivity
         // instead of their "parent" activities. I'll do what I can
-        //setUpClass(intent);
+        setUpClass(intent);
 
         classTitle.addTextChangedListener(new TextWatcher() {
 
@@ -146,14 +150,16 @@ public class ClassActivity extends AppCompatActivity {
                 MainActivity.arrayAdapter3.notifyDataSetChanged();
 
                 // Creating Object of SharedPreferences to store data in the phone
-                MainActivity.classes.set(classId, String.valueOf(charSequence));
-                MainActivity.arrayAdapter3.notifyDataSetChanged();
+                //MainActivity.classes.set(classId, String.valueOf(charSequence));
+                //MainActivity.arrayAdapter3.notifyDataSetChanged();
 
                 // Creating Object of SharedPreferences to store data in the phone
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                HashSet set = new HashSet(MainActivity.classes);
-                sharedPreferences.edit().putStringSet("classes", set).apply();
+                //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
+                //HashSet set = new HashSet(MainActivity.classes);
+                //sharedPreferences.edit().putStringSet("classes", set).apply();
 
+                // I know it's risky, but we gotta try it
+                renameDir(String.valueOf(charSequence));
 
             }
 
@@ -171,6 +177,8 @@ public class ClassActivity extends AppCompatActivity {
 
                 // To change directory's name:
                 //renameDir(newName);
+
+                // NOTE: I don't know how to get the new name from the Editable
             }
         });
 
@@ -215,11 +223,13 @@ public class ClassActivity extends AppCompatActivity {
         Log.d("ClassActivity", "setUpClass: classTitle has been set");
         File[] fileList = currentDirectory.listFiles();
         noteList = new String[fileList.length];
+        notes_title.clear();
         for (int x=0; x<fileList.length; x++) {
             noteList[x] = fileList[x].getName();
+            notes_title.add(fileList[x].getName());
         }
         Log.d("ClassActivity", "setUpClass: noteList has been set and filled");
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, noteList);
+        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, noteList);
         Log.d("ClassActivity", "setUpClass: ArrayAdapter has been set to noteList");
     }
 
@@ -252,22 +262,21 @@ public class ClassActivity extends AppCompatActivity {
     /****************************************************************************************
      * A function to update the intent to prepare to make a new note
      * @param i The current intent
-     * @return Updated intent with the parent directory of the new note
      ****************************************************************************************/
-    public Intent setNewNote(Intent i) {
+    public void setNewNote(Intent i) {
         Log.d("ClassActivity", "setNewNote: parentPath is readying to send");
-        return i.putExtra("parentPath", currentDirectory.toString());
+        i.putExtra("parentPath", currentDirectory.toString());
     }
 
     /****************************************************************************************
      * A function to update the intent to the selected note and load the note's information
      * @param i The current intent
      * @param place The position of the Note in the directory
-     * @return Updated intent with the current note's information
      ****************************************************************************************/
-    public Intent setExistingNote(Intent i, int place) {
+    public void setExistingNote(Intent i, int place) {
         Log.d("ClassActivity", "setExistingNote: filePath is readying to send");
-        return i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
+        i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
+        setNewNote(i);
     }
 
     /********************************************
@@ -310,8 +319,10 @@ public class ClassActivity extends AppCompatActivity {
         currentDirectory.listFiles()[place].delete();
         File[] newNoteList = currentDirectory.listFiles();
         noteList = new String[newNoteList.length];
+        notes_title.clear();
         for (int x=0; x<newNoteList.length; x++) {
             noteList[x] = newNoteList[place].getName();
+            notes_title.add(newNoteList[x].getName());
         }
         Log.d("ClassActivity", "deleteNote: noteList has been reset");
     }
@@ -331,19 +342,22 @@ public class ClassActivity extends AppCompatActivity {
             if (name.equals(parent.listFiles()[x].getName())) {
                 // If the name is in the directory
                 answer = true;
-            } else {
-                Log.d("ClassActivity", "generateClassTitle: returning name " + name);
-                return name;
             }
+        }
+        if (!answer) {
+            Log.d("ClassActivity", "generateClassTitle: returning name " + name);
+            return name;
         }
         Log.d("ClassActivity", "generateClassTitle: does " + name + " title exist in its parent directory? " + answer);
         while (answer) {
             newName = name + y;
             // Append the number to the name
+            answer = false;
             for (int z=0; z<parent.listFiles().length; z++) {
-                if (!newName.equals(parent.listFiles()[z].getName())) {
-                    // If the new name isn't in the directory, exit loop
-                    answer = false;
+                Log.d("ClassActivity", "generateClassTitle: testing if " + newName + " exists in this directory");
+                if (newName.equals(parent.listFiles()[z].getName())) {
+                    // If the new name is in the directory
+                    answer = true;
                 }
             }
             Log.d("ClassActivity", "generateClassTitle: new name " + newName + " has been generated");
