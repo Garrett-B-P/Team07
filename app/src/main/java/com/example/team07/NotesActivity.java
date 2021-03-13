@@ -171,6 +171,10 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
     // Below are functions to call for app's directory use
     // Api thing is for StandardCharsets.UTF_8 in InputStreamReader
+    /******************************************************************
+     * A function to set up NotesActivity with necessary information
+     * @param i The current intent from ClassActivity
+     ******************************************************************/
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setUpNote(Intent i) {
         // to set up an existing note
@@ -207,6 +211,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         // and if that's null, check if it sent "parentPath", for new notes
         // I now have functions in Class to send either "filePath" or "parentPath"
     }
+
+    /********************************************************************************
+     * A function to find or make the path of the directory NotesActivity will use
+     * @param i The intent that will be tested which path it has
+     * @return The string holding the filepath NotesActivity will use
+     ********************************************************************************/
     public String getNotePath(Intent i) {
         String filePath = i.getStringExtra("filePath");
         String parentPath = i.getStringExtra("parentPath");
@@ -223,6 +233,13 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             return newNote.getPath();
         }
     }
+
+    /**************************************************
+     * A function to make a file
+     * @param parent The new file's parent directory
+     * @param name The new file's title
+     * @return The new file to use for NotesActivity
+     **************************************************/
     public File makeNewFile(File parent, String name) {
         File newFile = new File(parent, name);
         try {
@@ -232,6 +249,11 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         }
         return newFile;
     }
+
+    /******************************************************
+     * A function to rename the current file
+     * @param newName The file's possibly new title
+     ******************************************************/
     public void renameFile(String newName) {
         if (!path.getName().equals(newName)) {
             String checkedName = generateNoteTitle(newName, parent);
@@ -243,6 +265,10 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             path = newFileName;
         }
     }
+
+    /******************************************************************
+     * A function to save NotesActivity's contents to file
+     ******************************************************************/
     public void saveToFile() {
         TextView body = findViewById(R.id.noteBody);
         String fileContents = body.getText().toString();
@@ -255,6 +281,13 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             e.printStackTrace();
         }
     }
+
+    /**************************************************************************************
+     * A function used to check if a Note exists in this directory to not overwrite it
+     * @param name The original name we're using
+     * @param parent This note's parent directory
+     * @return The name that may or may not have a number added to the end
+     **************************************************************************************/
     public String generateNoteTitle(String name, File parent) {
         Boolean answer = false;
         int y = 0;

@@ -134,9 +134,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Below are functions to call for app's directory use
 
-    /**
-     *
-     */
+    /******************************************************************
+     * A function to set up MainActivity with necessary information
+     ******************************************************************/
     public void setUpMain() {
         mainDirectory = getApplicationContext().getFilesDir();
         File[] fileList = mainDirectory.listFiles();
@@ -147,20 +147,20 @@ public class MainActivity extends AppCompatActivity {
         arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
     }
 
-    /**
-     *
+    /****************************************************************************************
+     * A function to update the intent to prepare to make a new class
      * @param i The current intent
-     * @return
-     */
+     * @return Updated intent with the parent directory of the new class
+     ****************************************************************************************/
     public Intent setNewClass(Intent i) {
         return i.putExtra("parentPath", mainDirectory.toString());
     }
 
     /****************************************************************************************
-     * A function to update the intent to the selected class and load the classes information
+     * A function to update the intent to the selected class and load the class's information
      * @param i The current intent
      * @param place The position of the Class in the directory
-     * @return Updated intent with the current classes information
+     * @return Updated intent with the current class's information
      ****************************************************************************************/
     public Intent setExistingClass(Intent i, int place) {
         return i.putExtra("filePath", mainDirectory.listFiles()[place].toString());
