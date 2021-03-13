@@ -207,17 +207,20 @@ public class ClassActivity extends AppCompatActivity {
      ******************************************************************/
     public void setUpClass(Intent i) {
         String filePath = getClassPath(i);
+        Log.d("ClassActivity", "setUpClass: filePath has been received");
         EditText classTitle = findViewById(R.id.classTitle);
-        if (filePath != null) {
-            // If existing directory was clicked on and path sent, set up here
-            currentDirectory = new File(filePath);
-            classTitle.setText(currentDirectory.getName());
-            File[] fileList = currentDirectory.listFiles();
-            noteList = new String[fileList.length];
-            for (int x=0; x<fileList.length; x++) {
-                noteList[x] = fileList[x].getName();
-            }
+        currentDirectory = new File(filePath);
+        Log.d("ClassActivity", "setUpClass: currentDirectory has been set");
+        classTitle.setText(currentDirectory.getName());
+        Log.d("ClassActivity", "setUpClass: classTitle has been set");
+        File[] fileList = currentDirectory.listFiles();
+        noteList = new String[fileList.length];
+        for (int x=0; x<fileList.length; x++) {
+            noteList[x] = fileList[x].getName();
         }
+        Log.d("ClassActivity", "setUpClass: noteList has been set and filled");
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, noteList);
+        Log.d("ClassActivity", "setUpClass: ArrayAdapter has been set to noteList");
     }
 
     /********************************************************************************
@@ -229,14 +232,18 @@ public class ClassActivity extends AppCompatActivity {
         String filePath = i.getStringExtra("filePath");
         String parentPath = i.getStringExtra("parentPath");
         if (filePath != null) {
+            Log.d("ClassActivity", "getClassPath: sending an existing file path");
             return filePath;
         } else {
+            Log.d("ClassActivity", "getClassPath: generating a new file path");
             File parent = new File(parentPath);
             String newName = generateClassTitle("Untitled", parent);
+            Log.d("ClassActivity", "getClassPath: title of new file is " + newName);
             // I want to add a function call instead of the line above to check if this name exists,
             // and if not, iterate through a while loop adding x to the end of the given title
             // This would prevent existing files from being overwritten
             File newClass = new File(parentPath, newName);
+            Log.d("ClassActivity", "getClassPath: generated a new File");
             makeNewDir(newClass.getName());
             return newClass.getPath();
         }
@@ -248,6 +255,7 @@ public class ClassActivity extends AppCompatActivity {
      * @return Updated intent with the parent directory of the new note
      ****************************************************************************************/
     public Intent setNewNote(Intent i) {
+        Log.d("ClassActivity", "setNewNote: parentPath is readying to send");
         return i.putExtra("parentPath", currentDirectory.toString());
     }
 
@@ -258,6 +266,7 @@ public class ClassActivity extends AppCompatActivity {
      * @return Updated intent with the current note's information
      ****************************************************************************************/
     public Intent setExistingNote(Intent i, int place) {
+        Log.d("ClassActivity", "setExistingNote: filePath is readying to send");
         return i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
     }
 
@@ -267,8 +276,14 @@ public class ClassActivity extends AppCompatActivity {
      ********************************************/
     public void makeNewDir(String title) {
         File newDir = new File(getApplicationContext().getFilesDir(), title);
-        newDir.mkdir();
+        Boolean answer = newDir.mkdir();
+        if (answer) {
+            Log.d("ClassActivity", "makeNewDir: " + title + " directory made");
+        } else {
+            Log.d("ClassActivity", "makeNewDir: " + title + " directory already exists");
+        }
         currentDirectory = newDir;
+        Log.d("ClassActivity", "makeNewDir: currentDirectory has been set");
     }
 
     /******************************************************
@@ -277,10 +292,12 @@ public class ClassActivity extends AppCompatActivity {
      ******************************************************/
     public void renameDir(String newName) {
         if (!currentDirectory.getName().equals(newName)) {
+            Log.d("ClassActivity", "renameDir: currentDirectory will now be renamed");
             String checkedName = generateClassTitle(newName, getApplicationContext().getFilesDir());
             File newDirName = new File(currentDirectory.getParent(), checkedName);
             currentDirectory.renameTo(newDirName);
             currentDirectory = newDirName;
+            Log.d("ClassActivity", "renameDir: currentDirectory has been renamed");
         }
     }
 
@@ -289,12 +306,14 @@ public class ClassActivity extends AppCompatActivity {
      * @param place The position the note we're deleting
      *********************************************************/
     public void deleteNote(int place) {
+        Log.d("ClassActivity", "deleteNote: Note number " + place + " will now be deleted");
         currentDirectory.listFiles()[place].delete();
         File[] newNoteList = currentDirectory.listFiles();
         noteList = new String[newNoteList.length];
         for (int x=0; x<newNoteList.length; x++) {
             noteList[x] = newNoteList[place].getName();
         }
+        Log.d("ClassActivity", "deleteNote: noteList has been reset");
     }
 
     /**************************************************************************************
@@ -307,14 +326,17 @@ public class ClassActivity extends AppCompatActivity {
         Boolean answer = false;
         int y = 0;
         String newName = "";
+        Log.d("ClassActivity", "generateClassTitle: about to test if name exists");
         for (int x=0; x<parent.listFiles().length; x++) {
             if (name.equals(parent.listFiles()[x].getName())) {
                 // If the name is in the directory
                 answer = true;
             } else {
+                Log.d("ClassActivity", "generateClassTitle: returning name " + name);
                 return name;
             }
         }
+        Log.d("ClassActivity", "generateClassTitle: does " + name + " title exist in its parent directory? " + answer);
         while (answer) {
             newName = name + y;
             // Append the number to the name
@@ -324,8 +346,10 @@ public class ClassActivity extends AppCompatActivity {
                     answer = false;
                 }
             }
+            Log.d("ClassActivity", "generateClassTitle: new name " + newName + " has been generated");
             y++;
         }
+        Log.d("ClassActivity", "generateClassTitle: returning new name " + newName);
         return newName;
     }
 }

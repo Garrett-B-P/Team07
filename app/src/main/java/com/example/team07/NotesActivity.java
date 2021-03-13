@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -179,33 +180,42 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     public void setUpNote(Intent i) {
         // to set up an existing note
         String filepath = getNotePath(i);
+        Log.d("NotesActivity", "setUpNote: filePath has been received");
         EditText noteTitle = findViewById(R.id.noteTitle);
-        if (filepath != null) {
-            path = new File(filepath);
-            noteTitle.setText(path.getName());
-            try {
-                FileInputStream fis = new FileInputStream(path);
-                InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
-                StringBuilder builder = new StringBuilder();
-                try (BufferedReader reader = new BufferedReader(isr)) {
-                    String line = reader.readLine();
-                    while (line != null) {
-                        builder.append(line).append("\n");
-                        line = reader.readLine();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    contents = builder.toString();
+        path = new File(filepath);
+        Log.d("NotesActivity", "setUpNote: path has been set");
+        noteTitle.setText(path.getName());
+        Log.d("NotesActivity", "setUpNote: noteTitle has been set");
+        try {
+            FileInputStream fis = new FileInputStream(path);
+            Log.d("NotesActivity", "setUpNote: FileInputStream has been created");
+            InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            Log.d("NotesActivity", "setUpNote: InputStreamReader has been created");
+            StringBuilder builder = new StringBuilder();
+            Log.d("NotesActivity", "setUpNote: StringBuilder has been created");
+            try (BufferedReader reader = new BufferedReader(isr)) {
+                String line = reader.readLine();
+                while (line != null) {
+                    builder.append(line).append("\n");
+                    line = reader.readLine();
                 }
-                fis.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                Toast toast = Toast.makeText(getApplicationContext(), "File is not found", Toast.LENGTH_SHORT);
-                toast.show();
             } catch (IOException e) {
                 e.printStackTrace();
+                Log.d("NotesActivity", "setUpNote: Something went wrong making BufferedReader or reading to StringBuilder");
+            } finally {
+                contents = builder.toString();
+                Log.d("NotesActivity", "setUpNote: contents have been filled");
             }
+            fis.close();
+            Log.d("NotesActivity", "setUpNote: FileInputStream has been closed");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Toast toast = Toast.makeText(getApplicationContext(), "File is not found", Toast.LENGTH_SHORT);
+            toast.show();
+            Log.d("NotesActivity", "setUpNote: The file apparently does not exist");
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("NotesActivity", "setUpNote: Closing the FileInputStream went wrong");
         }
         // I should have this check if intent sent "filePath", for existing notes,
         // and if that's null, check if it sent "parentPath", for new notes
@@ -221,14 +231,18 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         String filePath = i.getStringExtra("filePath");
         String parentPath = i.getStringExtra("parentPath");
         if (filePath != null) {
+            Log.d("NotesActivity", "getNotePath: sending an existing file path");
             return filePath;
         } else {
+            Log.d("NotesActivity", "getNotePath: generating a new file path");
             File parent = new File(parentPath);
             String newName = generateNoteTitle("Untitled", parent);
+            Log.d("NotesActivity", "getNotePath: title of new file is " + newName);
             // I want to add a function call instead of the line above to check if this name exists,
             // and if not, iterate through a while loop adding x to the end of the given title
             // This would prevent existing files from being overwritten
             File newNote = new File(parentPath, newName);
+            Log.d("NotesActivity", "getNotePath: generated a new file");
             makeNewFile(parent, newNote.getName());
             return newNote.getPath();
         }
@@ -238,16 +252,20 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
      * A function to make a file
      * @param parent The new file's parent directory
      * @param name The new file's title
-     * @return The new file to use for NotesActivity
      **************************************************/
-    public File makeNewFile(File parent, String name) {
+    public void makeNewFile(File parent, String name) {
         File newFile = new File(parent, name);
         try {
-            newFile.createNewFile();
+            Boolean answer = newFile.createNewFile();
+            if (answer) {
+                Log.d("NotesActivity", "makeNewFile: " + name + " file made");
+            } else {
+                Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
+            }
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
         }
-        return newFile;
     }
 
     /******************************************************
@@ -256,13 +274,24 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
      ******************************************************/
     public void renameFile(String newName) {
         if (!path.getName().equals(newName)) {
+            Log.d("NotesActivity", "renameFile: path will now be renamed");
             String checkedName = generateNoteTitle(newName, parent);
             File newFileName = new File(parent, checkedName);
-            path.renameTo(newFileName);
-            // For some reason, renameTo() deletes the old name directory after renaming,
-            // but it doesn't do the same for the old name file, so we have to do that
-            path.delete();
-            path = newFileName;
+            Boolean x = path.renameTo(newFileName);
+            if (x) {
+                // For some reason, renameTo() deletes the old name directory after renaming,
+                // but it doesn't do the same for the old name file, so we have to do that
+                Boolean y = path.delete();
+                if (y) {
+                    Log.d("NotesActivity", "renameFile: old name path has now been deleted");
+                } else {
+                    Log.d("NotesActivity", "renameFile: old name path failed to be deleted");
+                }
+                path = newFileName;
+                Log.d("NotesActivity", "renameFile: path has now been renamed");
+            } else {
+                Log.d("NotesActivity", "renameFile: path failed to be renamed");
+            }
         }
     }
 
@@ -272,13 +301,19 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     public void saveToFile() {
         TextView body = findViewById(R.id.noteBody);
         String fileContents = body.getText().toString();
+        Log.d("NotesActivity", "saveToFile: fileContents has been filled");
         try {
             FileWriter writer = new FileWriter(path);
+            Log.d("NotesActivity", "saveToFile: Created FileWriter");
             writer.append(fileContents);
+            Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
             writer.flush();
+            Log.d("NotesActivity", "saveToFile: Flushed stream");
             writer.close();
+            Log.d("NotesActivity", "saveToFile: Closed FileWriter");
         } catch (IOException e) {
             e.printStackTrace();
+            Log.d("NotesActivity", "saveToFile: FileWriter failed");
         }
     }
 
@@ -292,14 +327,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         Boolean answer = false;
         int y = 0;
         String newName = "";
+        Log.d("NotesActivity", "generateNoteTitle: about to test if name exists");
         for (int x=0; x<parent.listFiles().length; x++) {
             if (name.equals(parent.listFiles()[x].getName())) {
                 // If the name is in the directory
                 answer = true;
             } else {
+                Log.d("NotesActivity", "generateNoteTitle: returning name " + name);
                 return name;
             }
         }
+        Log.d("NotesActivity", "generateNoteTitle: does " + name + " title exist in its parent directory? " + answer);
         while (answer) {
             newName = name + y;
             // Append the number to the name
@@ -309,8 +347,10 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
                     answer = false;
                 }
             }
+            Log.d("NotesActivity", "generateNotesTitle: new name " + newName + " has been generated");
             y++;
         }
+        Log.d("NotesActivity", "generateNoteTitle: returning new name " + newName);
         return newName;
     }
 

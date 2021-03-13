@@ -139,12 +139,15 @@ public class MainActivity extends AppCompatActivity {
      ******************************************************************/
     public void setUpMain() {
         mainDirectory = getApplicationContext().getFilesDir();
+        Log.d("MainActivity", "setUpMain: mainDirectory has been set");
         File[] fileList = mainDirectory.listFiles();
         classList = new String[fileList.length];
         for (int i=0; i<fileList.length; i++) {
             classList[i] = fileList[i].getName();
         }
-        arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
+        Log.d("MainActivity", "setUpMain: classList has been set and filled");
+        arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
+        Log.d("MainActivity", "setUpMain: ArrayAdapter has been set to classList");
     }
 
     /****************************************************************************************
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
      * @return Updated intent with the parent directory of the new class
      ****************************************************************************************/
     public Intent setNewClass(Intent i) {
+        Log.d("MainActivity", "setNewClass: parentPath is readying to send");
         return i.putExtra("parentPath", mainDirectory.toString());
     }
 
@@ -163,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
      * @return Updated intent with the current class's information
      ****************************************************************************************/
     public Intent setExistingClass(Intent i, int place) {
+        Log.d("MainActivity", "setExistingClass: filePath is readying to send");
         return i.putExtra("filePath", mainDirectory.listFiles()[place].toString());
     }
 
@@ -174,18 +179,29 @@ public class MainActivity extends AppCompatActivity {
         // A directory with items inside it cannot be deleted, so contents will be deleted first
         File[] fullList = mainDirectory.listFiles();
         File[] toDelete = fullList[place].listFiles();
+        Log.d("MainActivity", "deleteClass: Directory " + place + " will now be deleted");
         if (toDelete.length > 0) {
-            Log.d("MainActivity", "Directory to be deleted has items inside");
+            Log.d("MainActivity", "deleteClass: This directory has items inside");
             for (int x=0; x<toDelete.length; x++) {
-                toDelete[x].delete();
+                Boolean itemDelete = toDelete[x].delete();
+                if (itemDelete) {
+                    Log.d("MainActivity", "deleteClass: Directory item " + x + " has been deleted");
+                } else {
+                    Log.d("MainActivity", "deleteClass: Directory item " + x + " failed to delete");
+                }
             }
         }
-        fullList[place].delete();
+        Boolean classDelete = fullList[place].delete();
+        if (classDelete) {
+            Log.d("MainActivity", "deleteClass: Directory has been deleted");
+        } else {
+            Log.d("MainActivity", "deleteClass: Directory was not deleted. There may be items within");
+        }
         File[] newList = mainDirectory.listFiles();
         classList = new String[newList.length];
         for (int i=0; i<newList.length; i++) {
             classList[i] = newList[i].getName();
         }
-
+        Log.d("MainActivity", "deleteClass: classList has been reset");
     }
 }
