@@ -19,9 +19,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-// Milestones: Week 10
-// Titles and content now searchable
-// Notes and Class files are now actually saved and remembered
+// Milestones: Week 11
+// From Week 10: Titles and content now searchable
+// Camera now accessible and automatically uploads picture taken
+// Pictures and pdfs able to be uploaded to notes/class
 
 public class MainActivity extends AppCompatActivity {
 
