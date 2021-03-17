@@ -1,27 +1,40 @@
 package com.example.team07;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.loader.content.CursorLoader;
+
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,6 +54,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     //For the camera
     private ImageView mimageView;
     private static final int REQUEST_IMAGE_CAPTURE = 101;
+    final int TAKE_PHOTO = 1;
+    final int FROM_STORAGE = 2;
 
     Calendar createdDate = Calendar.getInstance();
     // createdDate might never be shown, but can be sorted by in the future
@@ -156,13 +171,114 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
     //For the camera
     public void takePicture(View view) {
+
+        selectImage();
+        /*
         Intent imageTakeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (imageTakeIntent.resolveActivity(getPackageManager()) != null){
             startActivityForResult(imageTakeIntent, REQUEST_IMAGE_CAPTURE);
         }
+        */
     }
 
+    private void selectImage() {
+
+        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(NotesActivity.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (items[item].equals("Take Photo")) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Toast.makeText(getApplicationContext(), "Take Photo", Toast.LENGTH_SHORT).show();
+                    startActivityForResult(intent, TAKE_PHOTO);
+                }
+                else if (items[item].equals("Choose from Library")) {
+                    String[] PERMISSIONS = {
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    };
+                    ActivityCompat.requestPermissions(NotesActivity.this, PERMISSIONS, 1);
+
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.setType("image/*");
+                    Toast.makeText(getApplicationContext(), "Choose from Library", Toast.LENGTH_SHORT).show();
+                    startActivityForResult(Intent.createChooser(intent, "Select File"), FROM_STORAGE);
+                }
+                else if (items[item].equals("Cancel")) {
+                    Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        File destination = null;
+        if (resultCode == RESULT_OK) {
+
+            if (requestCode == TAKE_PHOTO) {
+                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                destination = new File(Environment.getExternalStorageDirectory(),System.currentTimeMillis() + ".jpg");
+                FileOutputStream fo;
+
+                try {
+                    destination.createNewFile();
+                    fo = new FileOutputStream(destination);
+                    fo.write(bytes.toByteArray());
+                    fo.close();
+                }
+                catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+
+                }
+
+                ((ImageView) findViewById(R.id.imageView)).setImageBitmap(thumbnail);
+
+            }
+            else if (requestCode == FROM_STORAGE) {
+                Log.d("FROM_STORAGE ", " FROM_STORAGE");
+                Uri selectedImageUri = data.getData();
+                String[] projection = {MediaStore.MediaColumns.DATA};
+                CursorLoader cursorLoader = new CursorLoader(NotesActivity.this, selectedImageUri, projection, null, null, null);
+                Cursor cursor = cursorLoader.loadInBackground();
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+                String selectedImagePath = cursor.getString(column_index);
+                String fileNameSegments[] = selectedImagePath.split("/");
+                String fileName = fileNameSegments[fileNameSegments.length - 1];
+                Bitmap bm;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(selectedImagePath, options);
+                final int REQUIRED_SIZE = 100;
+                int scale = 1;
+
+                while (options.outWidth / scale / 2 >= REQUIRED_SIZE && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+                    scale *= 2;
+
+                options.inSampleSize = scale;
+                options.inJustDecodeBounds = false;
+                bm = BitmapFactory.decodeFile(selectedImagePath, options);
+                ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
+            }
+        }
+    }
+
+/*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -172,7 +288,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             mimageView.setImageBitmap(imageBitmap);
         }
 
-    }
+    }*/
 
     // Below are functions to call for app's directory use
     // Api thing is for StandardCharsets.UTF_8 in InputStreamReader
