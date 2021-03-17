@@ -366,4 +366,13 @@ public class ClassActivity extends AppCompatActivity {
         Log.d("ClassActivity", "generateClassTitle: returning new name " + newName);
         return newName;
     }
+
+    public static void refreshNoteList() {
+        File[] fileList = currentDirectory.listFiles();
+        notes_title.clear();
+        for (int x=0; x<fileList.length; x++) {
+            notes_title.add(fileList[x].getName());
+        }
+        arrayAdapter.notifyDataSetChanged();
+    }
 }
