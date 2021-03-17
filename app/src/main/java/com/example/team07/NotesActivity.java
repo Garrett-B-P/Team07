@@ -430,10 +430,14 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         Boolean answer = false;
         int y = 0;
         String newName = "";
+        if (name.equals("")) {
+            Log.d("NotesActivity", "generateNoteTitle: name was empty");
+            name = "Untitled";
+        }
         for (int x=0; x<parentFile.listFiles().length; x++) {
-            if (name.equals(parentFile.listFiles()[x].getName()) || newName.equals("")) {
+            if (name.equals(parentFile.listFiles()[x].getName())) {
                 // If the name is in the directory
-                answer = true;
+                answer = false;
             }
         }
         if (!answer) {
