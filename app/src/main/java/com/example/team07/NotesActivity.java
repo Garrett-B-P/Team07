@@ -8,6 +8,7 @@ import androidx.loader.content.CursorLoader;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -56,8 +57,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     String contents;
 
     //For the camera
-    private ImageView mImageView;
-    private static final int REQUEST_IMAGE_CAPTURE = 101;
     final int TAKE_PHOTO = 1;
     final int FROM_STORAGE = 2;
 
@@ -75,8 +74,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
-
-        mImageView = findViewById(R.id.imageView);
 
         TextView time = findViewById(R.id.time);
         lastEdit = Calendar.getInstance();
@@ -177,13 +174,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     public void takePicture(View view) {
 
         selectImage();
-        /*
-        Intent imageTakeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if (imageTakeIntent.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(imageTakeIntent, REQUEST_IMAGE_CAPTURE);
-        }
-        */
     }
 
     private void selectImage() {
@@ -281,18 +271,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             }
         }
     }
-
-/*
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
-        }
-
-    }*/
 
     // Below are functions to call for app's directory use
     // Api thing is for StandardCharsets.UTF_8 in InputStreamReader
