@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="JavaDoc" pattern="src:*..*&amp;&amp;!src[Team07.app]:com.example.team07.Bu&amp;&amp;!src[Team07.app]:build" />
+</component>

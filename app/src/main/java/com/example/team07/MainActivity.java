@@ -24,6 +24,11 @@ import java.util.HashSet;
 // Camera now accessible and automatically uploads picture taken
 // Pictures and pdfs able to be uploaded to notes/class
 
+/**********************************************************************************************
+ * A class to implement the main page ui. Creates/reopens the main directory where all the
+ * information for the app will be stored. Stores the titles for each class as well for viewing
+ * purposes.
+ **********************************************************************************************/
 public class MainActivity extends AppCompatActivity {
 
     //Creates an array for the different classes, Garrett
@@ -32,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     ListView listView;
     // Member variables below are for use with app's directory
     static File mainDirectory;
-    public String[] classList;
 
     //When the add class button is hit it will create and start a new intent, Garrett
     public void onClick(View v) {
@@ -83,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(MainActivity.this)
                     .setIcon(R.drawable.ic_dialog_alert)
                     .setTitle("Are you sure?")
-                    .setMessage("Do you want to delete " + classList[itemToDelete] + "?")
+                    .setMessage("Do you want to delete " + classes.get(itemToDelete) + "?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
                         //classes.remove(itemToDelete);
                         // To delete the class from the directory
@@ -142,10 +146,8 @@ public class MainActivity extends AppCompatActivity {
         mainDirectory = getApplicationContext().getFilesDir();
         Log.d("MainActivity", "setUpMain: mainDirectory has been set");
         File[] fileList = mainDirectory.listFiles();
-        classList = new String[fileList.length];
         classes.clear();
         for (int i=0; i<fileList.length; i++) {
-            classList[i] = fileList[i].getName();
             classes.add(fileList[i].getName());
         }
         Log.d("MainActivity", "setUpMain: classList has been set and filled");
@@ -201,10 +203,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("MainActivity", "deleteClass: Directory was not deleted. There may be items within");
         }
         File[] newList = mainDirectory.listFiles();
-        classList = new String[newList.length];
         classes.clear();
         for (int i=0; i<newList.length; i++) {
-            classList[i] = newList[i].getName();
             classes.add(newList[i].getName());
         }
         Log.d("MainActivity", "deleteClass: classList has been reset");

@@ -42,7 +42,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.HashSet;
 
-
+/********************************************************************************************
+ * A class to handle ui for the notes page. Creates a file to store the information in itself
+ * in the class it currently belongs to if needed. Otherwise opens the correct file and loads
+ * the information to the screen.
+ ********************************************************************************************/
 public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     //int noteId;
@@ -52,7 +56,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     String contents;
 
     //For the camera
-    private ImageView mimageView;
+    private ImageView mImageView;
     private static final int REQUEST_IMAGE_CAPTURE = 101;
     final int TAKE_PHOTO = 1;
     final int FROM_STORAGE = 2;
@@ -72,7 +76,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
 
-        mimageView = findViewById(R.id.imageView);
+        mImageView = findViewById(R.id.imageView);
 
         TextView time = findViewById(R.id.time);
         lastEdit = Calendar.getInstance();
@@ -285,7 +289,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mimageView.setImageBitmap(imageBitmap);
+            mImageView.setImageBitmap(imageBitmap);
         }
 
     }*/
@@ -434,6 +438,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             e.printStackTrace();
             Log.d("NotesActivity", "saveToFile: FileWriter failed");
         }
+        ClassActivity.refreshNoteList();
+        Log.d("NotesActivity", "saveToFile: Class arrayAdapter notified?");
     }
 
     /**************************************************************************************
