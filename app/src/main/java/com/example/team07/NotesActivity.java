@@ -322,6 +322,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
             e.printStackTrace();
             Log.d("NotesActivity", "saveToFile: FileWriter failed");
         }
+        ClassActivity.refreshNoteList();
+        Log.d("NotesActivity", "saveToFile: Class arrayAdapter notified?");
     }
 
     /**************************************************************************************
