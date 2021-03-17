@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //initSearchWidget();
         setContentView(R.layout.activity_main);
 
         // Creates list of classes
@@ -137,6 +139,35 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onCreateOptionsMenu(menu);
     }
+
+   /* public void initSearchWidget() {
+        SearchView searchView = findViewById(R.id.searchView3);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ArrayList<String> filteredClasses = new ArrayList<>();
+
+                for (int i = 0; i < classes.size(); i++){
+                    String aClass = classes.get(i);
+
+                    if (aClass.toLowerCase().contains(newText.toLowerCase())) {
+                        filteredClasses.add(aClass);
+                    }
+                }
+
+                ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, filteredClasses);
+                listView.setAdapter(arrayAdapter);
+
+                return false;
+            }
+        });
+    }*/
 
     // Below are functions to call for app's directory use
 
