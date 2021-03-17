@@ -32,7 +32,6 @@ public class ClassActivity extends AppCompatActivity {
     //int classId;
     // Member variables below are for use with app's directory
     static File currentDirectory;
-    public String[] noteList;
 
     //Creates Arrays that hold the note information, Garrett
     static ArrayList<String> notes_title = new ArrayList<String>();
@@ -98,7 +97,7 @@ public class ClassActivity extends AppCompatActivity {
                 new AlertDialog.Builder(ClassActivity.this)
                         .setIcon(R.drawable.ic_dialog_alert)
                         .setTitle("Are you sure?")
-                        .setMessage("Do you want to delete " + noteList[itemToDelete] + "?")
+                        .setMessage("Do you want to delete " + notes_title.get(itemToDelete) + "?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                             @Override
@@ -227,10 +226,8 @@ public class ClassActivity extends AppCompatActivity {
         classTitle.setText(currentDirectory.getName());
         Log.d("ClassActivity", "setUpClass: classTitle has been set");
         File[] fileList = currentDirectory.listFiles();
-        noteList = new String[fileList.length];
         notes_title.clear();
         for (int x=0; x<fileList.length; x++) {
-            noteList[x] = fileList[x].getName();
             notes_title.add(fileList[x].getName());
         }
         Log.d("ClassActivity", "setUpClass: noteList has been set and filled");
@@ -323,10 +320,8 @@ public class ClassActivity extends AppCompatActivity {
         Log.d("ClassActivity", "deleteNote: Note number " + place + " will now be deleted");
         currentDirectory.listFiles()[place].delete();
         File[] newNoteList = currentDirectory.listFiles();
-        noteList = new String[newNoteList.length];
         notes_title.clear();
         for (int x=0; x<newNoteList.length; x++) {
-            noteList[x] = newNoteList[place].getName();
             notes_title.add(newNoteList[x].getName());
         }
         Log.d("ClassActivity", "deleteNote: noteList has been reset");
