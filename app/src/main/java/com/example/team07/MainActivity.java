@@ -24,6 +24,11 @@ import java.util.HashSet;
 // Camera now accessible and automatically uploads picture taken
 // Pictures and pdfs able to be uploaded to notes/class
 
+/**********************************************************************************************
+ * A class to implement the main page ui. Creates/reopens the main directory where all the
+ * information for the app will be stored. Stores the titles for each class as well for viewing
+ * purposes.
+ **********************************************************************************************/
 public class MainActivity extends AppCompatActivity {
 
     //Creates an array for the different classes, Garrett

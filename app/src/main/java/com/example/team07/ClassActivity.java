@@ -23,6 +23,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/************************************************************************************************
+ * A class to facilitate the class page ui and handle transitioning to the note page. Will create
+ * a directory of itself in the main directory when new class is made. Holds the titles for each
+ * of the notes for listing purposes.
+ ************************************************************************************************/
 public class ClassActivity extends AppCompatActivity {
     //int classId;
     // Member variables below are for use with app's directory
