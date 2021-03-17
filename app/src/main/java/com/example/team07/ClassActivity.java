@@ -355,7 +355,7 @@ public class ClassActivity extends AppCompatActivity {
             answer = false;
             for (int z=0; z<parent.listFiles().length; z++) {
                 Log.d("ClassActivity", "generateClassTitle: testing if " + newName + " exists in this directory");
-                if (newName.equals(parent.listFiles()[z].getName())) {
+                if (newName.equals(parent.listFiles()[z].getName()) || newName.equals("")) {
                     // If the new name is in the directory
                     answer = true;
                 }
