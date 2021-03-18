@@ -8,6 +8,7 @@ import androidx.loader.content.CursorLoader;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +40,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 
@@ -483,6 +485,46 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         }
         Log.d("NotesActivity", "generateNoteTitle: returning new name " + newName);
         return newName;
+    }
+
+    /**
+     * To save picture to file
+     * @param bitmapImage Image to be saved
+     */
+    public void savePicture(Bitmap bitmapImage) {
+        String fileName = new SimpleDateFormat("YYYYMMddHHmmss").format(Calendar.getInstance());
+        File picFile = new File(parent, fileName + ".jpg"); // Does this need to be .jpg, or do we need to specify?
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(picFile);
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * To load picture from file and display in imageView
+     * @param fileName Name of picture to be loaded and displayed
+     */
+    public void loadPicture(String fileName) {
+        // How to choose any one picture?
+        // Maybe try to save to gallery if needed? Then can pull from there?
+        try {
+            File picFile = new File(parent, fileName);
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(picFile));
+            ImageView img = (ImageView)findViewById(R.id.imageView);
+            img.setImageBitmap(b);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }
