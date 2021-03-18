@@ -469,8 +469,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
      * @param bitmapImage Image to be saved
      */
     public void savePicture(Bitmap bitmapImage) {
-        String fileName = new SimpleDateFormat("YYYYMMddHHmmss").format(Calendar.getInstance());
-        File picFile = new File(parent, fileName + ".jpg"); // Does this need to be .jpg, or do we need to specify?
+        File picFile = new File(parent, path.getName() + ".jpg"); // Does this need to be .jpg, or do we need to specify?
 
         FileOutputStream fos = null;
         try {
@@ -489,13 +488,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
     /**
      * To load picture from file and display in imageView
-     * @param fileName Name of picture to be loaded and displayed
      */
-    public void loadPicture(String fileName) {
+    public void loadPicture() {
         // How to choose any one picture?
         // Maybe try to save to gallery if needed? Then can pull from there?
         try {
-            File picFile = new File(parent, fileName);
+            File picFile = new File(parent, path.getName() + ".jpg");
             Bitmap b = BitmapFactory.decodeStream(new FileInputStream(picFile));
             ImageView img = (ImageView)findViewById(R.id.imageView);
             img.setImageBitmap(b);
