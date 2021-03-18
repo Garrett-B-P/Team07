@@ -105,6 +105,7 @@
         android:layout_marginRight="16dp"
         android:clickable="true"
         android:contentDescription="@string/add_photo"
+        app:backgroundTint="@color/teal_700"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
