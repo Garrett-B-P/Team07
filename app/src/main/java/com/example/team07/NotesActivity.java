@@ -178,7 +178,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     }
 
     private void selectImage() {
-
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(NotesActivity.this);
         builder.setTitle("Add Photo!");
@@ -475,6 +474,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         try {
             fos = new FileOutputStream(picFile);
             bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            Toast.makeText(NotesActivity.this, "Pic saved", Toast.LENGTH_SHORT).show();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
@@ -503,8 +503,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     }
 
 }
-        //dateCreated = Calendar.getInstance();
 
 
-
-
+//dateCreated = Calendar.getInstance();

@@ -26,11 +26,11 @@
         android:id="@+id/searchView3"
         android:layout_width="235dp"
         android:layout_height="34dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="28dp"
+        android:iconifiedByDefault="false"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:iconifiedByDefault="false" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/classList"
