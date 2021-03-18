@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        initSearchWidget();
+        //initSearchWidget();
 
         // Creates list of classes
         listView = findViewById(R.id.classList);
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return Auto generated return statement
      **********************************************************************************/
-   /* @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Initialize search view
         SearchView searchView = findViewById(R.id.searchView3);
@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
-    }*/
+    }
 
-    public void initSearchWidget() {
+    /*public void initSearchWidget() {
         SearchView searchView = findViewById(R.id.searchView3);
         ArrayList<String> filteredClasses = new ArrayList<>();
 
@@ -145,13 +145,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
 
-                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
+                ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, filteredClasses);
                 listView.setAdapter(arrayAdapter);
 
                 return false;
             }
         });
-    }
+    }*/
 
     public void clickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
