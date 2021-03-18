@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Going from MainActivity to ClassActivity
-                Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
+                Intent intent = new Intent(MainActivity.this, ClassActivity.class);
                 //intent.putExtra("classId", position);
                 // Below will send Class directory's filepath to be used in ClassActivity
                 setExistingClass(intent, position);
