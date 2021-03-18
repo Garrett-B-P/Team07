@@ -337,6 +337,10 @@ public class ClassActivity extends AppCompatActivity {
         Boolean answer = false;
         int y = 0;
         String newName = "";
+        if (name.equals("")) {
+            Log.d("ClassActivity", "generateClassTitle: name was empty");
+            name = "Untitled";
+        }
         Log.d("ClassActivity", "generateClassTitle: about to test if name exists");
         for (int x=0; x<parent.listFiles().length; x++) {
             if (name.equals(parent.listFiles()[x].getName())) {
@@ -355,8 +359,9 @@ public class ClassActivity extends AppCompatActivity {
             answer = false;
             for (int z=0; z<parent.listFiles().length; z++) {
                 Log.d("ClassActivity", "generateClassTitle: testing if " + newName + " exists in this directory");
-                if (newName.equals(parent.listFiles()[z].getName()) || newName.equals("")) {
+                if (newName.equals(parent.listFiles()[z].getName())) {
                     // If the new name is in the directory
+                    Log.d("ClassActivity", "generateClassTitle: new name " + newName + " is in this directory");
                     answer = true;
                 }
             }
