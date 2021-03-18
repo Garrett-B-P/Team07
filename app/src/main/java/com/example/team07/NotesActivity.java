@@ -30,6 +30,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -80,6 +82,16 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         lastEdit = Calendar.getInstance();
         String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
         time.setText(timeStamp);
+
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImage();
+            }
+        });
 
 //Attempt 1 on saving notes
 
