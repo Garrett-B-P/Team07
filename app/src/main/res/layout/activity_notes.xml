@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="false"
+    android:overScrollMode="always"
     tools:context=".NotesActivity">
 
     <TextView
@@ -12,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="140dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:text="@string/timeStamp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +23,6 @@
         android:layout_width="170dp"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +32,6 @@
         android:layout_width="185dp"
         android:layout_height="46dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:autofillHints=""
         android:ems="10"
@@ -54,7 +53,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
+        android:adjustViewBounds="true"
+        android:clickable="true"
         android:contentDescription="@string/picture"
+        android:cropToPadding="false"
+        android:focusable="true"
+        android:scaleType="fitStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.561"
         app:layout_constraintStart_toStartOf="parent"
@@ -85,7 +89,6 @@
         android:layout_height="41dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:onClick="onClick"
         android:text="@string/finish"
         app:backgroundTint="@color/teal_700"
@@ -98,9 +101,8 @@
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:onClick="takePicture"
-        android:text="@string/take_pic"
+        android:text="@string/add_photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 
