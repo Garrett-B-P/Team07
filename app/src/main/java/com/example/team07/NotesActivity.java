@@ -464,10 +464,10 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         return newName;
     }
 
-    /**
+    /**************************************************************************************
      * To save picture to file
      * @param bitmapImage Image to be saved
-     */
+     *************************************************************************************/
     public void savePicture(Bitmap bitmapImage) {
         String fileName = new SimpleDateFormat("YYYYMMddHHmmss").format(Calendar.getInstance());
         File picFile = new File(parent, fileName + ".jpg"); // Does this need to be .jpg, or do we need to specify?
@@ -487,10 +487,10 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         }
     }
 
-    /**
+    /**************************************************************************************
      * To load picture from file and display in imageView
      * @param fileName Name of picture to be loaded and displayed
-     */
+     *************************************************************************************/
     public void loadPicture(String fileName) {
         // How to choose any one picture?
         // Maybe try to save to gallery if needed? Then can pull from there?
@@ -506,7 +506,3 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
 
 }
         //dateCreated = Calendar.getInstance();
-
-
-
-
