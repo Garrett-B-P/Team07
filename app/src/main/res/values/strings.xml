@@ -4,7 +4,6 @@
     <string name="note">Type Note Here</string>
     <string name="timeStamp">Time Stamp</string>
     <string name="save">Save</string>
-
     <string name="button">Button</string>
     <string name="enter_note_title">Enter Note Title</string>
     <string name="enter_note_here">Enter Note Here</string>
@@ -18,5 +17,4 @@
     <string name="take_pic">Take Pic</string>
     <string name="picture">Picture</string>
     <string name="add_photo">Add Photo</string>
-    <string name="save">Save</string>
 </resources>

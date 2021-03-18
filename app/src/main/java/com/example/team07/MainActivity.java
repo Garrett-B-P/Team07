@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
      * Used to implement the search bar and apply a filter on the arrayAdapter3 to only
      * display searched items.
      *
-     * @param menu Unused in this function, auto generated with the function itself.
      * @return Auto generated return statement
      **********************************************************************************/
    /* @Override
