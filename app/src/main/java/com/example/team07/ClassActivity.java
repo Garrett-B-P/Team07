@@ -105,7 +105,7 @@ public class ClassActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 //notes_title.remove(itemToDelete);
                                 // Below is to delete the Note from the directory
-                                deleteNote(i);
+                                deleteNote(itemToDelete);
                                 arrayAdapter.notifyDataSetChanged();
                                 //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
                                 //HashSet<String> set = new HashSet(ClassActivity.notes_title);
