@@ -252,22 +252,38 @@ public class MainActivity extends AppCompatActivity {
         Log.d("MainActivity", "deleteClass: classList has been reset");
     }
 
+    /**
+     * Find specific directory in case of SearchView use
+     * @param position The position of directory in its list
+     * @return the directory File to send to other functions
+     */
     public File findClass(int position) {
         SearchView searchVal = findViewById(R.id.searchView3);
         File foundFile = null;
         if (!searchVal.getQuery().toString().isEmpty()) {
+            // get filtered list of classes
             List<String> searchList = filterClasses(classes, searchVal.getQuery().toString());
+            // find what filename is being selected
             String fileName = searchList.get(position);
             for (File f:mainDirectory.listFiles()) {
                 if (fileName.equals(f.getName())) {
+                    // if the names match, we've found our file
                     foundFile = f;
                 }
             }
         } else {
+            // if not searching for anything
             foundFile = mainDirectory.listFiles()[position];
         }
         return foundFile;
     }
+
+    /**
+     * Filters a list of classes for applicable names
+     * @param classList list to be filtered
+     * @param searchVal string to search for
+     * @return list of applicable class names
+     */
     public List<String> filterClasses(List<String> classList, String searchVal) {
         List<String> newList = new ArrayList<>();
         for (String x:classList) {

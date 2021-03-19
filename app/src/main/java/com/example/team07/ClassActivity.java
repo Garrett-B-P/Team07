@@ -376,6 +376,9 @@ public class ClassActivity extends AppCompatActivity {
         return newName;
     }
 
+    /**
+     * Refreshes class's note list
+     */
     public static void refreshNoteList() {
         File[] fileList = currentDirectory.listFiles();
         notes_title.clear();
@@ -385,22 +388,38 @@ public class ClassActivity extends AppCompatActivity {
         arrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Find specific note in case of SearchView use
+     * @param position The position of the file in its list
+     * @return The file to send to other functions
+     */
     public File findNote(int position) {
         SearchView searchVal = findViewById(R.id.searchView2);
         File foundFile = null;
         if (!searchVal.getQuery().toString().isEmpty()) {
+            // get filtered list of notes
             List<String> searchList = filterNotes(notes_title, searchVal.getQuery().toString());
+            // find what filename is being selected
             String fileName = searchList.get(position);
             for (File f:currentDirectory.listFiles()) {
                 if (fileName.equals(f.getName())) {
+                    // if the names match, we've found our file
                     foundFile = f;
                 }
             }
         } else {
+            // if not searching for anything
             foundFile = currentDirectory.listFiles()[position];
         }
         return foundFile;
     }
+
+    /**
+     * Filters a list of notes for applicable names
+     * @param noteList list to be filtered
+     * @param searchVal string to search for
+     * @return list of applicable note names
+     */
     public List<String> filterNotes(List<String> noteList, String searchVal) {
         List<String> newList = new ArrayList<>();
         for (String x:noteList) {
