@@ -14,10 +14,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 // Milestones: Week 11
 // From Week 10: Titles and content now searchable
@@ -207,7 +209,10 @@ public class MainActivity extends AppCompatActivity {
      ****************************************************************************************/
     public Intent setExistingClass(Intent i, int place) {
         Log.d("MainActivity", "setExistingClass: filePath is readying to send");
-        return i.putExtra("filePath", mainDirectory.listFiles()[place].toString());
+        File toSend = findClass(place);
+        //return i.putExtra("filePath", mainDirectory.listFiles()[place].toString());
+        return i.putExtra("filePath", toSend.toString());
+
     }
 
     /*****************************************************************
@@ -216,8 +221,10 @@ public class MainActivity extends AppCompatActivity {
      *****************************************************************/
     public void deleteClass(int place) {
         // A directory with items inside it cannot be deleted, so contents will be deleted first
-        File[] fullList = mainDirectory.listFiles();
-        File[] toDelete = fullList[place].listFiles();
+        File toDel = findClass(place);
+        //File[] fullList = mainDirectory.listFiles();
+        //File[] toDelete = fullList[place].listFiles();
+        File[] toDelete = toDel.listFiles();
         Log.d("MainActivity", "deleteClass: Directory " + place + " will now be deleted");
         if (toDelete.length > 0) {
             Log.d("MainActivity", "deleteClass: This directory has items inside");
@@ -230,7 +237,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        Boolean classDelete = fullList[place].delete();
+        //Boolean classDelete = fullList[place].delete();
+        Boolean classDelete = toDel.delete();
         if (classDelete) {
             Log.d("MainActivity", "deleteClass: Directory has been deleted");
         } else {
@@ -242,5 +250,31 @@ public class MainActivity extends AppCompatActivity {
             classes.add(newList[i].getName());
         }
         Log.d("MainActivity", "deleteClass: classList has been reset");
+    }
+
+    public File findClass(int position) {
+        SearchView searchVal = findViewById(R.id.searchView3);
+        File foundFile = null;
+        if (!searchVal.getQuery().toString().isEmpty()) {
+            List<String> searchList = filterClasses(classes, searchVal.getQuery().toString());
+            String fileName = searchList.get(position);
+            for (File f:mainDirectory.listFiles()) {
+                if (fileName.equals(f.getName())) {
+                    foundFile = f;
+                }
+            }
+        } else {
+            foundFile = mainDirectory.listFiles()[position];
+        }
+        return foundFile;
+    }
+    public List<String> filterClasses(List<String> classList, String searchVal) {
+        List<String> newList = new ArrayList<>();
+        for (String x:classList) {
+            if (x.toLowerCase().contains(searchVal.toLowerCase())) {
+                newList.add(x);
+            }
+        }
+        return newList;
     }
 }
