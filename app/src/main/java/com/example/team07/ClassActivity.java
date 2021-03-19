@@ -22,6 +22,7 @@ import android.widget.TextView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 /************************************************************************************************
  * A class to facilitate the class page ui and handle transitioning to the note page. Will create
@@ -277,7 +278,9 @@ public class ClassActivity extends AppCompatActivity {
      ****************************************************************************************/
     public void setExistingNote(Intent i, int place) {
         Log.d("ClassActivity", "setExistingNote: filePath is readying to send");
-        i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
+        File toSend = findNote(place);
+        //i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
+        i.putExtra("filePath", toSend.toString());
         setNewNote(i);
     }
 
@@ -318,7 +321,8 @@ public class ClassActivity extends AppCompatActivity {
      *********************************************************/
     public void deleteNote(int place) {
         Log.d("ClassActivity", "deleteNote: Note number " + place + " will now be deleted");
-        currentDirectory.listFiles()[place].delete();
+        //currentDirectory.listFiles()[place].delete();
+        findNote(place).delete();
         File[] newNoteList = currentDirectory.listFiles();
         notes_title.clear();
         for (int x=0; x<newNoteList.length; x++) {
@@ -379,5 +383,31 @@ public class ClassActivity extends AppCompatActivity {
             notes_title.add(fileList[x].getName());
         }
         arrayAdapter.notifyDataSetChanged();
+    }
+
+    public File findNote(int position) {
+        SearchView searchVal = findViewById(R.id.searchView2);
+        File foundFile = null;
+        if (!searchVal.getQuery().toString().isEmpty()) {
+            List<String> searchList = filterNotes(notes_title, searchVal.getQuery().toString());
+            String fileName = searchList.get(position);
+            for (File f:currentDirectory.listFiles()) {
+                if (fileName.equals(f.getName())) {
+                    foundFile = f;
+                }
+            }
+        } else {
+            foundFile = currentDirectory.listFiles()[position];
+        }
+        return foundFile;
+    }
+    public List<String> filterNotes(List<String> noteList, String searchVal) {
+        List<String> newList = new ArrayList<>();
+        for (String x:noteList) {
+            if (x.toLowerCase().contains(searchVal.toLowerCase())) {
+                newList.add(x);
+            }
+        }
+        return newList;
     }
 }
