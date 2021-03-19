@@ -37,6 +37,7 @@ public class ClassActivity extends AppCompatActivity {
     //Creates Arrays that hold the note information, Garrett
     static ArrayList<String> notes_title = new ArrayList<String>();
     static ArrayAdapter arrayAdapter;
+    ListView listView;
 
     //Creates an intent for the NotesActivity and sends some information to the activity, Garrett
     public void onClick(View v) {
@@ -50,10 +51,9 @@ public class ClassActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_class);
+        initSearchWidget();
 
-        //finds the listView in the layout and sets it to a variable, Garrett
-        ListView listView = findViewById(R.id.listView2);
-
+        listView = findViewById(R.id.listView2);
         //I believe this saves the note, Garrett
         //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
         //HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
@@ -98,7 +98,7 @@ public class ClassActivity extends AppCompatActivity {
                 new AlertDialog.Builder(ClassActivity.this)
                         .setIcon(R.drawable.ic_dialog_alert)
                         .setTitle("Are you sure?")
-                        .setMessage("Do you want to delete " + notes_title.get(itemToDelete) + "?")
+                        .setMessage("Do you want to delete " + findNote(itemToDelete).getName() + "?")
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 
                             @Override
@@ -190,8 +190,39 @@ public class ClassActivity extends AppCompatActivity {
 
     }
 
+    public void initSearchWidget() {
+        SearchView searchView = findViewById(R.id.searchView2);
+        ArrayList<String> filteredClasses = new ArrayList<>();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filteredClasses.clear();
+
+                for (int i = 0; i < notes_title.size(); i++){
+                    String aClass = notes_title.get(i);
+
+                    if (aClass.toLowerCase().contains(newText.toLowerCase())) {
+                        filteredClasses.add(aClass);
+                    }
+                }
+
+                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
+                listView.setAdapter(arrayAdapter);
+
+                return false;
+            }
+        });
+        filteredClasses.clear();
+    }
+
     // Function for searchView2, will apply a filter to arrayAdapter2 so only items with matching text are displayed
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Initialize search view
         SearchView searchView = findViewById(R.id.searchView2);
@@ -211,7 +242,7 @@ public class ClassActivity extends AppCompatActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
     // Below are functions to call for app's directory use
 
     /******************************************************************
