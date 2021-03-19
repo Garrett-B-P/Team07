@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        //initSearchWidget();
+        initSearchWidget();
 
         // Creates list of classes
         listView = findViewById(R.id.classList);
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(MainActivity.this)
                     .setIcon(R.drawable.ic_dialog_alert)
                     .setTitle("Are you sure?")
-                    .setMessage("Do you want to delete " + classes.get(itemToDelete) + "?")
+                    .setMessage("Do you want to delete " + findClass(itemToDelete).getName() + "?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
                         //classes.remove(itemToDelete);
                         // To delete the class from the directory
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @return Auto generated return statement
      **********************************************************************************/
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Initialize search view
         SearchView searchView = findViewById(R.id.searchView3);
@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
-    /*public void initSearchWidget() {
+    public void initSearchWidget() {
         SearchView searchView = findViewById(R.id.searchView3);
         ArrayList<String> filteredClasses = new ArrayList<>();
 
@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                filteredClasses.clear();
 
                 for (int i = 0; i < classes.size(); i++){
                     String aClass = classes.get(i);
@@ -153,7 +154,8 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-    }*/
+        filteredClasses.clear();
+    }
 
     public void clickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -291,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
                 newList.add(x);
             }
         }
+
         return newList;
     }
 }
