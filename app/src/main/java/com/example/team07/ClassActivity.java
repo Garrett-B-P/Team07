@@ -202,18 +202,24 @@ public class ClassActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                filteredClasses.clear();
+                // reason for if/else statement: if newText is empty, switch back to normal adapter
+                if (!newText.isEmpty()) {
+                    filteredClasses.clear();
 
-                for (int i = 0; i < notes_title.size(); i++){
-                    String aClass = notes_title.get(i);
+                    for (int i = 0; i < notes_title.size(); i++){
+                        String aClass = notes_title.get(i);
 
-                    if (aClass.toLowerCase().contains(newText.toLowerCase())) {
-                        filteredClasses.add(aClass);
+                        if (aClass.toLowerCase().contains(newText.toLowerCase())) {
+                            filteredClasses.add(aClass);
+                        }
                     }
-                }
 
-                ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
-                listView.setAdapter(arrayAdapter);
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
+                    listView.setAdapter(arrayAdapter);
+                } else {
+                    arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, notes_title);
+                    listView.setAdapter(arrayAdapter);
+                }
 
                 return false;
             }
