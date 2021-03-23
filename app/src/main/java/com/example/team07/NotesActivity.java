@@ -44,6 +44,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashSet;
 
 /********************************************************************************************
@@ -167,7 +168,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     // compareTo() is needed for Comparable<File>
     @Override
     public int compareTo(File o) {
-        return 0;
+        return this.path.getName().compareTo(o.getName());
     }
 
     /*
@@ -180,6 +181,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         }
     };
      */
+    public static Comparator<File> lastEdit = new Comparator<File>() {
+        @Override
+        public int compare(File o1, File o2) {
+            return (int)(o1.lastModified() - o2.lastModified());
+        }
+    };
 
     //For the camera
     public void takePicture(View view) {
