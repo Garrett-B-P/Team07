@@ -240,7 +240,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-                destination = new File(Environment.getExternalStorageDirectory(),System.currentTimeMillis() + ".jpg");
+                destination = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpg");
                 FileOutputStream fo;
 
                 try {
@@ -248,19 +248,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                     fo = new FileOutputStream(destination);
                     fo.write(bytes.toByteArray());
                     fo.close();
-                }
-                catch (FileNotFoundException e) {
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
 
                 }
 
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(thumbnail);
+                MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , "");
 
-            }
-            else if (requestCode == FROM_STORAGE) {
+            } else if (requestCode == FROM_STORAGE) {
                 Log.d("FROM_STORAGE ", " FROM_STORAGE");
                 Uri selectedImageUri = data.getData();
                 String[] projection = {MediaStore.MediaColumns.DATA};
@@ -285,6 +283,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 options.inJustDecodeBounds = false;
                 bm = BitmapFactory.decodeFile(selectedImagePath, options);
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
+
+
             }
         }
     }
