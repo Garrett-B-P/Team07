@@ -44,6 +44,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.HashSet;
 
 /********************************************************************************************
@@ -51,7 +52,7 @@ import java.util.HashSet;
  * in the class it currently belongs to if needed. Otherwise opens the correct file and loads
  * the information to the screen.
  ********************************************************************************************/
-public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
+public class NotesActivity extends AppCompatActivity implements Comparable<File> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     //int noteId;
     // Member variables below are for use with app's directory
@@ -63,9 +64,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     final int TAKE_PHOTO = 1;
     final int FROM_STORAGE = 2;
 
-    Calendar createdDate = Calendar.getInstance();
-    // createdDate might never be shown, but can be sorted by in the future
-    Calendar lastEdit;
+    //Calendar lastEdit;
 
     public void onClick(View v) {
         finish();
@@ -78,11 +77,11 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
 
-        TextView time = findViewById(R.id.time);
-        lastEdit = Calendar.getInstance();
-        String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
-        time.setText(timeStamp);
-
+        //TextView time = findViewById(R.id.time);
+        //lastEdit = Calendar.getInstance();
+        //String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
+        //time.setText(timeStamp);
+        // If we were to use the above, it would be below setUpNote()
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
@@ -166,22 +165,28 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         saveToFile();
     }
 
-    // compareTo() is needed for Comparable<NotesActivity>
+    // compareTo() is needed for Comparable<File>
     @Override
-    public int compareTo(NotesActivity o) {
-        return 0;
+    public int compareTo(File o) {
+        return this.path.getName().compareTo(o.getName());
     }
 
     /*
     // To make other comparisons: Collections.sort(ListName, NotesActivity.byCreate);
-    public static Comparator<NotesActivity> byCreate = new Comparator<NotesActivity>() {
+    public static Comparator<File> byCreate = new Comparator<File>() {
         @Override
-        public int compare(NotesActivity o1, NotesActivity o2) {
+        public int compare(File o1, File o2) {
             //return (o1.createDateVar.compareTo(o2.createDateVar);
             return 0;
         }
     };
      */
+    public static Comparator<File> lastEdit = new Comparator<File>() {
+        @Override
+        public int compare(File o1, File o2) {
+            return (int)(o1.lastModified() - o2.lastModified());
+        }
+    };
 
     //For the camera
     public void takePicture(View view) {
@@ -235,7 +240,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
                 Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-                destination = new File(Environment.getExternalStorageDirectory(),System.currentTimeMillis() + ".jpg");
+                destination = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpg");
                 FileOutputStream fo;
 
                 try {
@@ -243,19 +248,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
                     fo = new FileOutputStream(destination);
                     fo.write(bytes.toByteArray());
                     fo.close();
-                }
-                catch (FileNotFoundException e) {
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
 
                 }
 
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(thumbnail);
+                MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , "");
 
-            }
-            else if (requestCode == FROM_STORAGE) {
+            } else if (requestCode == FROM_STORAGE) {
                 Log.d("FROM_STORAGE ", " FROM_STORAGE");
                 Uri selectedImageUri = data.getData();
                 String[] projection = {MediaStore.MediaColumns.DATA};
@@ -280,6 +283,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
                 options.inJustDecodeBounds = false;
                 bm = BitmapFactory.decodeFile(selectedImagePath, options);
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
+
+
             }
         }
     }
@@ -300,6 +305,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         Log.d("NotesActivity", "setUpNote: path has been set");
         noteTitle.setText(path.getName());
         Log.d("NotesActivity", "setUpNote: noteTitle has been set");
+        //lastEdit.setTimeInMillis(path.lastModified());
+        // Above supposedly sets a calendar date through milliseconds
         try {
             FileInputStream fis = new FileInputStream(path);
             Log.d("NotesActivity", "setUpNote: FileInputStream has been created");
