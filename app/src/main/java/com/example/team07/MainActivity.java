@@ -21,10 +21,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-// Milestones: Week 11
-// From Week 10: Titles and content now searchable
-// Camera now accessible and automatically uploads picture taken
-// Pictures and pdfs able to be uploaded to notes/class
+// Milestones: Week 12 - Work on stretch goals and polish/test core features
+// From Week 11: get camera pictures to automatically upload to their NotesActivity
+// Reminders and due dates work in tandem with system calendar
+// Sort classes/notes by dates edited/created or by title
+// Further refine GUI to be more user-friendly
+// Work out bugs that may have been uncovered
 
 /**********************************************************************************************
  * A class to implement the main page ui. Creates/reopens the main directory where all the
@@ -153,6 +155,11 @@ public class MainActivity extends AppCompatActivity {
                     ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, filteredClasses);
                     listView.setAdapter(arrayAdapter);
                 } else {
+                    classes.clear();
+                    File[] fileList = mainDirectory.listFiles();
+                    for (int i=0; i<fileList.length; i++) {
+                        classes.add(fileList[i].getName());
+                    }
                     listView.setAdapter(arrayAdapter3);
                 }
 
