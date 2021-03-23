@@ -100,34 +100,11 @@ public class MainActivity extends AppCompatActivity {
 
     // Function for searchView3, will apply a filter to arrayAdapter3 so only items with matching text are displayed
 
-    /**********************************************************************************
-     * Used to implement the search bar and apply a filter on the arrayAdapter3 to only
-     * display searched items.
-     *
-     * @return Auto generated return statement
-     **********************************************************************************/
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Initialize search view
-        SearchView searchView = findViewById(R.id.searchView3);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //Filter array list of classes
-                arrayAdapter3.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }*/
-
+    /*************************************************************************************************
+     * Widget to control what is displayed when search bar is being used. Creates new list of filtered
+     * items matching the search query. Also refreshes the list of classes if a new class is created
+     * while the search is initiated.
+     *************************************************************************************************/
     public void initSearchWidget() {
         SearchView searchView = findViewById(R.id.searchView3);
         ArrayList<String> filteredClasses = new ArrayList<>();
@@ -169,6 +146,10 @@ public class MainActivity extends AppCompatActivity {
         filteredClasses.clear();
     }
 
+    /****************************************************************************************
+     * Function that contains clickListener for the listView. Calls setExistingClass function
+     * to setup the intent with the proper information before starting the class activity.
+     ****************************************************************************************/
     public void clickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -292,12 +273,12 @@ public class MainActivity extends AppCompatActivity {
         return foundFile;
     }
 
-    /**
+    /************************************************
      * Filters a list of classes for applicable names
      * @param classList list to be filtered
      * @param searchVal string to search for
      * @return list of applicable class names
-     */
+     ************************************************/
     public List<String> filterClasses(List<String> classList, String searchVal) {
         List<String> newList = new ArrayList<>();
         for (String x:classList) {
