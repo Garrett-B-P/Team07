@@ -155,6 +155,11 @@ public class MainActivity extends AppCompatActivity {
                     ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, filteredClasses);
                     listView.setAdapter(arrayAdapter);
                 } else {
+                    classes.clear();
+                    File[] fileList = mainDirectory.listFiles();
+                    for (int i=0; i<fileList.length; i++) {
+                        classes.add(fileList[i].getName());
+                    }
                     listView.setAdapter(arrayAdapter3);
                 }
 

@@ -217,6 +217,11 @@ public class ClassActivity extends AppCompatActivity {
                     ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
                     listView.setAdapter(arrayAdapter);
                 } else {
+                    notes_title.clear();
+                    File[] fileList = currentDirectory.listFiles();
+                    for (int x=0; x<fileList.length; x++) {
+                        notes_title.add(fileList[x].getName());
+                    }
                     arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, notes_title);
                     listView.setAdapter(arrayAdapter);
                 }
