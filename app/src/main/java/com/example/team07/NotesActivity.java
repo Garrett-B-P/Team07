@@ -51,7 +51,7 @@ import java.util.HashSet;
  * in the class it currently belongs to if needed. Otherwise opens the correct file and loads
  * the information to the screen.
  ********************************************************************************************/
-public class NotesActivity extends AppCompatActivity implements Comparable<NotesActivity> {
+public class NotesActivity extends AppCompatActivity implements Comparable<File> {
     //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
     //int noteId;
     // Member variables below are for use with app's directory
@@ -63,9 +63,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
     final int TAKE_PHOTO = 1;
     final int FROM_STORAGE = 2;
 
-    Calendar createdDate = Calendar.getInstance();
-    // createdDate might never be shown, but can be sorted by in the future
-    Calendar lastEdit;
+    //Calendar lastEdit;
 
     public void onClick(View v) {
         finish();
@@ -78,11 +76,11 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
 
-        TextView time = findViewById(R.id.time);
-        lastEdit = Calendar.getInstance();
-        String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
-        time.setText(timeStamp);
-
+        //TextView time = findViewById(R.id.time);
+        //lastEdit = Calendar.getInstance();
+        //String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
+        //time.setText(timeStamp);
+        // If we were to use the above, it would be below setUpNote()
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
@@ -166,17 +164,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         saveToFile();
     }
 
-    // compareTo() is needed for Comparable<NotesActivity>
+    // compareTo() is needed for Comparable<File>
     @Override
-    public int compareTo(NotesActivity o) {
+    public int compareTo(File o) {
         return 0;
     }
 
     /*
     // To make other comparisons: Collections.sort(ListName, NotesActivity.byCreate);
-    public static Comparator<NotesActivity> byCreate = new Comparator<NotesActivity>() {
+    public static Comparator<File> byCreate = new Comparator<File>() {
         @Override
-        public int compare(NotesActivity o1, NotesActivity o2) {
+        public int compare(File o1, File o2) {
             //return (o1.createDateVar.compareTo(o2.createDateVar);
             return 0;
         }
@@ -300,6 +298,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<Notes
         Log.d("NotesActivity", "setUpNote: path has been set");
         noteTitle.setText(path.getName());
         Log.d("NotesActivity", "setUpNote: noteTitle has been set");
+        //lastEdit.setTimeInMillis(path.lastModified());
+        // Above supposedly sets a calendar date through milliseconds
         try {
             FileInputStream fis = new FileInputStream(path);
             Log.d("NotesActivity", "setUpNote: FileInputStream has been created");
