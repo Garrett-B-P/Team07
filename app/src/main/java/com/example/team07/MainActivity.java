@@ -120,34 +120,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     // Function for searchView3, will apply a filter to arrayAdapter3 so only items with matching text are displayed
 
-    /**********************************************************************************
-     * Used to implement the search bar and apply a filter on the arrayAdapter3 to only
-     * display searched items.
-     *
-     * @return Auto generated return statement
-     **********************************************************************************/
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Initialize search view
-        SearchView searchView = findViewById(R.id.searchView3);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //Filter array list of classes
-                arrayAdapter3.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }*/
-
+    /*************************************************************************************************
+     * Widget to control what is displayed when search bar is being used. Creates new list of filtered
+     * items matching the search query. Also refreshes the list of classes if a new class is created
+     * while the search is initiated.
+     *************************************************************************************************/
     public void initSearchWidget() {
         SearchView searchView = findViewById(R.id.searchView3);
         ArrayList<String> filteredClasses = new ArrayList<>();
@@ -175,11 +152,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, filteredClasses);
                     listView.setAdapter(arrayAdapter);
                 } else {
-                    classes.clear();
-                    File[] fileList = mainDirectory.listFiles();
-                    for (int i=0; i<fileList.length; i++) {
-                        classes.add(fileList[i].getName());
-                    }
+                    resetClasses();
                     listView.setAdapter(arrayAdapter3);
                 }
 
@@ -189,6 +162,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         filteredClasses.clear();
     }
 
+    /****************************************************************************************
+     * Function that contains clickListener for the listView. Calls setExistingClass function
+     * to setup the intent with the proper information before starting the class activity.
+     ****************************************************************************************/
     public void clickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -215,11 +192,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void setUpMain() {
         mainDirectory = getApplicationContext().getFilesDir();
         Log.d("MainActivity", "setUpMain: mainDirectory has been set");
-        File[] fileList = mainDirectory.listFiles();
-        classes.clear();
-        for (int i=0; i<fileList.length; i++) {
-            classes.add(fileList[i].getName());
-        }
+        resetClasses();
         Log.d("MainActivity", "setUpMain: classList has been set and filled");
         //arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
         Log.d("MainActivity", "setUpMain: ArrayAdapter has been set to classList");
@@ -278,11 +251,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         } else {
             Log.d("MainActivity", "deleteClass: Directory was not deleted. There may be items within");
         }
-        File[] newList = mainDirectory.listFiles();
-        classes.clear();
-        for (int i=0; i<newList.length; i++) {
-            classes.add(newList[i].getName());
-        }
+        resetClasses();
         Log.d("MainActivity", "deleteClass: classList has been reset");
     }
 
@@ -312,12 +281,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return foundFile;
     }
 
-    /**
+    /************************************************
      * Filters a list of classes for applicable names
      * @param classList list to be filtered
      * @param searchVal string to search for
      * @return list of applicable class names
-     */
+     ************************************************/
     public List<String> filterClasses(List<String> classList, String searchVal) {
         List<String> newList = new ArrayList<>();
         for (String x:classList) {
@@ -327,6 +296,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         return newList;
+    }
+
+    /**
+     * Reset classes list for display
+     */
+    public void resetClasses() {
+        File[] fileList = mainDirectory.listFiles();
+        classes.clear();
+        for (int i=0; i<fileList.length; i++) {
+            classes.add(fileList[i].getName());
+        }
     }
 
     @Override

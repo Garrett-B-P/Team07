@@ -55,7 +55,7 @@
              android:layout_height="wrap_content"
              android:layout_marginStart="50dp"
              android:layout_marginLeft="50dp"
-             android:layout_marginTop="16dp"
+             android:layout_marginTop="48dp"
              android:layout_marginEnd="50dp"
              android:layout_marginRight="50dp"
              android:adjustViewBounds="true"
@@ -68,7 +68,7 @@
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintHorizontal_bias="0.561"
              app:layout_constraintStart_toStartOf="parent"
-             app:layout_constraintTop_toBottomOf="@+id/time" />
+             app:layout_constraintTop_toBottomOf="@+id/noteTitle" />
 
 
          <EditText
@@ -93,18 +93,19 @@
 
          <EditText
              android:id="@+id/noteTitle"
-             android:layout_width="185dp"
-             android:layout_height="46dp"
+             android:layout_width="250dp"
+             android:layout_height="wrap_content"
              android:layout_marginStart="16dp"
              android:layout_marginTop="16dp"
              android:autofillHints=""
              android:ems="10"
              android:hint="@string/title_name"
-             android:inputType="textPersonName"
+             android:inputType="textMultiLine"
              android:selectAllOnFocus="true"
              android:textColor="@color/black"
              android:typeface="normal"
              android:textStyle="bold"
+             android:textSize="25dp"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintTop_toTopOf="parent" />
 
