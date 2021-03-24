@@ -14,9 +14,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
+import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,12 +36,16 @@ import java.util.List;
  * information for the app will be stored. Stores the titles for each class as well for viewing
  * purposes.
  **********************************************************************************************/
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+
+
+    private Spinner spinnerSearch;
 
     //Creates an array for the different classes, Garrett
     static ArrayList<String> classes = new ArrayList<>();
     static ArrayAdapter arrayAdapter3;
     ListView listView;
+
     // Member variables below are for use with app's directory
     static File mainDirectory;
 
@@ -56,6 +63,18 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         initSearchWidget();
+
+        spinnerSearch = findViewById(R.id.spinner);
+        spinnerSearch.setOnItemSelectedListener(this);
+
+        String[] searchOptions = getResources().getStringArray(R.array.searchOptions);
+        ArrayAdapter adapter = new ArrayAdapter(this,
+                android.R.layout.simple_spinner_item, searchOptions);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSearch.setAdapter(adapter);
+
+
 
         // Creates list of classes
         listView = findViewById(R.id.classList);
@@ -97,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
     // Function for searchView3, will apply a filter to arrayAdapter3 so only items with matching text are displayed
 
@@ -307,5 +327,20 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return newList;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (parent.getId() == R.id.spinner) {
+            String valueFromSpinner = parent.getItemAtPosition(position).toString();
+            if (position != 0) {
+                Toast.makeText(MainActivity.this, "" + valueFromSpinner, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

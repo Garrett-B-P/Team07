@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="searchOptions">
+        <item>Default</item>
+        <item>Last Edited</item>
+        <item>Title</item>
+        <item>Reverse Title</item>
+</string-array></resources>
