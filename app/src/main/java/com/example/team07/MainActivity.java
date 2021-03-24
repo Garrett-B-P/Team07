@@ -4,12 +4,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.os.Bundle;
 import android.widget.AdapterView;
@@ -17,14 +14,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 // Milestones: Week 12 - Work on stretch goals and polish/test core features
@@ -42,7 +36,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
 
-    private Spinner spinnerSearch;
+    private Spinner spinnerSort;
 
     //Creates an array for the different classes, Garrett
     static ArrayList<String> classes = new ArrayList<>();
@@ -67,15 +61,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         initSearchWidget();
 
-        spinnerSearch = findViewById(R.id.spinner);
-        spinnerSearch.setOnItemSelectedListener(this);
+        spinnerSort = findViewById(R.id.spinner);
+        spinnerSort.setOnItemSelectedListener(this);
 
         String[] searchOptions = getResources().getStringArray(R.array.searchOptions);
         ArrayAdapter adapter = new ArrayAdapter(this,
                 android.R.layout.simple_spinner_item, searchOptions);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSearch.setAdapter(adapter);
+        spinnerSort.setAdapter(adapter);
 
 
 
@@ -325,31 +319,34 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
             switch (position) {
                 case 1: {
-                    Toast.makeText(MainActivity.this, "You selected: " + valueFromSpinner, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, valueFromSpinner, Toast.LENGTH_SHORT).show();
                     Collections.sort(fileList, NotesActivity.lastEdit.reversed());
                     break;
                 }
                 case 2: {
-                    Toast.makeText(MainActivity.this, "You selected: " + valueFromSpinner, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, valueFromSpinner, Toast.LENGTH_SHORT).show();
                     Collections.sort(fileList, NotesActivity.lastEdit);
                     break;
                 }
                 case 3: {
+                    Toast.makeText(MainActivity.this, valueFromSpinner, Toast.LENGTH_SHORT).show();
                     Collections.sort(fileList);
                     break;
                 }
                 case 4: {
+                    Toast.makeText(MainActivity.this, valueFromSpinner, Toast.LENGTH_SHORT).show();
                     Collections.sort(fileList, Collections.reverseOrder());
                     break;
                 }
             }
 
-            ArrayList<String> titles = new ArrayList<>();
+            classes.clear();
+
             for (File f: fileList) {
-                titles.add(f.getName());
+                classes.add(f.getName());
             }
 
-            ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, titles);
+            ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, classes);
             listView.setAdapter(arrayAdapter);
         }
     }

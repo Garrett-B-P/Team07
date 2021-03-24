@@ -283,8 +283,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 options.inJustDecodeBounds = false;
                 bm = BitmapFactory.decodeFile(selectedImagePath, options);
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
-
-
             }
         }
     }
