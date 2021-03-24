@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
