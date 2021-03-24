@@ -1,11 +1,13 @@
 package com.example.team07;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.lang.reflect.GenericArrayType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -236,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (toDelete.length > 0) {
             Log.d("MainActivity", "deleteClass: This directory has items inside");
             for (int x=0; x<toDelete.length; x++) {
-                Boolean itemDelete = toDelete[x].delete();
+                boolean itemDelete = toDelete[x].delete();
                 if (itemDelete) {
                     Log.d("MainActivity", "deleteClass: Directory item " + x + " has been deleted");
                 } else {
@@ -245,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
         //Boolean classDelete = fullList[place].delete();
-        Boolean classDelete = toDel.delete();
+        boolean classDelete = toDel.delete();
         if (classDelete) {
             Log.d("MainActivity", "deleteClass: Directory has been deleted");
         } else {
@@ -304,18 +307,50 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void resetClasses() {
         File[] fileList = mainDirectory.listFiles();
         classes.clear();
-        for (int i=0; i<fileList.length; i++) {
-            classes.add(fileList[i].getName());
+        for (File file : fileList) {
+            classes.add(file.getName());
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.spinner) {
             String valueFromSpinner = parent.getItemAtPosition(position).toString();
-            if (position != 0) {
-                Toast.makeText(MainActivity.this, "" + valueFromSpinner, Toast.LENGTH_SHORT).show();
+
+            File[] x = mainDirectory.listFiles();
+            ArrayList<File> fileList = new ArrayList<>();
+            for (File f: x) {
+                fileList.add(f);
             }
+            switch (position) {
+                case 1: {
+                    Toast.makeText(MainActivity.this, "You selected: " + valueFromSpinner, Toast.LENGTH_SHORT).show();
+                    Collections.sort(fileList, NotesActivity.lastEdit.reversed());
+                    break;
+                }
+                case 2: {
+                    Toast.makeText(MainActivity.this, "You selected: " + valueFromSpinner, Toast.LENGTH_SHORT).show();
+                    Collections.sort(fileList, NotesActivity.lastEdit);
+                    break;
+                }
+                case 3: {
+                    Collections.sort(fileList);
+                    break;
+                }
+                case 4: {
+                    Collections.sort(fileList, Collections.reverseOrder());
+                    break;
+                }
+            }
+
+            ArrayList<String> titles = new ArrayList<>();
+            for (File f: fileList) {
+                titles.add(f.getName());
+            }
+
+            ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, titles);
+            listView.setAdapter(arrayAdapter);
         }
     }
 

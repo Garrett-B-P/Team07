@@ -2,7 +2,8 @@
 <resources>
     <string-array name="searchOptions">
         <item>Default</item>
-        <item>Last Edited</item>
-        <item>Title</item>
-        <item>Reverse Title</item>
+        <item>Most Recent</item>
+        <item>Least Recent</item>
+        <item>A-Z</item>
+        <item>Z-A</item>
 </string-array></resources>
