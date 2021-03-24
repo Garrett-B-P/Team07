@@ -456,7 +456,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         for (int x=0; x<parentFile.listFiles().length; x++) {
             if (name.equals(parentFile.listFiles()[x].getName())) {
                 // If the name is in the directory
-                answer = false;
+                answer = true;
             }
         }
         if (!answer) {

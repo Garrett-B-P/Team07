@@ -132,11 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, filteredClasses);
                     listView.setAdapter(arrayAdapter);
                 } else {
-                    classes.clear();
-                    File[] fileList = mainDirectory.listFiles();
-                    for (int i=0; i<fileList.length; i++) {
-                        classes.add(fileList[i].getName());
-                    }
+                    resetClasses();
                     listView.setAdapter(arrayAdapter3);
                 }
 
@@ -176,11 +172,7 @@ public class MainActivity extends AppCompatActivity {
     public void setUpMain() {
         mainDirectory = getApplicationContext().getFilesDir();
         Log.d("MainActivity", "setUpMain: mainDirectory has been set");
-        File[] fileList = mainDirectory.listFiles();
-        classes.clear();
-        for (int i=0; i<fileList.length; i++) {
-            classes.add(fileList[i].getName());
-        }
+        resetClasses();
         Log.d("MainActivity", "setUpMain: classList has been set and filled");
         //arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
         Log.d("MainActivity", "setUpMain: ArrayAdapter has been set to classList");
@@ -239,11 +231,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d("MainActivity", "deleteClass: Directory was not deleted. There may be items within");
         }
-        File[] newList = mainDirectory.listFiles();
-        classes.clear();
-        for (int i=0; i<newList.length; i++) {
-            classes.add(newList[i].getName());
-        }
+        resetClasses();
         Log.d("MainActivity", "deleteClass: classList has been reset");
     }
 
@@ -288,5 +276,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return newList;
+    }
+
+    /**
+     * Reset classes list for display
+     */
+    public void resetClasses() {
+        File[] fileList = mainDirectory.listFiles();
+        classes.clear();
+        for (int i=0; i<fileList.length; i++) {
+            classes.add(fileList[i].getName());
+        }
     }
 }

@@ -217,11 +217,7 @@ public class ClassActivity extends AppCompatActivity {
                     ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
                     listView.setAdapter(arrayAdapter);
                 } else {
-                    notes_title.clear();
-                    File[] fileList = currentDirectory.listFiles();
-                    for (int x=0; x<fileList.length; x++) {
-                        notes_title.add(fileList[x].getName());
-                    }
+                    resetNotes();
                     arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, notes_title);
                     listView.setAdapter(arrayAdapter);
                 }
@@ -268,11 +264,7 @@ public class ClassActivity extends AppCompatActivity {
         Log.d("ClassActivity", "setUpClass: currentDirectory has been set");
         classTitle.setText(currentDirectory.getName());
         Log.d("ClassActivity", "setUpClass: classTitle has been set");
-        File[] fileList = currentDirectory.listFiles();
-        notes_title.clear();
-        for (int x=0; x<fileList.length; x++) {
-            notes_title.add(fileList[x].getName());
-        }
+        resetNotes();
         Log.d("ClassActivity", "setUpClass: noteList has been set and filled");
         //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, noteList);
         Log.d("ClassActivity", "setUpClass: ArrayAdapter has been set to noteList");
@@ -366,10 +358,7 @@ public class ClassActivity extends AppCompatActivity {
         //currentDirectory.listFiles()[place].delete();
         findNote(place).delete();
         File[] newNoteList = currentDirectory.listFiles();
-        notes_title.clear();
-        for (int x=0; x<newNoteList.length; x++) {
-            notes_title.add(newNoteList[x].getName());
-        }
+        resetNotes();
         Log.d("ClassActivity", "deleteNote: noteList has been reset");
     }
 
@@ -470,5 +459,16 @@ public class ClassActivity extends AppCompatActivity {
             }
         }
         return newList;
+    }
+
+    /**
+     * Reset notes list for display
+     */
+    public void resetNotes() {
+        notes_title.clear();
+        File[] fileList = currentDirectory.listFiles();
+        for (int x=0; x<fileList.length; x++) {
+            notes_title.add(fileList[x].getName());
+        }
     }
 }
