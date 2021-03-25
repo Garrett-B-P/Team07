@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         startActivity(intent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    //@RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -166,11 +166,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             //When an item in the list view is clicked it will go to that intent, Garrett
-            @RequiresApi(api = Build.VERSION_CODES.N)
+            //@RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("MainActivity", "listView.onItemClick: getItemAtPosition is " + listView.getItemAtPosition(position));
-                Log.i("MainActivity", "listView.onItemClick: getSelectedItem is " + listView.getSelectedItem());
+                Log.i("MainActivity", "listView.onItemClick: Item is " + listView.getItemAtPosition(position).toString());
                 // Going from MainActivity to ClassActivity
                 Intent intent = new Intent(MainActivity.this, ClassActivity.class);
                 //intent.putExtra("classId", position);
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param place The position of the Class in the directory
      * @return Updated intent with the current class's information
      ****************************************************************************************/
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    //@RequiresApi(api = Build.VERSION_CODES.N)
     public Intent setExistingClass(Intent i, int place) {
         Log.d("MainActivity", "setExistingClass: filePath is readying to send");
         File toSend = findClass(place);
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * A function used to delete directories and their contents
      * @param place The position the directory we're deleting
      *****************************************************************/
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    //@RequiresApi(api = Build.VERSION_CODES.N)
     public void deleteClass(int place) {
         // A directory with items inside it cannot be deleted, so contents will be deleted first
         File toDel = findClass(place);
@@ -261,8 +261,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param position The position of directory in its list
      * @return the directory File to send to other functions
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    //@RequiresApi(api = Build.VERSION_CODES.N)
     public File findClass(int position) {
+        String name = listView.getItemAtPosition(position).toString();
+        Log.i("MainActivity", "findClass: Item is " + listView.getItemAtPosition(position).toString());
+        for (File f:mainDirectory.listFiles()) {
+            if (name.equals(f.getName())) {
+                return f;
+            }
+        }
+        return null;
+        /*
         SearchView searchVal = findViewById(R.id.searchView3);
         //Spinner spinner = findViewById(R.id.spinner);
         File foundFile = null;
@@ -306,6 +315,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             foundFile = mainDirectory.listFiles()[position];
         }
         return foundFile;
+
+         */
     }
 
     /************************************************

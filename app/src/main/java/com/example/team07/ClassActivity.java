@@ -424,6 +424,14 @@ public class ClassActivity extends AppCompatActivity {
      * @return The file to send to other functions
      */
     public File findNote(int position) {
+        String name = listView.getItemAtPosition(position).toString();
+        for (File f:currentDirectory.listFiles()) {
+            if (name.equals(f.getName())) {
+                return f;
+            }
+        }
+        return null;
+        /*
         SearchView searchVal = findViewById(R.id.searchView2);
         File foundFile = null;
         if (!searchVal.getQuery().toString().isEmpty()) {
@@ -442,6 +450,8 @@ public class ClassActivity extends AppCompatActivity {
             foundFile = currentDirectory.listFiles()[position];
         }
         return foundFile;
+
+         */
     }
 
     /**
