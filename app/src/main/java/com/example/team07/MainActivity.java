@@ -387,8 +387,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 classes.add(f.getName());
             }
 
-            ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, classes);
-            listView.setAdapter(arrayAdapter);
+            arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, classes);
+            listView.setAdapter(arrayAdapter3);
         }
     }
 
