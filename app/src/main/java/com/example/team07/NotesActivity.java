@@ -188,6 +188,13 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         }
     };
 
+    public static Comparator<File> title = new Comparator<File>() {
+        @Override
+        public int compare(File o1, File o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
+    };
+
     //For the camera
     public void takePicture(View view) {
 

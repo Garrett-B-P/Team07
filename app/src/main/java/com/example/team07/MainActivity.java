@@ -301,10 +301,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     Collections.sort(sortList, NotesActivity.lastEdit);
                     break;
                 case 3:
-                    Collections.sort(sortList);
+                    Collections.sort(sortList, NotesActivity.title);
                     break;
                 case 4:
-                    Collections.sort(sortList, Collections.reverseOrder());
+                    Collections.sort(sortList, NotesActivity.title.reversed());
                     break;
             }
             System.out.print("Found " + sortList.get(position).getName());
