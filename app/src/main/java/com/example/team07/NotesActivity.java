@@ -336,13 +336,11 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             try (BufferedReader reader = new BufferedReader(isr)) {
                 String line = reader.readLine();
                 while (line != null) {
-                    if (line != "PHOTOPATH_"){
+                    if (!line.contains("PHOTOPATH_")){
                         builder.append(line).append("\n");
                         line = reader.readLine();
-                    } else if (line == "PHOTOPATH_"){
-                        line = reader.readLine();
-                    } else {
-                        photoPath = line;
+                    } else{
+                        photoPath = line.substring(10);
                         line = reader.readLine();
                     }
                 }
@@ -453,7 +451,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             FileWriter writer = new FileWriter(path);
             Log.d("NotesActivity", "saveToFile: Created FileWriter");
             writer.append(fileContents);
-            writer.append("\nPHOTOPATH_\n");
+            writer.append("\nPHOTOPATH_");
             writer.append(photoPath);
             Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
             writer.flush();
