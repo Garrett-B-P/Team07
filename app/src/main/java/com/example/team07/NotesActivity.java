@@ -83,7 +83,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
-        if(photoPath != null) {
+        if(photoPath != "") {
             Toast.makeText(NotesActivity.this, "It worked", Toast.LENGTH_SHORT).show();
             loadGalleryImage(photoPath);
         }
