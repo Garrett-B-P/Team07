@@ -336,9 +336,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             try (BufferedReader reader = new BufferedReader(isr)) {
                 String line = reader.readLine();
                 while (line != null) {
-                    builder.append(line).append("\n");
-                    line = reader.readLine();
+                    if (line != "PHOTOPATH_"){
+                        builder.append(line).append("\n");
+                        line = reader.readLine();
+                    } else if (line == "PHOTOPATH_"){
+                        line = reader.readLine();
+                    } else {
+                        photoPath = line;
+                        line = reader.readLine();
+                    }
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d("NotesActivity", "setUpNote: Something went wrong making BufferedReader or reading to StringBuilder");
@@ -445,6 +453,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             FileWriter writer = new FileWriter(path);
             Log.d("NotesActivity", "saveToFile: Created FileWriter");
             writer.append(fileContents);
+            writer.append("\nPHOTOPATH_\n");
+            writer.append(photoPath);
             Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
             writer.flush();
             Log.d("NotesActivity", "saveToFile: Flushed stream");
