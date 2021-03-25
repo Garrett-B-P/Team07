@@ -56,6 +56,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     File parent;
     File path;
     String contents;
+    String photoPath;
 
     //For the camera
     final int TAKE_PHOTO = 1;
@@ -81,6 +82,11 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         // If we were to use the above, it would be below setUpNote()
 
         FloatingActionButton fab = findViewById(R.id.fab);
+
+        if(photoPath != null) {
+            Toast.makeText(NotesActivity.this, "It worked", Toast.LENGTH_SHORT).show();
+            loadGalleryImage(photoPath);
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,7 +250,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-                destination = new File(Environment.getExternalStorageDirectory(), System.currentTimeMillis() + ".jpg");
+                String info = System.currentTimeMillis() + ".jpg";
+                destination = new File(Environment.getExternalStorageDirectory(), info);
                 FileOutputStream fo;
 
                 try {
@@ -259,6 +266,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
 
                 }
 
+                photoPath = info;
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(thumbnail);
                 MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , "");
 
@@ -273,22 +281,31 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 String selectedImagePath = cursor.getString(column_index);
                 String fileNameSegments[] = selectedImagePath.split("/");
                 String fileName = fileNameSegments[fileNameSegments.length - 1];
-                Bitmap bm;
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(selectedImagePath, options);
-                final int REQUIRED_SIZE = 100;
-                int scale = 1;
 
-                while (options.outWidth / scale / 2 >= REQUIRED_SIZE && options.outHeight / scale / 2 >= REQUIRED_SIZE)
-                    scale *= 2;
+                loadGalleryImage(selectedImagePath);
 
-                options.inSampleSize = scale;
-                options.inJustDecodeBounds = false;
-                bm = BitmapFactory.decodeFile(selectedImagePath, options);
-                ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
+                photoPath = selectedImagePath;
+                Toast.makeText(NotesActivity.this, photoPath, Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    public void loadGalleryImage(String path) {
+        Bitmap bm;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        final int REQUIRED_SIZE = 100;
+        int scale = 1;
+
+        while (options.outWidth / scale / 2 >= REQUIRED_SIZE && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+            scale *= 2;
+
+        options.inSampleSize = scale;
+        options.inJustDecodeBounds = false;
+        bm = BitmapFactory.decodeFile(path, options);
+
+        ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
     }
 
     // Below are functions to call for app's directory use
