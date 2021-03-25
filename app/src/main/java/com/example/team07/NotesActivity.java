@@ -5,7 +5,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.loader.content.CursorLoader;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -29,9 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -290,8 +287,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 options.inJustDecodeBounds = false;
                 bm = BitmapFactory.decodeFile(selectedImagePath, options);
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
-
-
             }
         }
     }
