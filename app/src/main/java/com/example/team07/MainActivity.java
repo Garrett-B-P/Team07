@@ -277,15 +277,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     foundFile = f;
                 }
             }
-        } else if (spinnerSearch.getSelectedItemPosition() != 0) {
-            System.out.print("getSelectedItem: " + spinnerSearch.getSelectedItem());
-            Log.i("MainActivity", "findClass: getSelectedItem is " + spinnerSearch.getSelectedItem());
+        } else if (spinnerSort.getSelectedItemPosition() != 0) {
+            System.out.print("getSelectedItem: " + spinnerSort.getSelectedItem());
+            Log.i("MainActivity", "findClass: getSelectedItem is " + spinnerSort.getSelectedItem());
             ArrayList<File> sortList = new ArrayList<>();
             File[] classList = mainDirectory.listFiles();
             for (File f:classList) {
                 sortList.add(f);
             }
-            switch (spinnerSearch.getSelectedItemPosition()) {
+            switch (spinnerSort.getSelectedItemPosition()) {
                 case 1:
                     Collections.sort(sortList, NotesActivity.lastEdit.reversed());
                     break;
