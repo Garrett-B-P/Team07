@@ -318,7 +318,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                         Log.i("NotesActivity", "setUpNote: match found: " + line);
                         photoPath = line.substring(10);
                     } else {
-                        builder.append(line).append("\n");
+                        builder.append(line);
                     }
                     line = reader.readLine();
                 }
