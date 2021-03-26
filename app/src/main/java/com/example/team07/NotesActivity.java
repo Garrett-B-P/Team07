@@ -40,7 +40,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.regex.Matcher;
@@ -242,6 +245,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         builder.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -277,7 +281,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 Log.i("NotesActivity", "onActivityResult: String destination " + destination.toString());
                 Log.i("NotesActivity", "onActivityResult: destination name " + destination.getName());
 
-                photoPath = fullPath.substring(9);
+                // Uncomment this when using real phone to test it
+                //photoPath = fullPath.substring(9);
+
+                // The below works with emulation (comment block out when using real phone)
+                File gallery = new File("/storage/emulated/0/pictures");
+                File[] pics = gallery.listFiles();
+                ArrayList<File> pictures = new ArrayList<>();
+                pictures.addAll(Arrays.asList(pics));
+                Collections.sort(pictures, lastEdit.reversed());
+                photoPath = pictures.get(0).getPath();
+                Log.i("NotesActivity", "onActivityResult: new photoPath is " + photoPath);
 
             } else if (requestCode == FROM_STORAGE) {
                 Log.d("FROM_STORAGE ", " FROM_STORAGE");
