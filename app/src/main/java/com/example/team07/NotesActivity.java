@@ -59,7 +59,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     File parent;
     File path;
     String contents;
-    String photoPath;
+    String photoPath = null;
 
     //For the camera
     final int TAKE_PHOTO = 1;
@@ -429,7 +429,9 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             FileWriter writer = new FileWriter(path);
             Log.d("NotesActivity", "saveToFile: Created FileWriter");
             writer.append(fileContents);
-            writer.append("\nPHOTOPATH_" + photoPath);
+            if (photoPath != null) {
+                writer.append("\nPHOTOPATH_" + photoPath);
+            }
             Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
             writer.flush();
             Log.d("NotesActivity", "saveToFile: Flushed stream");
