@@ -43,6 +43,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /********************************************************************************************
  * A class to handle ui for the notes page. Creates a file to store the information in itself
@@ -334,15 +336,18 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             StringBuilder builder = new StringBuilder();
             Log.d("NotesActivity", "setUpNote: StringBuilder has been created");
             try (BufferedReader reader = new BufferedReader(isr)) {
+                Pattern pattern = Pattern.compile("^PHOTOPATH_");
+                Matcher matcher = null;
                 String line = reader.readLine();
                 while (line != null) {
-                    if (!line.contains("PHOTOPATH_")){
-                        builder.append(line).append("\n");
-                        line = reader.readLine();
-                    } else{
+                    matcher = pattern.matcher(line);
+                    if (matcher.find()){
+                        Log.i("NotesActivity", "setUpNote: match found");
                         photoPath = line.substring(10);
-                        line = reader.readLine();
+                    } else {
+                        builder.append(line).append("\n");
                     }
+                    line = reader.readLine();
                 }
 
             } catch (IOException e) {
@@ -446,13 +451,14 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     public void saveToFile() {
         TextView body = findViewById(R.id.noteBody);
         String fileContents = body.getText().toString();
+        if (!photoPath.isEmpty()) {
+            fileContents.concat("\nPHOTOPATH_" + photoPath);
+        }
         Log.d("NotesActivity", "saveToFile: fileContents has been filled");
         try {
             FileWriter writer = new FileWriter(path);
             Log.d("NotesActivity", "saveToFile: Created FileWriter");
             writer.append(fileContents);
-            writer.append("\nPHOTOPATH_");
-            writer.append(photoPath);
             Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
             writer.flush();
             Log.d("NotesActivity", "saveToFile: Flushed stream");
