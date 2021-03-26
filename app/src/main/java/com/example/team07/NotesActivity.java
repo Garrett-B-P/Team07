@@ -310,6 +310,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             try (BufferedReader reader = new BufferedReader(isr)) {
                 Pattern pattern = Pattern.compile("PHOTOPATH_");
                 Matcher matcher = null;
+                int x = 0;
                 String line = reader.readLine();
                 while (line != null) {
                     Log.i("NotesActivity", "setUpNote: Line is " + line);
@@ -318,9 +319,14 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                         Log.i("NotesActivity", "setUpNote: match found: " + line);
                         photoPath = line.substring(10);
                     } else {
+                        Log.i("NotesActivity", "setUpNote: x is " + x);
+                        if (x != 0) {
+                            builder.append("\n");
+                        }
                         builder.append(line);
                     }
                     line = reader.readLine();
+                    x++;
                 }
 
             } catch (IOException e) {
