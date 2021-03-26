@@ -85,11 +85,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
-        if(photoPath != "") {
-            Toast.makeText(NotesActivity.this, "It worked", Toast.LENGTH_SHORT).show();
-            loadGalleryImage(photoPath);
-        }
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +116,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
 
         // This is a custom function to use app file to set up Note
         setUpNote(intent);
+
+        if(photoPath != null) {
+            Toast.makeText(NotesActivity.this, "It worked", Toast.LENGTH_SHORT).show();
+            loadGalleryImage(photoPath);
+            Log.i("Photo", photoPath);
+        }
 
         //This is checking for when the note is changed and saves it when it does, for the title, Garrett
         noteTitle.addTextChangedListener(new TextWatcher() {
@@ -268,9 +269,15 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
 
                 }
 
-                photoPath = info;
+                //photoPath = destination.toString();
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(thumbnail);
-                MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , "");
+                String fullPath = MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , "");
+                Log.i("NotesActivity", "onActivityResult: " + MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , ""));
+                Log.i("NotesActivity", "onActivityResult: thumbnail " + thumbnail);
+                Log.i("NotesActivity", "onActivityResult: String destination " + destination.toString());
+                Log.i("NotesActivity", "onActivityResult: destination name " + destination.getName());
+
+                photoPath = fullPath.substring(9);
 
             } else if (requestCode == FROM_STORAGE) {
                 Log.d("FROM_STORAGE ", " FROM_STORAGE");
@@ -336,13 +343,14 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             StringBuilder builder = new StringBuilder();
             Log.d("NotesActivity", "setUpNote: StringBuilder has been created");
             try (BufferedReader reader = new BufferedReader(isr)) {
-                Pattern pattern = Pattern.compile("^PHOTOPATH_");
+                Pattern pattern = Pattern.compile("PHOTOPATH_");
                 Matcher matcher = null;
                 String line = reader.readLine();
                 while (line != null) {
+                    Log.i("NotesActivity", "setUpNote: Line is " + line);
                     matcher = pattern.matcher(line);
                     if (matcher.find()){
-                        Log.i("NotesActivity", "setUpNote: match found");
+                        Log.i("NotesActivity", "setUpNote: match found: " + line);
                         photoPath = line.substring(10);
                     } else {
                         builder.append(line).append("\n");
@@ -451,14 +459,15 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     public void saveToFile() {
         TextView body = findViewById(R.id.noteBody);
         String fileContents = body.getText().toString();
-        if (!photoPath.isEmpty()) {
+        /*if (photoPath != null) {
             fileContents.concat("\nPHOTOPATH_" + photoPath);
-        }
+        }*/
         Log.d("NotesActivity", "saveToFile: fileContents has been filled");
         try {
             FileWriter writer = new FileWriter(path);
             Log.d("NotesActivity", "saveToFile: Created FileWriter");
             writer.append(fileContents);
+            writer.append("\nPHOTOPATH_" + photoPath);
             Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
             writer.flush();
             Log.d("NotesActivity", "saveToFile: Flushed stream");
