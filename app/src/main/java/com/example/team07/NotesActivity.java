@@ -191,6 +191,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                     photoPath = null;
                     ((ImageView) findViewById(R.id.imageView)).setImageBitmap(null);
                     dialog.dismiss();
+                    restartNote();
                 }
                 else if (items[item].equals("Cancel")) {
                     Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
@@ -532,6 +533,14 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * To reboot NotesActivity
+     */
+    public void restartNote() {
+        onStop();
+        startActivity(getIntent());
     }
 
 }
