@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         startActivity(intent);
     }
 
-    //@RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +73,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Creates list of classes
         listView = findViewById(R.id.classList);
-        //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.course", Context.MODE_PRIVATE);
-        //HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("course", null);
 
         // This function is for use with app's directory
         setUpMain();
@@ -96,13 +93,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     .setTitle("Are you sure?")
                     .setMessage("Do you want to delete " + findClass(itemToDelete).getName() + "?")
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
-                        //classes.remove(itemToDelete);
                         // To delete the class from the directory
                         deleteClass(itemToDelete);
                         arrayAdapter3.notifyDataSetChanged();
-                        //SharedPreferences sharedPreferences1 = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                        //HashSet set1 = new HashSet(MainActivity.classes);
-                        //sharedPreferences1.edit().putStringSet("notes", set1).apply();
 
                         Log.i("ClassOnItemOnLongClick", "Deleted note #" + itemToDelete);
                     }).setNegativeButton("No", null).show();
@@ -166,14 +159,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             //When an item in the list view is clicked it will go to that intent, Garrett
-            //@RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i("MainActivity", "listView.onItemClick: getItemAtPosition is " + listView.getItemAtPosition(position));
                 Log.i("MainActivity", "listView.onItemClick: Item is " + listView.getItemAtPosition(position).toString());
                 // Going from MainActivity to ClassActivity
                 Intent intent = new Intent(MainActivity.this, ClassActivity.class);
-                //intent.putExtra("classId", position);
                 // Below will send Class directory's filepath to be used in ClassActivity
                 setExistingClass(intent, position);
                 startActivity(intent);
@@ -193,8 +184,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Log.d("MainActivity", "setUpMain: mainDirectory has been set");
         resetClasses();
         Log.d("MainActivity", "setUpMain: classList has been set and filled");
-        //arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classList);
-        Log.d("MainActivity", "setUpMain: ArrayAdapter has been set to classList");
     }
 
     /****************************************************************************************
@@ -213,11 +202,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param place The position of the Class in the directory
      * @return Updated intent with the current class's information
      ****************************************************************************************/
-    //@RequiresApi(api = Build.VERSION_CODES.N)
     public Intent setExistingClass(Intent i, int place) {
         Log.d("MainActivity", "setExistingClass: filePath is readying to send");
         File toSend = findClass(place);
-        //return i.putExtra("filePath", mainDirectory.listFiles()[place].toString());
         return i.putExtra("filePath", toSend.toString());
 
     }
@@ -226,12 +213,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * A function used to delete directories and their contents
      * @param place The position the directory we're deleting
      *****************************************************************/
-    //@RequiresApi(api = Build.VERSION_CODES.N)
     public void deleteClass(int place) {
         // A directory with items inside it cannot be deleted, so contents will be deleted first
         File toDel = findClass(place);
-        //File[] fullList = mainDirectory.listFiles();
-        //File[] toDelete = fullList[place].listFiles();
         File[] toDelete = toDel.listFiles();
         Log.d("MainActivity", "deleteClass: Directory " + place + " will now be deleted");
         if (toDelete.length > 0) {
@@ -245,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 }
             }
         }
-        //Boolean classDelete = fullList[place].delete();
         boolean classDelete = toDel.delete();
         if (classDelete) {
             Log.d("MainActivity", "deleteClass: Directory has been deleted");
@@ -261,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param position The position of directory in its list
      * @return the directory File to send to other functions
      */
-    //@RequiresApi(api = Build.VERSION_CODES.N)
     public File findClass(int position) {
         String name = listView.getItemAtPosition(position).toString();
         Log.i("MainActivity", "findClass: Item is " + listView.getItemAtPosition(position).toString());
@@ -271,69 +253,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         }
         return null;
-        /*
-        SearchView searchVal = findViewById(R.id.searchView3);
-        //Spinner spinner = findViewById(R.id.spinner);
-        File foundFile = null;
-        if (!searchVal.getQuery().toString().isEmpty()) {
-            // get filtered list of classes
-            List<String> searchList = filterClasses(classes, searchVal.getQuery().toString());
-            // find what filename is being selected
-            String fileName = searchList.get(position);
-            for (File f:mainDirectory.listFiles()) {
-                if (fileName.equals(f.getName())) {
-                    // if the names match, we've found our file
-                    foundFile = f;
-                }
-            }
-        } else if (spinnerSort.getSelectedItemPosition() != 0) {
-            System.out.print("getSelectedItem: " + spinnerSort.getSelectedItem());
-            Log.i("MainActivity", "findClass: getSelectedItem is " + spinnerSort.getSelectedItem());
-            ArrayList<File> sortList = new ArrayList<>();
-            File[] classList = mainDirectory.listFiles();
-            for (File f:classList) {
-                sortList.add(f);
-            }
-            switch (spinnerSort.getSelectedItemPosition()) {
-                case 1:
-                    Collections.sort(sortList, NotesActivity.lastEdit.reversed());
-                    break;
-                case 2:
-                    Collections.sort(sortList, NotesActivity.lastEdit);
-                    break;
-                case 3:
-                    Collections.sort(sortList, NotesActivity.title);
-                    break;
-                case 4:
-                    Collections.sort(sortList, NotesActivity.title.reversed());
-                    break;
-            }
-            System.out.print("Found " + sortList.get(position).getName());
-            foundFile = sortList.get(position);
-        } else {
-            // if not searching for anything
-            foundFile = mainDirectory.listFiles()[position];
-        }
-        return foundFile;
-
-         */
-    }
-
-    /************************************************
-     * Filters a list of classes for applicable names
-     * @param classList list to be filtered
-     * @param searchVal string to search for
-     * @return list of applicable class names
-     ************************************************/
-    public List<String> filterClasses(List<String> classList, String searchVal) {
-        List<String> newList = new ArrayList<>();
-        for (String x:classList) {
-            if (x.toLowerCase().contains(searchVal.toLowerCase())) {
-                newList.add(x);
-            }
-        }
-
-        return newList;
     }
 
     /**

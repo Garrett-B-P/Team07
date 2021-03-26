@@ -29,16 +29,13 @@ import java.util.List;
  * of the notes for listing purposes.
  ************************************************************************************************/
 public class ClassActivity extends AppCompatActivity {
-    //int classId;
     // Member variables below are for use with app's directory
     static File currentDirectory;
 
-    //Creates Arrays that hold the note information, Garrett
     static ArrayList<String> notes_title = new ArrayList<String>();
     static ArrayAdapter arrayAdapter;
     ListView listView;
 
-    //Creates an intent for the NotesActivity and sends some information to the activity, Garrett
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
         setNewNote(intent);
@@ -53,32 +50,17 @@ public class ClassActivity extends AppCompatActivity {
         initSearchWidget();
 
         listView = findViewById(R.id.listView2);
-        //I believe this saves the note, Garrett
-        //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-        //HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes", null);
 
-        //Creates an example note if there are no notes, Garrett
-        /*
-        if (set == null) {
-            notes_title.add("Example note");
-        } else {
-            notes_title = new ArrayList(set);
-        }
-         */
-
-        //Adds the created notes to the array adapter, Garrett
         arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, notes_title);
 
         listView.setAdapter(arrayAdapter);
 
-        //When a note is clicked on it will go to that note and passes in the info, Garrett
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                 Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
-                //intent.putExtra("noteId", i);
                 // Below will send Class directory's filepath to be used in ClassActivity
                 setExistingNote(intent, i);
                 startActivity(intent);
@@ -102,13 +84,9 @@ public class ClassActivity extends AppCompatActivity {
 
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                //notes_title.remove(itemToDelete);
                                 // Below is to delete the Note from the directory
                                 deleteNote(itemToDelete);
                                 arrayAdapter.notifyDataSetChanged();
-                                //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                                //HashSet<String> set = new HashSet(ClassActivity.notes_title);
-                                //sharedPreferences.edit().putStringSet("notes", set).apply();
 
                                 Log.i("ClassOnItemOnLongClick", "Deleted note #" + itemToDelete);
                             }
@@ -121,24 +99,6 @@ public class ClassActivity extends AppCompatActivity {
         EditText classTitle = findViewById(R.id.classTitle);
         Intent intent = getIntent();
 
-        //classId = intent.getIntExtra("classId", -1);
-
-        /*
-        if (classId != -1) {
-            classTitle.setText(MainActivity.classes.get(classId));
-        } else {
-            MainActivity.classes.add("");
-            classId = MainActivity.classes.size() - 1;
-            MainActivity.arrayAdapter3.notifyDataSetChanged();
-
-            Log.i("ClassCreate", "Created Class #" + classId);
-        }
-         */
-
-        // This custom function is for use with an app's directory
-        // PLEASE NOTE, FELLOW PROGRAMMERS!! I'd made my program ask for a name in MainActivity for the new ClassActivity,
-        // but don't quite know how to program it here, since the text box for new Class/Note are in ClassActivity/NoteActivity
-        // instead of their "parent" activities. I'll do what I can
         setUpClass(intent);
 
         classTitle.addTextChangedListener(new TextWatcher() {
@@ -153,16 +113,6 @@ public class ClassActivity extends AppCompatActivity {
 
                 MainActivity.arrayAdapter3.notifyDataSetChanged();
 
-                // Creating Object of SharedPreferences to store data in the phone
-                //MainActivity.classes.set(classId, String.valueOf(charSequence));
-                //MainActivity.arrayAdapter3.notifyDataSetChanged();
-
-                // Creating Object of SharedPreferences to store data in the phone
-                //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                //HashSet set = new HashSet(MainActivity.classes);
-                //sharedPreferences.edit().putStringSet("classes", set).apply();
-
-                // I know it's risky, but we gotta try it
                 renameDir(String.valueOf(charSequence));
 
             }
@@ -170,19 +120,6 @@ public class ClassActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 // add your code here
-
-                // From Cajsa: I want to add code to make directories here, since the name changes here
-                // I'll probably add code to test if directory exists, then if true, use the renameTo() option,
-                // but if false, mkdir()
-                // I was going to put it in onTextChanged() above, but that'd renameTo() and mkdir()
-                // every time the text changes, which I'd imagine is BAD
-                // How do I compare before it changed to after it changed? I need that to see if I can
-                // search for the directory, rename it, etc.
-
-                // To change directory's name:
-                //renameDir(newName);
-
-                // NOTE: I don't know how to get the new name from the Editable
             }
         });
 
@@ -285,9 +222,6 @@ public class ClassActivity extends AppCompatActivity {
             File parent = new File(parentPath);
             String newName = generateClassTitle("Untitled", parent);
             Log.d("ClassActivity", "getClassPath: title of new file is " + newName);
-            // I want to add a function call instead of the line above to check if this name exists,
-            // and if not, iterate through a while loop adding x to the end of the given title
-            // This would prevent existing files from being overwritten
             File newClass = new File(parentPath, newName);
             Log.d("ClassActivity", "getClassPath: generated a new File");
             makeNewDir(newClass.getName());
@@ -312,7 +246,6 @@ public class ClassActivity extends AppCompatActivity {
     public void setExistingNote(Intent i, int place) {
         Log.d("ClassActivity", "setExistingNote: filePath is readying to send");
         File toSend = findNote(place);
-        //i.putExtra("filePath", currentDirectory.listFiles()[place].toString());
         i.putExtra("filePath", toSend.toString());
         setNewNote(i);
     }
@@ -354,9 +287,7 @@ public class ClassActivity extends AppCompatActivity {
      *********************************************************/
     public void deleteNote(int place) {
         Log.d("ClassActivity", "deleteNote: Note number " + place + " will now be deleted");
-        //currentDirectory.listFiles()[place].delete();
         findNote(place).delete();
-        File[] newNoteList = currentDirectory.listFiles();
         resetNotes();
         Log.d("ClassActivity", "deleteNote: noteList has been reset");
     }
@@ -431,43 +362,6 @@ public class ClassActivity extends AppCompatActivity {
             }
         }
         return null;
-        /*
-        SearchView searchVal = findViewById(R.id.searchView2);
-        File foundFile = null;
-        if (!searchVal.getQuery().toString().isEmpty()) {
-            // get filtered list of notes
-            List<String> searchList = filterNotes(notes_title, searchVal.getQuery().toString());
-            // find what filename is being selected
-            String fileName = searchList.get(position);
-            for (File f:currentDirectory.listFiles()) {
-                if (fileName.equals(f.getName())) {
-                    // if the names match, we've found our file
-                    foundFile = f;
-                }
-            }
-        } else {
-            // if not searching for anything
-            foundFile = currentDirectory.listFiles()[position];
-        }
-        return foundFile;
-
-         */
-    }
-
-    /**
-     * Filters a list of notes for applicable names
-     * @param noteList list to be filtered
-     * @param searchVal string to search for
-     * @return list of applicable note names
-     */
-    public List<String> filterNotes(List<String> noteList, String searchVal) {
-        List<String> newList = new ArrayList<>();
-        for (String x:noteList) {
-            if (x.toLowerCase().contains(searchVal.toLowerCase())) {
-                newList.add(x);
-            }
-        }
-        return newList;
     }
 
     /**

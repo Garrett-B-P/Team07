@@ -55,8 +55,6 @@ import java.util.regex.Pattern;
  * the information to the screen.
  ********************************************************************************************/
 public class NotesActivity extends AppCompatActivity implements Comparable<File> {
-    //Creates a variable that holds the id of the note so that it can be saved and reloaded, Garrett
-    //int noteId;
     // Member variables below are for use with app's directory
     File parent;
     File path;
@@ -66,8 +64,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     //For the camera
     final int TAKE_PHOTO = 1;
     final int FROM_STORAGE = 2;
-
-    //Calendar lastEdit;
 
     public void onClick(View v) {
         finish();
@@ -79,12 +75,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notes);
-
-        //TextView time = findViewById(R.id.time);
-        //lastEdit = Calendar.getInstance();
-        //String timeStamp = java.text.DateFormat.getDateTimeInstance().format(lastEdit.getTime());
-        //time.setText(timeStamp);
-        // If we were to use the above, it would be below setUpNote()
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
@@ -103,19 +93,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         //I believe this gets the information that was passed through the intent, Garrett
         Intent intent = getIntent();
 
-        //I believe this section of code is checking the noteId, Garrett
-        //noteId = intent.getIntExtra("noteId", -1);
-
-        /*
-        if (noteId != -1) {
-            noteTitle.setText(ClassActivity.notes_title.get(noteId));
-
-        } else {
-            ClassActivity.notes_title.add("");
-            noteId = ClassActivity.notes_title.size() - 1;
-            ClassActivity.arrayAdapter.notifyDataSetChanged();
-        }
-         */
 
         // This is a custom function to use app file to set up Note
         setUpNote(intent);
@@ -135,15 +112,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                //ClassActivity.notes_title.set(noteId, String.valueOf(charSequence));
                 ClassActivity.arrayAdapter.notifyDataSetChanged();
 
-                // Creating Object of SharedPreferences to store data in the phone
-                //SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.example.notes", Context.MODE_PRIVATE);
-                //HashSet set = new HashSet(ClassActivity.notes_title);
-                //sharedPreferences.edit().putStringSet("notes", set).apply();
-
-                // I know it's risky, but we gotta try it
                 renameFile(String.valueOf(charSequence));
 
             }
@@ -151,24 +121,14 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             @Override
             public void afterTextChanged(Editable s) {
                 //add code here
-
-                // I'd need to add file-making text here, maybe
-                // If the file-making is here, here's my custom function:
-                // Found a problem: can't tell what the parent directory is
-                // Possible solution: can send parent directory path through intent instead,
-                // plus an existing file's name if not creating a new file
-                //path = makeNewFile(parent, name);
             }
         });
     }
 
-    // onStop() is currently only saving note body to file
-    // In my program, it also renamed the title if it was different
     @Override
     protected void onStop() {
         super.onStop();
 
-        // If no title, either don't save note or assign title?
         TextView noteTitle = findViewById(R.id.noteTitle);
         renameFile(noteTitle.getText().toString());
         saveToFile();
@@ -180,16 +140,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         return this.path.getName().compareTo(o.getName());
     }
 
-    /*
     // To make other comparisons: Collections.sort(ListName, NotesActivity.byCreate);
-    public static Comparator<File> byCreate = new Comparator<File>() {
-        @Override
-        public int compare(File o1, File o2) {
-            //return (o1.createDateVar.compareTo(o2.createDateVar);
-            return 0;
-        }
-    };
-     */
     public static Comparator<File> lastEdit = new Comparator<File>() {
         @Override
         public int compare(File o1, File o2) {
@@ -395,7 +346,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             body.setText(contents);
             Log.d("NotesActivity", "setUpNote: contents is not empty, set noteBody");
         }
-        //ClassActivity.arrayAdapter.notifyDataSetChanged();
     }
 
     /********************************************************************************
@@ -414,9 +364,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             Log.d("NotesActivity", "getNotePath: generating a new file path");
             String newName = generateNoteTitle("Untitled", parent);
             Log.d("NotesActivity", "getNotePath: title of new file is " + newName);
-            // I want to add a function call instead of the line above to check if this name exists,
-            // and if not, iterate through a while loop adding x to the end of the given title
-            // This would prevent existing files from being overwritten
             File newNote = new File(parentPath, newName);
             Log.d("NotesActivity", "getNotePath: generated a new file");
             makeNewFile(parent, newNote.getName());
@@ -443,7 +390,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             e.printStackTrace();
             Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
         }
-        //ClassActivity.arrayAdapter.notifyDataSetChanged();
     }
 
     /******************************************************
@@ -464,7 +410,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 Log.d("NotesActivity", "renameFile: path failed to be renamed");
             }
         }
-        //ClassActivity.arrayAdapter.notifyDataSetChanged();
     }
 
     /******************************************************************
@@ -473,9 +418,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     public void saveToFile() {
         TextView body = findViewById(R.id.noteBody);
         String fileContents = body.getText().toString();
-        /*if (photoPath != null) {
-            fileContents.concat("\nPHOTOPATH_" + photoPath);
-        }*/
         Log.d("NotesActivity", "saveToFile: fileContents has been filled");
         try {
             FileWriter writer = new FileWriter(path);
@@ -579,5 +521,3 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
 
 }
 
-
-//dateCreated = Calendar.getInstance();
