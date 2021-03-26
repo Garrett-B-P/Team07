@@ -162,7 +162,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     }
 
     private void selectImage() {
-        final CharSequence[] items = {"Take Photo", "Choose from Library", "Cancel"};
+        final CharSequence[] items = {"Take Photo", "Choose from Library", "Remove Photo", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(NotesActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -186,6 +186,11 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                     intent.setType("image/*");
                     Toast.makeText(getApplicationContext(), "Choose from Library", Toast.LENGTH_SHORT).show();
                     startActivityForResult(Intent.createChooser(intent, "Select File"), FROM_STORAGE);
+                }
+                else if (items[item].equals("Remove Photo")) {
+                    photoPath = null;
+                    ((ImageView) findViewById(R.id.imageView)).setImageBitmap(null);
+                    dialog.dismiss();
                 }
                 else if (items[item].equals("Cancel")) {
                     Toast.makeText(getApplicationContext(), "Cancel", Toast.LENGTH_SHORT).show();
@@ -265,6 +270,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     }
 
     public void loadGalleryImage(String path) {
+        Log.i("NotesActivity", "loadGalleryImage: photoPath = " + photoPath);
+
         Bitmap bm;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
