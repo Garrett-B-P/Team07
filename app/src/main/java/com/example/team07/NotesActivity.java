@@ -539,7 +539,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * To reboot NotesActivity
      */
     public void restartNote() {
-        onStop();
+        saveToFile();
+        finish();
         startActivity(getIntent());
     }
 
