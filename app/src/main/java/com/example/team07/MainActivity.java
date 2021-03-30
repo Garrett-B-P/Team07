@@ -1,15 +1,10 @@
 package com.example.team07;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -17,19 +12,16 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-
-// Milestones: Week 12 - Work on stretch goals and polish/test core features
-// From Week 11: get camera pictures to automatically upload to their NotesActivity
-// Reminders and due dates work in tandem with system calendar
-// Sort classes/notes by dates edited/created or by title
-// Further refine GUI to be more user-friendly
-// Work out bugs that may have been uncovered
+import java.util.Objects;
 
 /**********************************************************************************************
  * A class to implement the main page ui. Creates/reopens the main directory where all the
@@ -39,18 +31,13 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
 
-    private Spinner spinnerSort;
-
     //Creates an array for the different classes, Garrett
     static ArrayList<String> classes = new ArrayList<>();
-    static ArrayAdapter arrayAdapter3;
+    static ArrayAdapter<String> arrayAdapter3;
     ListView listView;
 
     // Member variables below are for use with app's directory
     static File mainDirectory;
-
-    // Below is for runOnUiThread() from background thread
-    private final Activity activity = this;
 
     //When the add class button is hit it will create and start a new intent, Garrett
     public void addClass() {
@@ -69,23 +56,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         setContentView(R.layout.activity_main);
         initSearchWidget();
 
-        spinnerSort = findViewById(R.id.spinner);
+        Spinner spinnerSort = findViewById(R.id.spinner);
         spinnerSort.setOnItemSelectedListener(this);
 
         String[] searchOptions = getResources().getStringArray(R.array.searchOptions);
-        ArrayAdapter adapter = new ArrayAdapter(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, searchOptions);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSort.setAdapter(adapter);
 
         FloatingActionButton newClass = findViewById(R.id.addClass);
-        newClass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addClass();
-            }
-        });
+        newClass.setOnClickListener(v -> addClass());
 
         // Creates list of classes
         listView = findViewById(R.id.classList);
@@ -156,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
                     classes.clear();
                     classes.addAll(filteredClasses);
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, classes);
+                    ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, classes);
                     listView.setAdapter(arrayAdapter);
                 } else {
                     resetClasses();
@@ -173,21 +155,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * to setup the intent with the proper information before starting the class activity.
      ****************************************************************************************/
     public void clickListener() {
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //When an item in the list view is clicked it will go to that intent, Garrett
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            Log.i("MainActivity", "listView.onItemClick: getItemAtPosition is " + listView.getItemAtPosition(position));
+            Log.i("MainActivity", "listView.onItemClick: Item is " + listView.getItemAtPosition(position).toString());
+            // Going from MainActivity to ClassActivity
+            Intent intent = new Intent(MainActivity.this, ClassActivity.class);
+            // Below will send Class directory's filepath to be used in ClassActivity
+            setExistingClass(intent, position);
+            startActivity(intent);
 
-            //When an item in the list view is clicked it will go to that intent, Garrett
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i("MainActivity", "listView.onItemClick: getItemAtPosition is " + listView.getItemAtPosition(position));
-                Log.i("MainActivity", "listView.onItemClick: Item is " + listView.getItemAtPosition(position).toString());
-                // Going from MainActivity to ClassActivity
-                Intent intent = new Intent(MainActivity.this, ClassActivity.class);
-                // Below will send Class directory's filepath to be used in ClassActivity
-                setExistingClass(intent, position);
-                startActivity(intent);
-
-                Log.i("MainOnItemClick", "Opening class #" + position);
-            }
+            Log.i("MainOnItemClick", "Opening class #" + position);
         });
     }
 
@@ -206,23 +184,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     /****************************************************************************************
      * A function to update the intent to prepare to make a new class
      * @param i The current intent
-     * @return Updated intent with the parent directory of the new class
      ****************************************************************************************/
-    public Intent setNewClass(Intent i) {
+    public void setNewClass(Intent i) {
         Log.d("MainActivity", "setNewClass: parentPath is readying to send");
-        return i.putExtra("parentPath", mainDirectory.toString());
+        i.putExtra("parentPath", mainDirectory.toString());
     }
 
     /****************************************************************************************
      * A function to update the intent to the selected class and load the class's information
      * @param i The current intent
      * @param place The position of the Class in the directory
-     * @return Updated intent with the current class's information
      ****************************************************************************************/
-    public Intent setExistingClass(Intent i, int place) {
+    public void setExistingClass(Intent i, int place) {
         Log.d("MainActivity", "setExistingClass: filePath is readying to send");
         File toSend = findClass(place);
-        return i.putExtra("filePath", toSend.toString());
+        i.putExtra("filePath", toSend.toString());
 
     }
 
@@ -236,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         File toDel = findClass(place);
         File[] toDelete = toDel.listFiles();
         Log.d("MainActivity", "deleteClass: Directory " + place + " will now be deleted");
+        assert toDelete != null;
         if (toDelete.length > 0) {
             Log.d("MainActivity", "deleteClass: This directory has items inside");
             for (int x=0; x<toDelete.length; x++) {
@@ -265,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public File findClass(int position) {
         String name = listView.getItemAtPosition(position).toString();
         Log.i("MainActivity", "findClass: Item is " + listView.getItemAtPosition(position).toString());
-        for (File f:mainDirectory.listFiles()) {
+        for (File f: Objects.requireNonNull(mainDirectory.listFiles())) {
             if (name.equals(f.getName())) {
                 return f;
             }
@@ -277,14 +254,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Reset classes list for display
      */
     public void resetClasses() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File[] fileList = mainDirectory.listFiles();
-                classes.clear();
-                for (File file : fileList) {
-                    classes.add(file.getName());
-                }
+        Thread thread = new Thread(() -> {
+            File[] fileList = mainDirectory.listFiles();
+            assert fileList != null;
+            classes.clear();
+            for (File file : fileList) {
+                classes.add(file.getName());
             }
         });
         thread.start();
@@ -301,13 +276,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             for (int x = 0; x<classes.size(); x++) {
                 fileList.add(findClass(x));
             }
-
-            /*
-            File[] x = mainDirectory.listFiles();
-            for (File f: x) {
-                fileList.add(f);
-            }
-             */
 
             switch (position) {
                 case 1: {
@@ -338,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 classes.add(f.getName());
             }
 
-            arrayAdapter3 = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, classes);
+            arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, classes);
             listView.setAdapter(arrayAdapter3);
         }
     }
