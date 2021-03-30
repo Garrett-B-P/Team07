@@ -3,6 +3,8 @@ package com.example.team07;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     // Member variables below are for use with app's directory
     static File mainDirectory;
+
+    // Below is for runOnUiThread() from background thread
+    private final Activity activity = this;
 
     //When the add class button is hit it will create and start a new intent, Garrett
     public void onClick(View v) {
@@ -214,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param place The position the directory we're deleting
      *****************************************************************/
     public void deleteClass(int place) {
+        // Consider multithreading here
         // A directory with items inside it cannot be deleted, so contents will be deleted first
         File toDel = findClass(place);
         File[] toDelete = toDel.listFiles();
@@ -259,11 +265,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Reset classes list for display
      */
     public void resetClasses() {
-        File[] fileList = mainDirectory.listFiles();
-        classes.clear();
-        for (File file : fileList) {
-            classes.add(file.getName());
-        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File[] fileList = mainDirectory.listFiles();
+                classes.clear();
+                for (File file : fileList) {
+                    classes.add(file.getName());
+                }
+            }
+        });
+        thread.start();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.loader.content.CursorLoader;
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
@@ -60,6 +61,9 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     File path;
     String contents;
     String photoPath = null;
+
+    // Below is for runOnUiThread() from background thread
+    private final Activity activity = this;
 
     //For the camera
     final int TAKE_PHOTO = 1;
@@ -206,6 +210,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // Consider multithreading here, or at each part of second if/else statement
 
         File destination = null;
         if (resultCode == RESULT_OK) {
@@ -271,6 +276,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     }
 
     public void loadGalleryImage(String path) {
+        // Consider multithreading here, also would need runOnUiThread()
         Log.i("NotesActivity", "loadGalleryImage: photoPath = " + photoPath);
 
         Bitmap bm;
@@ -298,12 +304,13 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      ******************************************************************/
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public void setUpNote(Intent i) {
+        // Multithreading worked, but didn't display picture on boot-up; displaying saved pic should probably be in this function
         // to set up an existing note
         String filepath = getNotePath(i);
         Log.d("NotesActivity", "setUpNote: filePath has been received");
-        EditText noteTitle = findViewById(R.id.noteTitle);
         path = new File(filepath);
         Log.d("NotesActivity", "setUpNote: path has been set");
+        EditText noteTitle = findViewById(R.id.noteTitle);
         noteTitle.setText(path.getName());
         Log.d("NotesActivity", "setUpNote: noteTitle has been set");
         //lastEdit.setTimeInMillis(path.lastModified());
@@ -391,19 +398,25 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param name The new file's title
      **************************************************/
     public void makeNewFile(File parent, String name) {
-        File newFile = new File(parent, name);
-        try {
-            Boolean answer = newFile.createNewFile();
-            if (answer) {
-                Log.d("NotesActivity", "makeNewFile: " + name + " file made");
-            } else {
-                Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File newFile = new File(parent, name);
+                try {
+                    Boolean answer = newFile.createNewFile();
+                    if (answer) {
+                        Log.d("NotesActivity", "makeNewFile: " + name + " file made");
+                    } else {
+                        Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
+                    }
+                    path = newFile;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
+                }
             }
-            path = newFile;
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
-        }
+        });
+        thread.start();
     }
 
     /******************************************************
@@ -411,46 +424,63 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param newName The file's possibly new title
      ******************************************************/
     public void renameFile(String newName) {
-        if (!path.getName().equals(newName)) {
-            Log.d("NotesActivity", "renameFile: path will now be renamed");
-            Log.d("NotesActivity", "parent is " + parent.getName() + ", " + parent.toString());
-            String checkedName = generateNoteTitle(newName, parent);
-            File newFileName = new File(parent, checkedName);
-            Boolean x = path.renameTo(newFileName);
-            if (x) {
-                path = newFileName;
-                Log.d("NotesActivity", "renameFile: path has now been renamed");
-            } else {
-                Log.d("NotesActivity", "renameFile: path failed to be renamed");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!path.getName().equals(newName)) {
+                    Log.d("NotesActivity", "renameFile: path will now be renamed");
+                    Log.d("NotesActivity", "parent is " + parent.getName() + ", " + parent.toString());
+                    String checkedName = generateNoteTitle(newName, parent);
+                    File newFileName = new File(parent, checkedName);
+                    Boolean x = path.renameTo(newFileName);
+                    if (x) {
+                        path = newFileName;
+                        Log.d("NotesActivity", "renameFile: path has now been renamed");
+                    } else {
+                        Log.d("NotesActivity", "renameFile: path failed to be renamed");
+                    }
+                }
             }
-        }
+        });
+        thread.start();
     }
 
     /******************************************************************
      * A function to save NotesActivity's contents to file
      ******************************************************************/
     public void saveToFile() {
-        TextView body = findViewById(R.id.noteBody);
-        String fileContents = body.getText().toString();
-        Log.d("NotesActivity", "saveToFile: fileContents has been filled");
-        try {
-            FileWriter writer = new FileWriter(path);
-            Log.d("NotesActivity", "saveToFile: Created FileWriter");
-            writer.append(fileContents);
-            if (photoPath != null) {
-                writer.append("\nPHOTOPATH_" + photoPath);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TextView body = findViewById(R.id.noteBody);
+                String fileContents = body.getText().toString();
+                Log.d("NotesActivity", "saveToFile: fileContents has been filled");
+                try {
+                    FileWriter writer = new FileWriter(path);
+                    Log.d("NotesActivity", "saveToFile: Created FileWriter");
+                    writer.append(fileContents);
+                    if (photoPath != null) {
+                        writer.append("\nPHOTOPATH_" + photoPath);
+                    }
+                    Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
+                    writer.flush();
+                    Log.d("NotesActivity", "saveToFile: Flushed stream");
+                    writer.close();
+                    Log.d("NotesActivity", "saveToFile: Closed FileWriter");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("NotesActivity", "saveToFile: FileWriter failed");
+                }
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ClassActivity.refreshNoteList();
+                        Log.d("NotesActivity", "saveToFile: Class arrayAdapter notified?");
+                    }
+                });
             }
-            Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
-            writer.flush();
-            Log.d("NotesActivity", "saveToFile: Flushed stream");
-            writer.close();
-            Log.d("NotesActivity", "saveToFile: Closed FileWriter");
-        } catch (IOException e) {
-            e.printStackTrace();
-            Log.d("NotesActivity", "saveToFile: FileWriter failed");
-        }
-        ClassActivity.refreshNoteList();
-        Log.d("NotesActivity", "saveToFile: Class arrayAdapter notified?");
+        });
+        thread.start();
     }
 
     /**************************************************************************************
@@ -460,6 +490,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @return The name that may or may not have a number added to the end
      **************************************************************************************/
     public String generateNoteTitle(String name, File parentFile) {
+        // Accessing variable "name" within a new thread throws errors, so no multithreading here
         Boolean answer = false;
         int y = 0;
         String newName = "";
@@ -501,6 +532,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param bitmapImage Image to be saved
      */
     public void savePicture(Bitmap bitmapImage) {
+        // Consider multithreading here
         File picFile = new File(parent, path.getName() + ".jpg"); // Does this need to be .jpg, or do we need to specify?
 
         FileOutputStream fos = null;
@@ -523,6 +555,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * To load picture from file and display in imageView
      */
     public void loadPicture() {
+        // Consider multithreading here
         // How to choose any one picture?
         // Maybe try to save to gallery if needed? Then can pull from there?
         try {

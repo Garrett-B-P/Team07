@@ -2,6 +2,8 @@ package com.example.team07;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +37,9 @@ public class ClassActivity extends AppCompatActivity {
     static ArrayList<String> notes_title = new ArrayList<String>();
     static ArrayAdapter arrayAdapter;
     ListView listView;
+
+    // Below is for runOnUiThread() from background thread
+    private final Activity activity = this;
 
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
@@ -139,25 +144,42 @@ public class ClassActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 // reason for if/else statement: if newText is empty, switch back to normal adapter
-                if (!newText.isEmpty()) {
-                    filteredClasses.clear();
+                // I set runOnUiThreads for the ArrayAdapters in case that counts as a UI change
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!newText.isEmpty()) {
+                            filteredClasses.clear();
 
-                    for (int i = 0; i < notes_title.size(); i++){
-                        String aClass = notes_title.get(i);
+                            for (int i = 0; i < notes_title.size(); i++){
+                                String aClass = notes_title.get(i);
 
-                        if (aClass.toLowerCase().contains(newText.toLowerCase())) {
-                            filteredClasses.add(aClass);
+                                if (aClass.toLowerCase().contains(newText.toLowerCase())) {
+                                    filteredClasses.add(aClass);
+                                }
+                            }
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
+                                    listView.setAdapter(arrayAdapter);
+                                }
+                            });
+                        } else {
+                            resetNotes();
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, notes_title);
+                                    listView.setAdapter(arrayAdapter);
+                                }
+                            });
                         }
+
+
                     }
-
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, filteredClasses);
-                    listView.setAdapter(arrayAdapter);
-                } else {
-                    resetNotes();
-                    arrayAdapter = new ArrayAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, notes_title);
-                    listView.setAdapter(arrayAdapter);
-                }
-
+                });
+                thread.start();
                 return false;
             }
         });
@@ -193,17 +215,29 @@ public class ClassActivity extends AppCompatActivity {
      * @param i The current intent from MainActivity
      ******************************************************************/
     public void setUpClass(Intent i) {
-        String filePath = getClassPath(i);
-        Log.d("ClassActivity", "setUpClass: filePath has been received");
-        EditText classTitle = findViewById(R.id.classTitle);
-        currentDirectory = new File(filePath);
-        Log.d("ClassActivity", "setUpClass: currentDirectory has been set");
-        classTitle.setText(currentDirectory.getName());
-        Log.d("ClassActivity", "setUpClass: classTitle has been set");
-        resetNotes();
-        Log.d("ClassActivity", "setUpClass: noteList has been set and filled");
-        //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, noteList);
-        Log.d("ClassActivity", "setUpClass: ArrayAdapter has been set to noteList");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String filePath = getClassPath(i);
+                Log.d("ClassActivity", "setUpClass: filePath has been received");
+                currentDirectory = new File(filePath);
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        EditText classTitle = findViewById(R.id.classTitle);
+                        Log.d("ClassActivity", "setUpClass: currentDirectory has been set");
+                        classTitle.setText(currentDirectory.getName());
+                        Log.d("ClassActivity", "setUpClass: classTitle has been set");
+                    }
+                });
+                resetNotes();
+                Log.d("ClassActivity", "setUpClass: noteList has been set and filled");
+                //arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_expandable_list_item_1, noteList);
+                Log.d("ClassActivity", "setUpClass: ArrayAdapter has been set to noteList");
+
+            }
+        });
+        thread.start();
     }
 
     /********************************************************************************
@@ -255,15 +289,21 @@ public class ClassActivity extends AppCompatActivity {
      * @param title The new directory's title
      ********************************************/
     public void makeNewDir(String title) {
-        File newDir = new File(getApplicationContext().getFilesDir(), title);
-        Boolean answer = newDir.mkdir();
-        if (answer) {
-            Log.d("ClassActivity", "makeNewDir: " + title + " directory made");
-        } else {
-            Log.d("ClassActivity", "makeNewDir: " + title + " directory already exists");
-        }
-        currentDirectory = newDir;
-        Log.d("ClassActivity", "makeNewDir: currentDirectory has been set");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File newDir = new File(getApplicationContext().getFilesDir(), title);
+                Boolean answer = newDir.mkdir();
+                if (answer) {
+                    Log.d("ClassActivity", "makeNewDir: " + title + " directory made");
+                } else {
+                    Log.d("ClassActivity", "makeNewDir: " + title + " directory already exists");
+                }
+                currentDirectory = newDir;
+                Log.d("ClassActivity", "makeNewDir: currentDirectory has been set");
+            }
+        });
+        thread.start();
     }
 
     /******************************************************
@@ -271,14 +311,20 @@ public class ClassActivity extends AppCompatActivity {
      * @param newName The directory's possibly new title
      ******************************************************/
     public void renameDir(String newName) {
-        if (!currentDirectory.getName().equals(newName)) {
-            Log.d("ClassActivity", "renameDir: currentDirectory will now be renamed");
-            String checkedName = generateClassTitle(newName, getApplicationContext().getFilesDir());
-            File newDirName = new File(currentDirectory.getParent(), checkedName);
-            currentDirectory.renameTo(newDirName);
-            currentDirectory = newDirName;
-            Log.d("ClassActivity", "renameDir: currentDirectory has been renamed");
-        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (!currentDirectory.getName().equals(newName)) {
+                    Log.d("ClassActivity", "renameDir: currentDirectory will now be renamed");
+                    String checkedName = generateClassTitle(newName, getApplicationContext().getFilesDir());
+                    File newDirName = new File(currentDirectory.getParent(), checkedName);
+                    currentDirectory.renameTo(newDirName);
+                    currentDirectory = newDirName;
+                    Log.d("ClassActivity", "renameDir: currentDirectory has been renamed");
+                }
+            }
+        });
+        thread.start();
     }
 
     /*********************************************************
@@ -286,10 +332,16 @@ public class ClassActivity extends AppCompatActivity {
      * @param place The position the note we're deleting
      *********************************************************/
     public void deleteNote(int place) {
-        Log.d("ClassActivity", "deleteNote: Note number " + place + " will now be deleted");
-        findNote(place).delete();
-        resetNotes();
-        Log.d("ClassActivity", "deleteNote: noteList has been reset");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("ClassActivity", "deleteNote: Note number " + place + " will now be deleted");
+                findNote(place).delete();
+                resetNotes();
+                Log.d("ClassActivity", "deleteNote: noteList has been reset");
+            }
+        });
+        thread.start();
     }
 
     /**************************************************************************************
@@ -299,6 +351,7 @@ public class ClassActivity extends AppCompatActivity {
      * @return The name that may or may not have a number added to the end
      **************************************************************************************/
     public String generateClassTitle(String name, File parent) {
+        // Accessing variable "name" within a new thread throws errors, so no multithreading here
         Boolean answer = false;
         int y = 0;
         String newName = "";
@@ -341,6 +394,7 @@ public class ClassActivity extends AppCompatActivity {
      * Refreshes class's note list
      */
     public static void refreshNoteList() {
+        // Can't use non-static variable "activity" here for runOnUiThread
         File[] fileList = currentDirectory.listFiles();
         notes_title.clear();
         for (int x=0; x<fileList.length; x++) {
@@ -355,6 +409,7 @@ public class ClassActivity extends AppCompatActivity {
      * @return The file to send to other functions
      */
     public File findNote(int position) {
+        // finding a file in a thread to return out of the thread requires some sort of gymnastics
         String name = listView.getItemAtPosition(position).toString();
         for (File f:currentDirectory.listFiles()) {
             if (name.equals(f.getName())) {
@@ -368,10 +423,16 @@ public class ClassActivity extends AppCompatActivity {
      * Reset notes list for display
      */
     public void resetNotes() {
-        notes_title.clear();
-        File[] fileList = currentDirectory.listFiles();
-        for (int x=0; x<fileList.length; x++) {
-            notes_title.add(fileList[x].getName());
-        }
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                notes_title.clear();
+                File[] fileList = currentDirectory.listFiles();
+                for (int x=0; x<fileList.length; x++) {
+                    notes_title.add(fileList[x].getName());
+                }
+            }
+        });
+        thread.start();
     }
 }
