@@ -103,7 +103,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         setUpNote(intent);
 
         if(photoPath != null) {
-            Toast.makeText(NotesActivity.this, "It worked", Toast.LENGTH_SHORT).show();
             loadGalleryImage(photoPath);
             Log.i("Photo", photoPath);
         }
