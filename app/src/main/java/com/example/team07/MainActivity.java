@@ -154,7 +154,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         }
                     }
 
-                    ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, filteredClasses);
+                    classes.clear();
+                    classes.addAll(filteredClasses);
+                    ArrayAdapter arrayAdapter = new ArrayAdapter(MainActivity.this, android.R.layout.simple_list_item_1, classes);
                     listView.setAdapter(arrayAdapter);
                 } else {
                     resetClasses();
@@ -294,11 +296,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if (parent.getId() == R.id.spinner) {
             String valueFromSpinner = parent.getItemAtPosition(position).toString();
 
-            File[] x = mainDirectory.listFiles();
             ArrayList<File> fileList = new ArrayList<>();
+
+            for (int x = 0; x<classes.size(); x++) {
+                fileList.add(findClass(x));
+            }
+
+            /*
+            File[] x = mainDirectory.listFiles();
             for (File f: x) {
                 fileList.add(f);
             }
+             */
+
             switch (position) {
                 case 1: {
                     Toast.makeText(MainActivity.this, valueFromSpinner, Toast.LENGTH_SHORT).show();
