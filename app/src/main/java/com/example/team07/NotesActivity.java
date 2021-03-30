@@ -22,6 +22,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -577,5 +578,33 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         startActivity(getIntent());
     }
 
+    /**
+     * Change a string to a Bitmap
+     * @param source String source
+     * @return Bitmap result
+     */
+    public Bitmap strToBm(String source) {
+        try {
+            byte[] encodeByte = Base64.decode(source, Base64.DEFAULT);
+            Bitmap bm = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bm;
+        } catch (Exception e) {
+            Log.e("NotesActivity", "Something went wrong turning string to bitmap");
+        }
+        return null;
+    }
+
+    /**
+     * Change a Bitmap to a string
+     * @param source Bitmap source
+     * @return String result
+     */
+    public String bmToStr(Bitmap source) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        source.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String temp = Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
 }
 
