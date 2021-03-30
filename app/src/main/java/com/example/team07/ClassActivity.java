@@ -20,6 +20,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -41,7 +44,7 @@ public class ClassActivity extends AppCompatActivity {
     // Below is for runOnUiThread() from background thread
     private final Activity activity = this;
 
-    public void onClick(View v) {
+    public void addNote() {
         Intent intent = new Intent(getApplicationContext(), NotesActivity.class);
         setNewNote(intent);
         startActivity(intent);
@@ -128,6 +131,13 @@ public class ClassActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton newNote = findViewById(R.id.addNote);
+        newNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNote();
+            }
+        });
 
     }
 
