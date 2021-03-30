@@ -119,7 +119,7 @@ public class ClassActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                MainActivity.arrayAdapter3.notifyDataSetChanged();
+                MainActivity.classArrayAdapter.notifyDataSetChanged();
 
                 renameDir(String.valueOf(charSequence));
 
