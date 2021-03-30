@@ -16,6 +16,9 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private final Activity activity = this;
 
     //When the add class button is hit it will create and start a new intent, Garrett
-    public void onClick(View v) {
+    public void addClass() {
         Intent intent = new Intent(getApplicationContext(), ClassActivity.class);
         // Below will send parent's path to new Class instead of the Class's filepath
         setNewClass(intent);
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         setContentView(R.layout.activity_main);
         initSearchWidget();
@@ -74,7 +79,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSort.setAdapter(adapter);
 
-
+        FloatingActionButton newClass = findViewById(R.id.addClass);
+        newClass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addClass();
+            }
+        });
 
         // Creates list of classes
         listView = findViewById(R.id.classList);
@@ -149,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     resetClasses();
                     listView.setAdapter(arrayAdapter3);
                 }
-
                 return false;
             }
         });
