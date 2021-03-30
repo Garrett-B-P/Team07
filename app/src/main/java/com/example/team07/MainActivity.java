@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //Creates an array for the different classes, Garrett
     static ArrayList<String> classes = new ArrayList<>();
-    static ArrayAdapter<String> arrayAdapter3;
+    static ArrayAdapter<String> classArrayAdapter;
     ListView listView;
 
     // Member variables below are for use with app's directory
@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-
         setContentView(R.layout.activity_main);
         initSearchWidget();
 
@@ -60,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinnerSort.setOnItemSelectedListener(this);
 
         String[] searchOptions = getResources().getStringArray(R.array.searchOptions);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, searchOptions);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerSort.setAdapter(adapter);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerSort.setAdapter(spinnerAdapter);
 
         FloatingActionButton newClass = findViewById(R.id.addClass);
         newClass.setOnClickListener(v -> addClass());
@@ -75,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // This function is for use with app's directory
         setUpMain();
 
-        arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classes);
+        classArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_expandable_list_item_1, classes);
 
-        listView.setAdapter(arrayAdapter3);
+        listView.setAdapter(classArrayAdapter);
         clickListener();
 
 
@@ -93,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     .setPositiveButton("Yes", (dialogInterface, i1) -> {
                         // To delete the class from the directory
                         deleteClass(itemToDelete);
-                        arrayAdapter3.notifyDataSetChanged();
+                        classArrayAdapter.notifyDataSetChanged();
 
                         Log.i("ClassOnItemOnLongClick", "Deleted note #" + itemToDelete);
                     }).setNegativeButton("No", null).show();
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     listView.setAdapter(arrayAdapter);
                 } else {
                     resetClasses();
-                    listView.setAdapter(arrayAdapter3);
+                    listView.setAdapter(classArrayAdapter);
                 }
                 return false;
             }
@@ -306,8 +304,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 classes.add(f.getName());
             }
 
-            arrayAdapter3 = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, classes);
-            listView.setAdapter(arrayAdapter3);
+            classArrayAdapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, classes);
+            listView.setAdapter(classArrayAdapter);
         }
     }
 
