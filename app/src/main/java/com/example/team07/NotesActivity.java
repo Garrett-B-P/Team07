@@ -164,6 +164,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             public void onClick(DialogInterface dialog, int item) {
 
                 if (items[item].equals("Take Photo")) {
+                    String[] PERMISSIONS = {
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE
+                    };
+                    ActivityCompat.requestPermissions(NotesActivity.this, PERMISSIONS, 1);
+
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     Toast.makeText(getApplicationContext(), "Take Photo", Toast.LENGTH_SHORT).show();
                     startActivityForResult(intent, TAKE_PHOTO);
