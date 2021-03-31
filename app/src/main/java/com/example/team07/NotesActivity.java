@@ -266,21 +266,29 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         // Consider multithreading here, also would need runOnUiThread()
         Log.i("NotesActivity", "loadGalleryImage: photoPath = " + photoPath);
 
-        Bitmap bm;
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(path, options);
-        final int REQUIRED_SIZE = 100;
-        int scale = 1;
+        File photo = new File(photoPath);
+        if (!photo.isDirectory()) {
+            Log.i("NotesActivity", "loadGalleryImage: photoPath " + photoPath + " exists");
+            Bitmap bm;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, options);
+            final int REQUIRED_SIZE = 100;
+            int scale = 1;
 
-        while (options.outWidth / scale / 2 >= REQUIRED_SIZE && options.outHeight / scale / 2 >= REQUIRED_SIZE)
-            scale *= 2;
+            while (options.outWidth / scale / 2 >= REQUIRED_SIZE && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+                scale *= 2;
 
-        options.inSampleSize = scale;
-        options.inJustDecodeBounds = false;
-        bm = BitmapFactory.decodeFile(path, options);
+            options.inSampleSize = scale;
+            options.inJustDecodeBounds = false;
+            bm = BitmapFactory.decodeFile(path, options);
 
-        ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
+            ((ImageView) findViewById(R.id.imageView)).setImageBitmap(bm);
+        } else {
+            Log.i("NotesActivity", "loadGalleryImage: There may be an error in photo's file path");
+            Toast toast = Toast.makeText(this, "Image didn't load. Choose from gallery", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     // Below are functions to call for app's directory use
@@ -385,19 +393,22 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param name The new file's title
      **************************************************/
     public void makeNewFile(File parent, String name) {
-        Thread thread = new Thread(() -> {
-            File newFile = new File(parent, name);
-            try {
-                boolean answer = newFile.createNewFile();
-                if (answer) {
-                    Log.d("NotesActivity", "makeNewFile: " + name + " file made");
-                } else {
-                    Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File newFile = new File(parent, name);
+                try {
+                    boolean answer = newFile.createNewFile();
+                    if (answer) {
+                        Log.d("NotesActivity", "makeNewFile: " + name + " file made");
+                    } else {
+                        Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
+                    }
+                    path = newFile;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
                 }
-                path = newFile;
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
             }
         });
         thread.start();
