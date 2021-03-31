@@ -393,25 +393,19 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param name The new file's title
      **************************************************/
     public void makeNewFile(File parent, String name) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File newFile = new File(parent, name);
-                try {
-                    boolean answer = newFile.createNewFile();
-                    if (answer) {
-                        Log.d("NotesActivity", "makeNewFile: " + name + " file made");
-                    } else {
-                        Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
-                    }
-                    path = newFile;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
-                }
+        File newFile = new File(parent, name);
+        try {
+            boolean answer = newFile.createNewFile();
+            if (answer) {
+                Log.d("NotesActivity", "makeNewFile: " + name + " file made");
+            } else {
+                Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
             }
-        });
-        thread.start();
+            path = newFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
+        }
     }
 
     /******************************************************
@@ -419,22 +413,19 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param newName The file's possibly new title
      ******************************************************/
     public void renameFile(String newName) {
-        Thread thread = new Thread(() -> {
-            if (!path.getName().equals(newName)) {
-                Log.d("NotesActivity", "renameFile: path will now be renamed");
-                Log.d("NotesActivity", "parent is " + parent.getName() + ", " + parent.toString());
-                String checkedName = generateNoteTitle(newName, parent);
-                File newFileName = new File(parent, checkedName);
-                boolean x = path.renameTo(newFileName);
-                if (x) {
-                    path = newFileName;
-                    Log.d("NotesActivity", "renameFile: path has now been renamed");
-                } else {
-                    Log.d("NotesActivity", "renameFile: path failed to be renamed");
-                }
+        if (!path.getName().equals(newName)) {
+            Log.d("NotesActivity", "renameFile: path will now be renamed");
+            Log.d("NotesActivity", "parent is " + parent.getName() + ", " + parent.toString());
+            String checkedName = generateNoteTitle(newName, parent);
+            File newFileName = new File(parent, checkedName);
+            boolean x = path.renameTo(newFileName);
+            if (x) {
+                path = newFileName;
+                Log.d("NotesActivity", "renameFile: path has now been renamed");
+            } else {
+                Log.d("NotesActivity", "renameFile: path failed to be renamed");
             }
-        });
-        thread.start();
+        }
     }
 
     /******************************************************************

@@ -259,18 +259,15 @@ public class ClassActivity extends AppCompatActivity {
      * @param title The new directory's title
      ********************************************/
     public void makeNewDir(String title) {
-        Thread thread = new Thread(() -> {
-            File newDir = new File(getApplicationContext().getFilesDir(), title);
-            boolean answer = newDir.mkdir();
-            if (answer) {
-                Log.d("ClassActivity", "makeNewDir: " + title + " directory made");
-            } else {
-                Log.d("ClassActivity", "makeNewDir: " + title + " directory already exists");
-            }
-            currentDirectory = newDir;
-            Log.d("ClassActivity", "makeNewDir: currentDirectory has been set");
-        });
-        thread.start();
+        File newDir = new File(getApplicationContext().getFilesDir(), title);
+        boolean answer = newDir.mkdir();
+        if (answer) {
+            Log.d("ClassActivity", "makeNewDir: " + title + " directory made");
+        } else {
+            Log.d("ClassActivity", "makeNewDir: " + title + " directory already exists");
+        }
+        currentDirectory = newDir;
+        Log.d("ClassActivity", "makeNewDir: currentDirectory has been set");
     }
 
     /******************************************************
@@ -278,17 +275,14 @@ public class ClassActivity extends AppCompatActivity {
      * @param newName The directory's possibly new title
      ******************************************************/
     public void renameDir(String newName) {
-        Thread thread = new Thread(() -> {
-            if (!currentDirectory.getName().equals(newName)) {
-                Log.d("ClassActivity", "renameDir: currentDirectory will now be renamed");
-                String checkedName = generateClassTitle(newName, getApplicationContext().getFilesDir());
-                File newDirName = new File(currentDirectory.getParent(), checkedName);
-                currentDirectory.renameTo(newDirName);
-                currentDirectory = newDirName;
-                Log.d("ClassActivity", "renameDir: currentDirectory has been renamed");
-            }
-        });
-        thread.start();
+        if (!currentDirectory.getName().equals(newName)) {
+            Log.d("ClassActivity", "renameDir: currentDirectory will now be renamed");
+            String checkedName = generateClassTitle(newName, getApplicationContext().getFilesDir());
+            File newDirName = new File(currentDirectory.getParent(), checkedName);
+            currentDirectory.renameTo(newDirName);
+            currentDirectory = newDirName;
+            Log.d("ClassActivity", "renameDir: currentDirectory has been renamed");
+        }
     }
 
     /*********************************************************
