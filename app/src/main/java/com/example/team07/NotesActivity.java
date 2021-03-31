@@ -1,17 +1,9 @@
 package com.example.team07;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.loader.content.CursorLoader;
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,12 +17,19 @@ import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.loader.content.CursorLoader;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -41,13 +40,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -152,13 +148,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         }
     };
 
-    public static Comparator<File> title = new Comparator<File>() {
-        @Override
-        public int compare(File o1, File o2) {
-            return o1.getName().compareTo(o2.getName());
-        }
-    };
-
     //For the camera
     public void takePicture(View view) {
 
@@ -186,8 +175,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                     };
                     ActivityCompat.requestPermissions(NotesActivity.this, PERMISSIONS, 1);
 
-                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.setType("image/*");
+                    Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI).setType("image/*");
                     Toast.makeText(getApplicationContext(), "Choose from Library", Toast.LENGTH_SHORT).show();
                     startActivityForResult(Intent.createChooser(intent, "Select File"), FROM_STORAGE);
                 }
@@ -212,7 +200,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         super.onActivityResult(requestCode, resultCode, data);
         // Consider multithreading here, or at each part of second if/else statement
 
-        File destination = null;
+        File destination;
         if (resultCode == RESULT_OK) {
 
             if (requestCode == TAKE_PHOTO) {
@@ -249,8 +237,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 // The below works with emulation (comment block out when using real phone)
                 File gallery = new File("/storage/emulated/0/pictures");
                 File[] pics = gallery.listFiles();
-                ArrayList<File> pictures = new ArrayList<>();
-                pictures.addAll(Arrays.asList(pics));
+                ArrayList<File> pictures = new ArrayList<>(Arrays.asList(pics));
                 Collections.sort(pictures, lastEdit.reversed());
                 photoPath = pictures.get(0).getPath();
                 Log.i("NotesActivity", "onActivityResult: new photoPath is " + photoPath);
@@ -324,7 +311,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             Log.d("NotesActivity", "setUpNote: StringBuilder has been created");
             try (BufferedReader reader = new BufferedReader(isr)) {
                 Pattern pattern = Pattern.compile("PHOTOPATH_");
-                Matcher matcher = null;
+                Matcher matcher;
                 int x = 0;
                 String line = reader.readLine();
                 while (line != null) {
@@ -362,7 +349,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
             e.printStackTrace();
             Log.d("NotesActivity", "setUpNote: Closing the FileInputStream went wrong");
         }
-        if (contents != "") {
+        if (!contents.equals("")) {
             EditText body = findViewById(R.id.noteBody);
             body.setText(contents);
             Log.d("NotesActivity", "setUpNote: contents is not empty, set noteBody");
@@ -398,22 +385,19 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param name The new file's title
      **************************************************/
     public void makeNewFile(File parent, String name) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File newFile = new File(parent, name);
-                try {
-                    Boolean answer = newFile.createNewFile();
-                    if (answer) {
-                        Log.d("NotesActivity", "makeNewFile: " + name + " file made");
-                    } else {
-                        Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
-                    }
-                    path = newFile;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
+        Thread thread = new Thread(() -> {
+            File newFile = new File(parent, name);
+            try {
+                boolean answer = newFile.createNewFile();
+                if (answer) {
+                    Log.d("NotesActivity", "makeNewFile: " + name + " file made");
+                } else {
+                    Log.d("NotesActivity", "makeNewFile: " + name + " file already exists");
                 }
+                path = newFile;
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("NotesActivity", "makeNewFile: Something went wrong making the file");
             }
         });
         thread.start();
@@ -424,21 +408,18 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * @param newName The file's possibly new title
      ******************************************************/
     public void renameFile(String newName) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!path.getName().equals(newName)) {
-                    Log.d("NotesActivity", "renameFile: path will now be renamed");
-                    Log.d("NotesActivity", "parent is " + parent.getName() + ", " + parent.toString());
-                    String checkedName = generateNoteTitle(newName, parent);
-                    File newFileName = new File(parent, checkedName);
-                    Boolean x = path.renameTo(newFileName);
-                    if (x) {
-                        path = newFileName;
-                        Log.d("NotesActivity", "renameFile: path has now been renamed");
-                    } else {
-                        Log.d("NotesActivity", "renameFile: path failed to be renamed");
-                    }
+        Thread thread = new Thread(() -> {
+            if (!path.getName().equals(newName)) {
+                Log.d("NotesActivity", "renameFile: path will now be renamed");
+                Log.d("NotesActivity", "parent is " + parent.getName() + ", " + parent.toString());
+                String checkedName = generateNoteTitle(newName, parent);
+                File newFileName = new File(parent, checkedName);
+                boolean x = path.renameTo(newFileName);
+                if (x) {
+                    path = newFileName;
+                    Log.d("NotesActivity", "renameFile: path has now been renamed");
+                } else {
+                    Log.d("NotesActivity", "renameFile: path failed to be renamed");
                 }
             }
         });
@@ -449,36 +430,30 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      * A function to save NotesActivity's contents to file
      ******************************************************************/
     public void saveToFile() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                TextView body = findViewById(R.id.noteBody);
-                String fileContents = body.getText().toString();
-                Log.d("NotesActivity", "saveToFile: fileContents has been filled");
-                try {
-                    FileWriter writer = new FileWriter(path);
-                    Log.d("NotesActivity", "saveToFile: Created FileWriter");
-                    writer.append(fileContents);
-                    if (photoPath != null) {
-                        writer.append("\nPHOTOPATH_" + photoPath);
-                    }
-                    Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
-                    writer.flush();
-                    Log.d("NotesActivity", "saveToFile: Flushed stream");
-                    writer.close();
-                    Log.d("NotesActivity", "saveToFile: Closed FileWriter");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("NotesActivity", "saveToFile: FileWriter failed");
+        Thread thread = new Thread(() -> {
+            TextView body = findViewById(R.id.noteBody);
+            String fileContents = body.getText().toString();
+            Log.d("NotesActivity", "saveToFile: fileContents has been filled");
+            try {
+                FileWriter writer = new FileWriter(path);
+                Log.d("NotesActivity", "saveToFile: Created FileWriter");
+                writer.append(fileContents);
+                if (photoPath != null) {
+                    writer.append("\nPHOTOPATH_").append(photoPath);
                 }
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ClassActivity.refreshNoteList();
-                        Log.d("NotesActivity", "saveToFile: Class arrayAdapter notified?");
-                    }
-                });
+                Log.d("NotesActivity", "saveToFile: Wrote fileContents to file");
+                writer.flush();
+                Log.d("NotesActivity", "saveToFile: Flushed stream");
+                writer.close();
+                Log.d("NotesActivity", "saveToFile: Closed FileWriter");
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("NotesActivity", "saveToFile: FileWriter failed");
             }
+            activity.runOnUiThread(() -> {
+                ClassActivity.refreshNoteList();
+                Log.d("NotesActivity", "saveToFile: Class arrayAdapter notified?");
+            });
         });
         thread.start();
     }
@@ -491,7 +466,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
      **************************************************************************************/
     public String generateNoteTitle(String name, File parentFile) {
         // Accessing variable "name" within a new thread throws errors, so no multithreading here
-        Boolean answer = false;
+        boolean answer = false;
         int y = 0;
         String newName = "";
         if (name.equals("")) {
@@ -585,8 +560,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     public Bitmap strToBm(String source) {
         try {
             byte[] encodeByte = Base64.decode(source, Base64.DEFAULT);
-            Bitmap bm = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bm;
+            return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
         } catch (Exception e) {
             Log.e("NotesActivity", "Something went wrong turning string to bitmap");
         }
@@ -602,8 +576,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         source.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] b = baos.toByteArray();
-        String temp = Base64.encodeToString(b, Base64.DEFAULT);
-        return temp;
+        return Base64.encodeToString(b, Base64.DEFAULT);
     }
 }
 
