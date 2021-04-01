@@ -161,29 +161,6 @@ public class ClassActivity extends AppCompatActivity {
         });
         filteredClasses.clear();
     }
-
-    // Function for searchView2, will apply a filter to arrayAdapter2 so only items with matching text are displayed
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Initialize search view
-        SearchView searchView = findViewById(R.id.searchView2);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //Filter array list of classes
-                arrayAdapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-        return super.onCreateOptionsMenu(menu);
-    }*/
     // Below are functions to call for app's directory use
 
     /******************************************************************
