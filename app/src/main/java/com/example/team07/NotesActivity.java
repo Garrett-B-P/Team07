@@ -148,12 +148,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         }
     };
 
-    //For the camera
-    public void takePicture(View view) {
-
-        selectImage();
-    }
-
     private void selectImage() {
         final CharSequence[] items = {"Take Photo", "Choose from Library", "Remove Photo", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(NotesActivity.this);
@@ -308,8 +302,6 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         EditText noteTitle = findViewById(R.id.noteTitle);
         noteTitle.setText(path.getName());
         Log.d("NotesActivity", "setUpNote: noteTitle has been set");
-        //lastEdit.setTimeInMillis(path.lastModified());
-        // Above supposedly sets a calendar date through milliseconds
         try {
             FileInputStream fis = new FileInputStream(path);
             Log.d("NotesActivity", "setUpNote: FileInputStream has been created");
@@ -505,80 +497,12 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
     }
 
     /**
-     * To save picture to file
-     * @param bitmapImage Image to be saved
-     */
-    public void savePicture(Bitmap bitmapImage) {
-        // Consider multithreading here
-        File picFile = new File(parent, path.getName() + ".jpg"); // Does this need to be .jpg, or do we need to specify?
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(picFile);
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-            Toast.makeText(NotesActivity.this, "Pic saved", Toast.LENGTH_SHORT).show();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * To load picture from file and display in imageView
-     */
-    public void loadPicture() {
-        // Consider multithreading here
-        // How to choose any one picture?
-        // Maybe try to save to gallery if needed? Then can pull from there?
-        try {
-            File picFile = new File(parent, path.getName() + ".jpg");
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(picFile));
-            ImageView img = (ImageView)findViewById(R.id.imageView);
-            img.setImageBitmap(b);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * To reboot NotesActivity
      */
     public void restartNote() {
         saveToFile();
         finish();
         startActivity(getIntent());
-    }
-
-    /**
-     * Change a string to a Bitmap
-     * @param source String source
-     * @return Bitmap result
-     */
-    public Bitmap strToBm(String source) {
-        try {
-            byte[] encodeByte = Base64.decode(source, Base64.DEFAULT);
-            return BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-        } catch (Exception e) {
-            Log.e("NotesActivity", "Something went wrong turning string to bitmap");
-        }
-        return null;
-    }
-
-    /**
-     * Change a Bitmap to a string
-     * @param source Bitmap source
-     * @return String result
-     */
-    public String bmToStr(Bitmap source) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        source.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] b = baos.toByteArray();
-        return Base64.encodeToString(b, Base64.DEFAULT);
     }
 }
 
