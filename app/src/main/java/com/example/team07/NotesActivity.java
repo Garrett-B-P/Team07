@@ -208,7 +208,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
                 String info = System.currentTimeMillis() + ".jpg";
-                destination = new File(Environment.getExternalStorageDirectory(), info);
+                //destination = new File(Environment.getExternalStorageDirectory(), info);
+                destination = new File(Environment.DIRECTORY_DCIM, info);
                 FileOutputStream fo;
 
                 try {
@@ -224,6 +225,7 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 }
 
                 //photoPath = destination.toString();
+
                 ((ImageView) findViewById(R.id.imageView)).setImageBitmap(thumbnail);
                 String fullPath = MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , "");
                 Log.i("NotesActivity", "onActivityResult: " + MediaStore.Images.Media.insertImage(getContentResolver(), thumbnail, "" , ""));
@@ -232,15 +234,17 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
                 Log.i("NotesActivity", "onActivityResult: destination name " + destination.getName());
 
                 // Uncomment this when using real phone to test it
-                //photoPath = fullPath.substring(9);
+                photoPath = fullPath.substring(9);
 
-                // The below works with emulation (comment block out when using real phone)
+                // The below used to work with emulation (comment block out when using real phone)
+                /*
                 File gallery = new File("/storage/emulated/0/pictures");
                 File[] pics = gallery.listFiles();
                 ArrayList<File> pictures = new ArrayList<>(Arrays.asList(pics));
                 Collections.sort(pictures, lastEdit.reversed());
                 photoPath = pictures.get(0).getPath();
                 Log.i("NotesActivity", "onActivityResult: new photoPath is " + photoPath);
+                 */
 
             } else if (requestCode == FROM_STORAGE) {
                 Log.d("FROM_STORAGE ", " FROM_STORAGE");
@@ -267,7 +271,8 @@ public class NotesActivity extends AppCompatActivity implements Comparable<File>
         Log.i("NotesActivity", "loadGalleryImage: photoPath = " + photoPath);
 
         File photo = new File(photoPath);
-        if (!photo.isDirectory()) {
+        Log.i("NotesActivity", "loadGalleryImage: can read? " + photo.canRead());
+        if (!photo.isDirectory() && photo.canRead()) {
             Log.i("NotesActivity", "loadGalleryImage: photoPath " + photoPath + " exists");
             Bitmap bm;
             BitmapFactory.Options options = new BitmapFactory.Options();

@@ -15,7 +15,8 @@
         android:label="@string/app_name"
         android:roundIcon="?attr/actionModeBackground"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Team07">
+        android:theme="@style/Theme.Team07"
+        android:requestLegacyExternalStorage="true">
         <activity android:name=".NotesActivity" />
         <activity android:name=".ClassActivity"
             android:parentActivityName=".MainActivity"/>
