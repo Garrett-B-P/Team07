@@ -11,13 +11,10 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +26,6 @@ import java.util.Objects;
  * purposes.
  **********************************************************************************************/
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
-
 
     //Creates an array for the different classes, Garrett
     static ArrayList<String> classes = new ArrayList<>();

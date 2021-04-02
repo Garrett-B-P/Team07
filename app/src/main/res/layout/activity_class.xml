@@ -33,7 +33,8 @@
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/classTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/classTitle"
+        app:layout_constraintHeight_max="400dp"/>
 
     <EditText
         android:id="@+id/classTitle"
